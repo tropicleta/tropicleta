@@ -7,7 +7,7 @@ export type VehicleQuote=z.infer<typeof vehicleQuotesSchema>[number];
 export function selectionQuantities(catalog:PackageService[],selection:Selection){
   const counts:Record<string,number>={};
   for(const slug of selectedLeaves(catalog,selection)){
-    counts[slug]=Math.max(selection.manual.includes(slug)?selection.quantities?.[slug]??1:0,...selection.packages.filter(p=>packageLeaves(catalog,p).includes(slug)).map(p=>selection.quantities?.[p]??1));
+    counts[slug]=Math.max(...[...selection.manual,...selection.packages].filter(p=>packageLeaves(catalog,p).includes(slug)).map(p=>selection.quantities?.[p]??1),0);
     if(selection.quantities?.[slug])counts[slug]=selection.quantities[slug];
   }
   return counts;

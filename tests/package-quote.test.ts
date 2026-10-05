@@ -14,6 +14,21 @@ assert.deepEqual(packageQuote([customService],{manual:["custom"],packages:[],exc
 assert.throws(()=>packageQuote([customService],{manual:["custom"],packages:[],excluded:[]},"bicicleta"),/vehículo/);
 // Fixture artificial: no establece la composición de los paquetes reales del taller.
 const catalog=[individual("a"),individual("b"),individual("c",20000),individual("extra",15000),pack("basic",15000,["a","b"]),pack("complete",30000,["basic","c"])];
+const forkCatalog=[individual("bottles",35000),{...individual("air-fork",50000),components:[{slug:"bottles",required:true}]}];
+const forkSelection={manual:["air-fork","bottles"],packages:[],excluded:[]};
+assert.doesNotThrow(()=>validateHierarchy(forkCatalog));
+assert.deepEqual(packageLeaves(forkCatalog,"air-fork"),["air-fork","bottles"]);
+const forkQuote=packageQuote(forkCatalog,forkSelection,"bicicleta");
+assert.equal(forkQuote.lines.length,1);
+assert.equal(forkQuote.lines[0].kind,"individual");
+assert.deepEqual(forkQuote.lines[0].included,["bottles"]);
+assert.equal(serviceQuote(forkQuote.lines).total,50000);
+const forkPack=pack("fork-pack",45000,["air-fork","bottles"]);
+assert.equal(packageReference([...forkCatalog,forkPack],forkPack)!.reference,50000);
+const anotherFork={...individual("another-fork",40000),components:[{slug:"bottles",required:true}]};
+assert.equal(serviceQuote(packageQuote([...forkCatalog,anotherFork],{manual:["air-fork","another-fork"],packages:[],excluded:[]},"bicicleta").lines).total,90000);
+assert.deepEqual(toggleSelection(forkCatalog,forkSelection,"bottles"),forkSelection);
+assert.deepEqual(packageQuote(forkCatalog,{manual:["air-fork"],packages:[],excluded:["bottles"]},"bicicleta").leaves,["air-fork","bottles"]);
 const bikeOnly={...individual("bike-only"),excludesDoubleSuspension:true};
 const bikeChoice={manual:["bike-only"],packages:[],excluded:[]};
 assert.deepEqual(packageQuote([bikeOnly],bikeChoice,"bicicleta").leaves,["bike-only"]);

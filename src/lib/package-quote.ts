@@ -18,7 +18,7 @@ export function validateHierarchy(catalog: PackageService[]) {
     if (done.has(s.slug)) return;
     if (!s.vehicles.length) throw Error("Selecciona al menos un tipo de vehículo.");
     if (s.requiresDoubleSuspension && s.excludesDoubleSuspension) throw Error("Selecciona una compatibilidad válida para la doble suspensión.");
-    if (s.kind !== "package" && s.components.length) throw Error("Solo un paquete puede tener componentes.");
+    if (s.kind !== "package" && s.components.some(c => !c.required)) throw Error("Los trabajos incluidos en un servicio individual deben ser obligatorios.");
     if (new Set(s.components.map(c => c.slug)).size !== s.components.length) throw Error("Hay componentes duplicados.");
     visiting.add(s.slug);
     for (const c of s.components) {
@@ -44,7 +44,8 @@ export function packageLeaves(catalog: PackageService[], slug: string, requiredO
   function visit(key: string) {
     if (path.has(key)) throw Error("Dependencia circular.");
     const s = map.get(key); if (!s) throw Error("Componente inexistente.");
-    if (s.kind !== "package" || !s.components.length) { result.add(key); return; }
+    if (s.kind !== "package") result.add(key);
+    if (!s.components.length) { result.add(key); return; }
     path.add(key);
     s.components.filter(c => !requiredOnly || c.required).forEach(c => visit(c.slug));
     path.delete(key);
@@ -52,7 +53,13 @@ export function packageLeaves(catalog: PackageService[], slug: string, requiredO
   visit(slug); return [...result].sort();
 }
 export function selectedLeaves(catalog: PackageService[], selection: Selection) {
-  return [...new Set([...selection.manual, ...selection.packages.flatMap(slug => packageLeaves(catalog, slug))])].filter(slug => !selection.excluded.includes(slug)).sort();
+  const manual = selection.manual.filter(slug => !selection.excluded.includes(slug));
+  const included = manual.flatMap(slug => packageLeaves(catalog, slug));
+  const leaves = [...new Set([...included, ...selection.packages.flatMap(slug => packageLeaves(catalog, slug)).filter(slug => !selection.excluded.includes(slug))])];
+  return [...new Set(leaves.flatMap(slug => catalog.find(s => s.slug === slug)?.kind !== "package" ? packageLeaves(catalog, slug) : [slug]))].sort();
+}
+export function includingService(catalog: PackageService[], selection: Selection, slug: string) {
+  return catalog.find(s => s.kind !== "package" && s.slug !== slug && s.components.length && selectedLeaves(catalog, selection).includes(s.slug) && packageLeaves(catalog, s.slug).includes(slug));
 }
 /** A covered pack is an inclusion, rather than another selectable purchase. */
 export function coveringPackage(catalog: PackageService[], selection: Selection, slug: string) {
@@ -61,7 +68,7 @@ export function coveringPackage(catalog: PackageService[], selection: Selection,
   const required = packageLeaves(catalog, slug, true);
   const leaves = selectedLeaves(catalog, selection);
   if (!required.every(key => leaves.includes(key))) return undefined;
-  return selection.packages.map(key => catalog.find(s => s.slug === key)).find(parent => {
+  return [...selection.packages,...selection.manual].map(key => catalog.find(s => s.slug === key)).find(parent => {
     if (!parent || parent.slug === slug || !parent.components.length) return false;
     const parentLeaves = packageLeaves(catalog, parent.slug);
     const contains = (key: string, seen = new Set<string>()): boolean => {
@@ -74,6 +81,7 @@ export function coveringPackage(catalog: PackageService[], selection: Selection,
 }
 export function toggleSelection(catalog: PackageService[], selection: Selection, slug: string): Selection {
   const service = catalog.find(s => s.slug === slug); if (!service) return selection;
+  if (includingService(catalog, selection, slug)) return selection;
   if (service.kind === "package") {
     const all = packageLeaves(catalog, slug);
     if (selection.packages.includes(slug) && packageLeaves(catalog,slug,true).every(s=>selectedLeaves(catalog,selection).includes(s))) return { ...selection, packages: selection.packages.filter(p => p !== slug) };
@@ -103,6 +111,7 @@ export function packageQuote(catalog: PackageService[], selection: Selection, ve
   const recognized = allowed.filter(s => s.kind === "package" && s.components.length && packageLeaves(catalog, s.slug, true).every(slug => leaves.includes(slug)));
   const bit = new Map(leaves.map((slug,i) => [slug, 1n << BigInt(i)]));
   const candidates = [...leaves.map(slug => ({ service: map.get(slug)!, included: [slug] })), ...recognized.map(service => ({ service, included: packageLeaves(catalog, service.slug).filter(slug => leaves.includes(slug)) }))]
+    .map(c => c.service.kind !== "package" && c.service.components.length ? {...c, included: packageLeaves(catalog, c.service.slug)} : c)
     .map(c => ({ ...c, mask: c.included.reduce((mask, slug) => mask | bit.get(slug)!, 0n) }))
     .sort((a,b) => a.service.slug.localeCompare(b.service.slug));
   type Plan = { cost: number; pending: number; lines: typeof candidates };
@@ -113,8 +122,10 @@ export function packageQuote(catalog: PackageService[], selection: Selection, ve
     if (++states > 100000) throw Error("Esta composición tiene demasiadas combinaciones. Simplifica los paquetes.");
     const first = remaining & -remaining; let best: Plan | null = null;
     for (const c of candidates) {
-      if (!(c.mask & first) || (c.mask & remaining) !== c.mask) continue;
-      const next = solve(remaining ^ c.mask); if (!next) continue;
+      const individualInclusions = c.service.kind !== "package" && c.service.components.length > 0;
+      const effective = c.mask & remaining;
+      if (!(effective & first) || (individualInclusions ? !(remaining & bit.get(c.service.slug)!) : effective !== c.mask)) continue;
+      const next = solve(remaining ^ effective); if (!next) continue;
       const plan = { cost: next.cost + (c.service.price ?? 0), pending: next.pending + (c.service.price === null ? 1 : 0), lines: [c, ...next.lines] };
       if (!best || plan.pending < best.pending || (plan.pending === best.pending && (plan.cost < best.cost || (plan.cost === best.cost && plan.lines.length < best.lines.length)))) best = plan;
     }
@@ -122,5 +133,5 @@ export function packageQuote(catalog: PackageService[], selection: Selection, ve
   }
   const result = solve((1n << BigInt(leaves.length)) - 1n);
   if (!result) throw Error("No se puede calcular esta combinación sin duplicar trabajos.");
-  return { leaves, recognized: recognized.map(s => s.slug), lines: result.lines.map(c => ({ ...c.service, included: c.service.kind === "package" ? c.included.filter(s => s !== c.service.slug) : [], automatic: c.service.kind === "package" && !selection.packages.includes(c.service.slug) })) };
+  return { leaves, recognized: recognized.map(s => s.slug), lines: result.lines.map(c => ({ ...c.service, included: c.included.filter(s => s !== c.service.slug), automatic: c.service.kind === "package" && !selection.packages.includes(c.service.slug) })) };
 }

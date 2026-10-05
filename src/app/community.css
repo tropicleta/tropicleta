@@ -273,6 +273,9 @@
 
 .tp-service-option { border: 1px solid var(--tp-border); border-radius: 12px; padding: 8px; }
 .tp-service-option .tp-option { border: 0; padding: 4px; }
+.tp-service-option.is-included { border-style:dashed; }
+.tp-service-option.is-included .tp-option { cursor:default; }
+.tp-service-option.is-included .tp-option small { color:#ffad32; }
 .tp-service-quantity { display: flex; align-items: center; gap: 10px; margin: 8px 0 0; }
 .tp-service-quantity button { width: 34px; height: 34px; border-radius: 8px; border: 1px solid var(--tp-border); background: var(--tp-black-2); color: var(--tp-white); cursor: pointer; font-size: 20px; }
 .tp-service-quantity button:disabled { opacity: .35; cursor: default; }
