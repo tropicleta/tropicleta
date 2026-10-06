@@ -27,6 +27,7 @@ export const site = {
 export const nav = [
   { href: "/servicios/", label: "Servicios y cotización" },
   { href: "/tienda/", label: "Tienda" },
+  { href: "/recomendados/", label: "Recomendados" },
   { href: "/eventos/", label: "Taller móvil" },
   { href: "/nosotros/", label: "Nosotros" },
   { href: "/contacto/", label: "Contacto" },

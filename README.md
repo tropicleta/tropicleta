@@ -58,6 +58,8 @@ Los textos legales son de ejemplo: revísalos con asesoría legal antes de publi
 
 ## Pagos
 
+La preparación actual de tienda, recomendados y credenciales está documentada en [docs/activacion-tienda.md](docs/activacion-tienda.md). Pruebas de tienda: `npm run test:shop`.
+
 **Webpay Plus** (`transbank-sdk`): `startCheckout` crea la orden `pendiente` → `create()` → POST de `token_ws` a Webpay →
 `/api/webpay/retorno/` hace `commit()` **una sola vez por token** (reclamo atómico en BD), valida monto y orden, y
 marca `pagada` (descuenta stock y envía emails) o `rechazada`. `TBK_TOKEN` = anulado por el usuario; solo

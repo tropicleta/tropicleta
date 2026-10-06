@@ -109,12 +109,12 @@ export async function syncMercadoPagoPayment(paymentId: string) {
   const p = await mpPayment().get({ id: paymentId });
   if (!p.external_reference) return null;
   const [order] = await db.select().from(orders).where(eq(orders.code, p.external_reference)).limit(1);
-  if (!order) return null;
+  if (!order || order.paymentMethod !== "mercadopago") return null;
 
   if (p.status === "approved") {
-    if (Math.round(p.transaction_amount ?? 0) !== order.total) {
-      console.error(`[mp] monto no coincide en ${order.code}: ${p.transaction_amount} vs ${order.total}`);
-      await flagMercadoPagoIssue(order, "monto_distinto", p, `Mercado Pago aprobó ${formatCLP(Math.round(p.transaction_amount ?? 0))} pero la orden suma ${formatCLP(order.total)}. La orden quedó pendiente: revisar antes de entregar.`);
+    if (p.currency_id !== "CLP" || p.transaction_amount !== order.total || p.live_mode !== (process.env.MP_SANDBOX !== "1")) {
+      console.error(`[mp] pago incompatible con ${order.code}: monto, moneda o ambiente incorrectos`);
+      await flagMercadoPagoIssue(order, "pago_incompatible", p, `El pago aprobado no coincide con el monto, moneda CLP o ambiente esperado. La orden suma ${formatCLP(order.total)}. Revisar en Mercado Pago antes de entregar.`);
       return order.code;
     }
     await markOrderPaid(order.id, {

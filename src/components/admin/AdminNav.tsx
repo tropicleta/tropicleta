@@ -6,7 +6,7 @@ const groups = [
   {label:"Taller",links:[{href:"/admin/servicios/",label:"Servicios"},{href:"/admin/reservas/",label:"Reservas"},{href:"/admin/servicios/categorias/",label:"Categorías"},{href:"/admin/servicios/papelera/",label:"Papelera de servicios"}]},
 ];
 const general=[{href:"/admin/",label:"Resumen"},{href:"/admin/contabilidad/",label:"Contabilidad"}];
-const other=[{href:"/admin/mensajes/",label:"Mensajes"},{href:"/admin/actividad/",label:"Actividad"}];
+const other=[{href:"/admin/recomendados/",label:"Recomendados"},{href:"/admin/pagos/",label:"Configuración de pagos"},{href:"/admin/mensajes/",label:"Mensajes"},{href:"/admin/actividad/",label:"Actividad"}];
 export function AdminNav({badges}:{badges:Record<string,number>}) {
   const raw=usePathname();const pathname=raw.endsWith("/")?raw:raw+"/";
   const link=(item:{href:string;label:string},siblings:{href:string}[])=>{

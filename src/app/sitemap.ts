@@ -7,7 +7,7 @@ import { posts } from "@/data/posts";
 export const dynamic = "force-dynamic";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const staticPages = ["/", "/servicios/", "/tienda/", "/contacto/", "/nosotros/", "/eventos/", "/consejos/", "/preguntas-frecuentes/", "/garantia/", "/envios-y-devoluciones/", "/terminos/", "/privacidad/"].map((p) => ({
+  const staticPages = ["/", "/servicios/", "/tienda/", "/recomendados/", "/contacto/", "/nosotros/", "/eventos/", "/consejos/", "/preguntas-frecuentes/", "/garantia/", "/envios-y-devoluciones/", "/terminos/", "/privacidad/"].map((p) => ({
     url: siteUrl(p),
     changeFrequency: "weekly" as const,
     priority: p === "/" ? 1 : 0.8,

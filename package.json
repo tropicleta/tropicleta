@@ -14,7 +14,8 @@
     "test:accounting": "node --conditions=react-server --import tsx tests/accounting.test.ts",
     "db:reset-local": "node -e \"require('fs').rmSync('.data',{recursive:true,force:true})\" && echo 'BD local borrada; se recrea al iniciar'",
     "test:admin": "node --conditions=react-server --import tsx tests/admin.test.ts",
-    "test:catalog": "node --import tsx tests/catalog.test.ts"
+    "test:catalog": "node --import tsx tests/catalog.test.ts",
+    "test:shop": "node --conditions=react-server --import tsx tests/shop-readiness.test.ts"
   },
   "dependencies": {
     "@electric-sql/pglite": "^0.5.8",

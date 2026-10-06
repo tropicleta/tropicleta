@@ -9,7 +9,7 @@ import { SubmitButton } from "@/components/SubmitButton";
 import { deliveryCommunes, shopRules } from "@/data/shop";
 import { formatCLP } from "@/lib/format";
 
-export function CheckoutForm({ mpAvailable, notice }: { mpAvailable: boolean; notice?: string }) {
+export function CheckoutForm({ mpAvailable, webpayAvailable, testPayments, notice }: { mpAvailable: boolean; webpayAvailable: boolean; testPayments: boolean; notice?: string }) {
   const { items, subtotal, ready, setQuantity } = useCart();
   const [state, action] = useActionState<CheckoutState, FormData>(startCheckout, {});
   const [method, setMethod] = useState<"retiro" | "despacho">(
@@ -123,16 +123,18 @@ export function CheckoutForm({ mpAvailable, notice }: { mpAvailable: boolean; no
 
           <fieldset className="tp-fieldset">
             <legend className="tp-label">3. Pago</legend>
+            {testPayments && <p className="tp-alert">Hay medios de pago en modo de prueba. Los pagos de prueba no son compras reales.</p>}
+            {!webpayAvailable && !mpAvailable && <p className="tp-alert">Estamos habilitando los pagos online. Tu carrito se conserva para cuando estén disponibles.</p>}
             <div className="tp-options tp-options-2">
               <label className="tp-option">
-                <input type="radio" name="paymentMethod" value="webpay" defaultChecked={(val("paymentMethod") ?? "webpay") === "webpay"} />
+                <input type="radio" name="paymentMethod" value="webpay" disabled={!webpayAvailable} defaultChecked={webpayAvailable && (val("paymentMethod") ?? "webpay") === "webpay"} />
                 <span>
                   Webpay
-                  <small>Débito, crédito y prepago</small>
+                  <small>{webpayAvailable ? "Débito, crédito y prepago" : "Próximamente"}</small>
                 </span>
               </label>
               <label className="tp-option" style={mpAvailable ? undefined : { opacity: 0.5 }}>
-                <input type="radio" name="paymentMethod" value="mercadopago" disabled={!mpAvailable} defaultChecked={val("paymentMethod") === "mercadopago"} />
+                <input type="radio" name="paymentMethod" value="mercadopago" disabled={!mpAvailable} defaultChecked={mpAvailable && (val("paymentMethod") === "mercadopago" || !webpayAvailable)} />
                 <span>
                   Mercado Pago
                   <small>{mpAvailable ? "Tarjetas y saldo en cuenta" : "Próximamente"}</small>
@@ -175,7 +177,7 @@ export function CheckoutForm({ mpAvailable, notice }: { mpAvailable: boolean; no
               Redirigiendo al pago…
             </button>
           ) : (
-            <SubmitButton className="tp-btn tp-btn-primary tp-btn-block" pendingText="Conectando con el pago…">
+            <SubmitButton disabled={!webpayAvailable && !mpAvailable} className="tp-btn tp-btn-primary tp-btn-block" pendingText="Conectando con el pago…">
               Pagar {formatCLP(subtotal + shipping)}
             </SubmitButton>
           )}

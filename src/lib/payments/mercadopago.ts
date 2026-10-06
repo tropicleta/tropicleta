@@ -1,8 +1,9 @@
 import "server-only";
 import { MercadoPagoConfig, Payment, Preference } from "mercadopago";
+import { paymentConfiguration } from "@/lib/payment-config";
 
 export function mpEnabled() {
-  return Boolean(process.env.MP_ACCESS_TOKEN);
+  return paymentConfiguration().mpAvailable;
 }
 
 function client() {

@@ -10,6 +10,7 @@ import { webpayTransaction } from "@/lib/payments/webpay";
 import { mpEnabled, mpPreference } from "@/lib/payments/mercadopago";
 import { siteUrl } from "@/lib/site-url";
 import { eq } from "drizzle-orm";
+import { paymentConfiguration } from "@/lib/payment-config";
 
 export type CheckoutState = FormState & {
   /** Webpay: el cliente hace POST de token_ws a esta URL. Mercado Pago: redirección simple. */
@@ -33,8 +34,12 @@ async function checkout(fd: FormData): Promise<CheckoutState> {
   if (!parsed.success) return { errors: zodErrors(parsed.error), values };
   const d = parsed.data;
 
+  if (d.paymentMethod === "webpay" && !paymentConfiguration().webpayAvailable) {
+    return { errors: { paymentMethod: "Webpay aún no está disponible. Elige otro medio de pago." }, values };
+  }
+
   if (d.paymentMethod === "mercadopago" && !mpEnabled()) {
-    return { errors: { paymentMethod: "Mercado Pago aún no está disponible. Usa Webpay." }, values };
+    return { errors: { paymentMethod: "Mercado Pago aún no está disponible. Elige otro medio de pago." }, values };
   }
 
   // 1) Recalcular todo en el servidor desde la BD (nunca confiar en precios del cliente)
@@ -125,7 +130,8 @@ async function checkout(fd: FormData): Promise<CheckoutState> {
     });
     await db.update(schema.orders).set({ paymentToken: pref.id ?? null }).where(eq(schema.orders.id, order.id));
     const url = process.env.MP_SANDBOX === "1" ? pref.sandbox_init_point : pref.init_point;
-    return { redirect: { kind: "url", url: url! } };
+    if (!url) throw new Error("Mercado Pago no devolvió un enlace de pago");
+    return { redirect: { kind: "url", url } };
   } catch (e) {
     console.error("[checkout] error pasarela", e);
     await db.update(schema.orders).set({ status: "anulada" }).where(eq(schema.orders.id, order.id));
