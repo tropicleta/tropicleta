@@ -4,8 +4,22 @@ export type Vehicle = string;
 export type QuoteVehicle = { slug: string; name: string };
 // Recommended extras share the existing JSON storage but never enter composition or pricing.
 export type Component = { slug: string; required: boolean; recommended?: boolean };
-export function pricingCatalog<T extends {components: Component[]}>(catalog:T[]):T[] {
-  return catalog.map(s=>({...s,components:s.components.filter(c=>!c.recommended)}));
+export function pricingCatalog<T extends {components: Component[];slug?:string;kind?:string;active?:boolean;removed?:boolean}>(catalog:T[]):T[] {
+  // These individual jobs always include the corresponding smaller job.
+  const includedJobs:Record<string,string>={
+    "purga-frenos-hidraulicos":"ajuste-frenos-mecanicos",
+    "sangrado-freno-trasero":"ajuste-freno-trasero",
+    "servicio-completo-horquilla":"servicio-basico-horquilla",
+  };
+  return catalog.map(s=>{
+    const components=s.components.filter(c=>!c.recommended);
+    const child=includedJobs[s.slug??""];
+    const target=child?catalog.find(c=>c.slug===child&&!c.removed&&c.active!==false&&c.kind!=="package"):undefined;
+    if(s.kind!=="package"&&target){
+      return {...s,components:[...components.filter(c=>c.slug!==child),{slug:child,required:true}]};
+    }
+    return {...s,components};
+  });
 }
 export type PackageService = QuoteService & { kind: string; components: Component[]; vehicles: Vehicle[]; individuallySelectable: boolean; active: boolean; removed?: boolean; requiresDoubleSuspension?: boolean; excludesDoubleSuspension?: boolean };
 export function supportsVehicle(s: PackageService, vehicle: Vehicle, doubleSuspension = false) {
@@ -65,6 +79,7 @@ export function selectedLeaves(catalog: PackageService[], selection: Selection) 
   return [...new Set(leaves.flatMap(slug => catalog.find(s => s.slug === slug)?.kind !== "package" ? packageLeaves(catalog, slug) : [slug]))].sort();
 }
 export function includingService(catalog: PackageService[], selection: Selection, slug: string) {
+  catalog = pricingCatalog(catalog);
   return catalog.find(s => s.kind !== "package" && s.slug !== slug && s.components.length && selectedLeaves(catalog, selection).includes(s.slug) && packageLeaves(catalog, s.slug).includes(slug));
 }
 /** A covered pack is an inclusion, rather than another selectable purchase. */

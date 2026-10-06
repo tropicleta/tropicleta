@@ -15,6 +15,17 @@ assert.throws(()=>packageQuote([customService],{manual:["custom"],packages:[],ex
 // Fixture artificial: no establece la composición de los paquetes reales del taller.
 const catalog=[individual("a"),individual("b"),individual("c",20000),individual("extra",15000),pack("basic",15000,["a","b"]),pack("complete",30000,["basic","c"])];
 const forkCatalog=[individual("bottles",35000),{...individual("air-fork",50000),components:[{slug:"bottles",required:true}]}];
+const brakes=[individual("ajuste-frenos-mecanicos",7000),individual("ajuste-freno-trasero",7000),individual("purga-frenos-hidraulicos",15000),individual("sangrado-freno-trasero",15000)];
+for(const [bleed,adjust,other] of [["purga-frenos-hidraulicos","ajuste-frenos-mecanicos","ajuste-freno-trasero"],["sangrado-freno-trasero","ajuste-freno-trasero","ajuste-frenos-mecanicos"]]){
+  const selected={manual:[adjust,bleed],packages:[],excluded:[]};
+  const result=packageQuote(brakes,selected,"bicicleta");
+  assert.equal(serviceQuote(result.lines).total,15000);
+  assert.deepEqual(result.lines[0].included,[adjust]);
+  assert.deepEqual(toggleSelection(brakes,selected,adjust),selected);
+  assert.equal(serviceQuote(packageQuote(brakes,{...selected,manual:[...selected.manual,other]},"bicicleta").lines).total,22000);
+}
+assert.equal(serviceQuote(packageQuote(brakes,{manual:brakes.map(s=>s.slug),packages:[],excluded:[]},"bicicleta").lines).total,30000);
+assert.equal(serviceQuote(packageQuote([individual("servicio-completo-horquilla",50000),individual("servicio-basico-horquilla",35000)],{manual:["servicio-completo-horquilla","servicio-basico-horquilla"],packages:[],excluded:[]},"bicicleta").lines).total,50000);
 const forkSelection={manual:["air-fork","bottles"],packages:[],excluded:[]};
 assert.doesNotThrow(()=>validateHierarchy(forkCatalog));
 assert.deepEqual(packageLeaves(forkCatalog,"air-fork"),["air-fork","bottles"]);
