@@ -37,6 +37,10 @@ export function quoteMessage(catalog:PackageService[],groups:Group[],pickup:bool
 }
 
 export function suggestedExtras(catalog:PackageService[],parents:string[],leaves:string[],vehicle:string){
-  const slugs=[...new Set(parents.flatMap(slug=>catalog.find(s=>s.slug===slug)?.components.filter(c=>c.recommended).map(c=>c.slug)??[]))];
+  if(!parents.length)return [];
+  const configured=[...new Set(parents.flatMap(slug=>catalog.find(s=>s.slug===slug)?.components.filter(c=>c.recommended).map(c=>c.slug)??[]))];
+  // When no specific recommendations have been configured, offer compatible workshop jobs.
+  const defaults=["servicio-basico-horquilla","purga-frenos-hidraulicos","sangrado-freno-trasero","limpieza-bicicleta-transmision","limpieza-ultrasonica-encerado","pinchazo-scooter","cambio-de-camara-delantera-scooter","cambio-de-camara-trasera-scooter","frenos-scooter","frenos-scooter-delantero","frenos-scooter-trasero","recarga-liquido"];
+  const slugs=configured.length?configured:defaults;
   return slugs.map(slug=>catalog.find(s=>s.slug===slug)).filter((s):s is PackageService=>!!s&&s.active&&!s.removed&&s.kind!=="package"&&s.individuallySelectable&&supportsVehicle(s,vehicle)&&!leaves.includes(s.slug)&&!packageLeaves(catalog,s.slug).some(slug=>leaves.includes(slug))).slice(0,3);
 }

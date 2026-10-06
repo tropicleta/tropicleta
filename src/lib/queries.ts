@@ -1,4 +1,5 @@
 import "server-only";
+import { shortServiceName } from "./service-visuals";
 import { and, asc, desc, eq, gt, inArray } from "drizzle-orm";
 import { unstable_cache } from "next/cache";
 import { db, schema } from "@/db";
@@ -28,9 +29,9 @@ export const getServiceCatalog = unstable_cache(
         .where(eq(services.active, true))
         .orderBy(asc(services.sort), asc(services.name)),
     ]);
-    return cats.map((c) => ({ ...c, services: rows.filter((s) => s.categoryId === c.id) })).filter(c => c.services.length > 0);
+    return cats.map((c) => ({ ...c, services: rows.filter((s) => s.categoryId === c.id).map(s=>({...s,name:shortServiceName(s)})) })).filter(c => c.services.length > 0);
   },
-  ["service-catalog-v10"],
+  ["service-catalog-v11"],
   catalogCache,
 );
 
@@ -42,9 +43,9 @@ export const getService = unstable_cache(
       .innerJoin(serviceCategories, eq(services.categoryId, serviceCategories.id))
       .where(and(eq(services.slug, slug), eq(services.active, true)))
       .limit(1);
-    return rows[0] ?? null;
+    return rows[0] ? {...rows[0],service:{...rows[0].service,name:shortServiceName(rows[0].service)}} : null;
   },
-  ["service-v10"],
+  ["service-v11"],
   catalogCache,
 );
 
@@ -71,13 +72,13 @@ const getHomeServicesFromDb = unstable_cache(
         slug: service.slug,
         categorySlug: category.slug,
         categoryName: shortCategoryName(category.slug, category.name),
-        name: service.name,
+        name: shortServiceName(service),
         price: service.price,
       })),
       categories: cats.map((c) => ({ slug: c.slug, name: c.name })),
     };
   },
-  ["home-services-v3"],
+  ["home-services-v4"],
   catalogCache,
 );
 

@@ -10,6 +10,7 @@ import { serviceQuote, transportLabels } from "@/lib/service-quote";
 import { formatCLP } from "@/lib/format";
 import { bookingSchema } from "@/lib/validation";
 import { multiVehicleQuote,vehicleQuotesSchema } from "@/lib/multi-quote";
+import { shortServiceName } from "@/lib/service-visuals";
 import { selectionSchema } from "@/lib/quote-selection";
 
 export async function createBooking(_prev: FormState, fd: FormData): Promise<FormState> {
@@ -20,7 +21,7 @@ export async function createBooking(_prev: FormState, fd: FormData): Promise<For
 
   let code:string;
   try{
-    const catalog=await db.select().from(schema.services);
+    const catalog=(await db.select().from(schema.services)).map(s=>({...s,name:shortServiceName(s)}));
     const vehicles=await db.select().from(schema.quoteVehicles).where(eq(schema.quoteVehicles.removed,false));
     let groups:ReturnType<typeof multiVehicleQuote>;
     try{

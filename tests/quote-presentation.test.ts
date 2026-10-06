@@ -11,6 +11,10 @@ assert.deepEqual(suggestedExtras(catalog,["complete"],calculation.leaves,"bicicl
 assert.deepEqual(suggestedExtras(catalog,["complete"],[...calculation.leaves,"extra"],"bicicleta"),[]);
 assert.deepEqual(suggestedExtras(catalog,["complete"],calculation.leaves,"scooter"),[]);
 assert.deepEqual(suggestedExtras(catalog.map(s=>s.slug==="extra"?{...s,active:false}:s),["complete"],calculation.leaves,"bicicleta"),[]);
+const defaults=[...catalog.map(s=>({...s,components:s.components.filter(c=>!c.recommended)})),item("servicio-basico-horquilla",35000),item("purga-frenos-hidraulicos",15000),item("sangrado-freno-trasero",15000)];
+assert.equal(suggestedExtras(defaults,["complete"],calculation.leaves,"bicicleta").length,3);
+assert.equal(suggestedExtras(defaults,["complete"],[...calculation.leaves,"servicio-basico-horquilla"],"bicicleta").length,2);
+assert.equal(suggestedExtras(defaults,[],[],"bicicleta").length,0);
 const message=quoteMessage(catalog,[{label:"Bicicleta 1",calculation}],true,"Tierra Amarilla","both",true);
 assert.ok(message.includes("• complete: $50.000"));
 assert.ok(!message.includes("Incluido:"));
