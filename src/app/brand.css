@@ -67,6 +67,7 @@
   line-height: 1.25;
 }
 .tp-mobile-nav a { text-align: center; }
+.tp-header:has(.tp-menu-toggle[aria-expanded="true"]) { background:var(--tp-black); }
 @media (min-width: 980px) and (max-width: 1199px) {
   .tp-nav, .tp-header-cta { display: none; }
   .tp-menu-toggle { display: inline-grid !important; }
