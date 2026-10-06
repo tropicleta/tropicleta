@@ -120,6 +120,20 @@
       "when": 1791290758360,
       "tag": "0017_loose_skreet",
       "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "7",
+      "when": 1791306467246,
+      "tag": "0018_green_devos",
+      "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "7",
+      "when": 1791306762445,
+      "tag": "0019_chilly_wrecker",
+      "breakpoints": true
     }
   ]
 }

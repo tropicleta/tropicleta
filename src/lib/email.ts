@@ -6,16 +6,18 @@ const FROM = process.env.EMAIL_FROM ?? "Tropicleta <onboarding@resend.dev>";
 
 /** Envía un email con Resend. Sin RESEND_API_KEY lo deja en consola (desarrollo). Nunca lanza. */
 export async function sendEmail(to: string | undefined | null, subject: string, html: string) {
-  if (!to) return;
+  if (!to) return false;
   if (!resend) {
     console.info(`[email:dev] → ${to} · ${subject}`);
-    return;
+    return false;
   }
   try {
     const { error } = await resend.emails.send({ from: FROM, to, subject, html });
     if (error) console.error("[email] error", error);
+    return !error;
   } catch (e) {
     console.error("[email] excepción", e);
+    return false;
   }
 }
 

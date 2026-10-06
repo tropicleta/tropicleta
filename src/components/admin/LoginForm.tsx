@@ -25,6 +25,7 @@ export function LoginForm() {
       <SubmitButton className="tp-btn tp-btn-primary tp-btn-block" pendingText="Ingresando…">
         Ingresar
       </SubmitButton>
+      <p className="tp-hint">Por seguridad, la sesión se cierra después de 30 minutos sin actividad o al cumplir 8 horas. Cierra sesión al terminar en un equipo compartido.</p>
     </form>
   );
 }

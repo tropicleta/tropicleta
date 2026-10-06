@@ -2,16 +2,16 @@ import "server-only";
 import { createHmac, timingSafeEqual } from "node:crypto";
 import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { ADMIN_SESSION_SECONDS, newAdminToken, verifyAdminToken, passwordFingerprint } from "./admin-session-token";
+import { storeAdminSession, touchAdminSession, revokeAdminSession } from "./admin-session-store";
 
 /**
- * Sesión de administrador mínima: una contraseña (ADMIN_PASSWORD) y una cookie firmada con HMAC.
- * Suficiente para un solo taller; migrar a Auth.js si se necesitan varios usuarios.
+ * Cookie firmada y sesión revocable en BD: 8 horas máximas y 30 minutos de inactividad.
  *
  * La cookie incluye una huella de la contraseña: al cambiar ADMIN_PASSWORD (o SESSION_SECRET)
  * todas las sesiones abiertas dejan de ser válidas.
  */
-const COOKIE = "tp_admin";
-const MAX_AGE = 60 * 60 * 24 * 2; // 2 días
+const COOKIE = process.env.NODE_ENV === "production" ? "__Host-tp_admin" : "tp_admin";
 
 const isProd = process.env.NODE_ENV === "production";
 // En desarrollo hay valores por defecto para entrar sin configurar nada. En producción son obligatorios.
@@ -28,6 +28,13 @@ function expectedPassword() {
   return process.env.ADMIN_PASSWORD ?? (isProd ? undefined : DEV_PASSWORD);
 }
 
+function sessionCredential() {
+  return `${expectedPassword() ?? ""}\0${process.env.ADMIN_LOGIN_EMAIL ?? ""}`;
+}
+
+export function adminAuthFingerprint() { return passwordFingerprint(sessionCredential(), secret()); }
+export function signLoginCode(value: string) { return sign(`login-code:${value}`); }
+
 export { adminConfigurationError } from "./auth-config";
 
 function sign(payload: string) {
@@ -40,11 +47,6 @@ function safeEqual(a: string, b: string) {
   return ab.length === bb.length && timingSafeEqual(ab, bb);
 }
 
-/** Huella corta de la contraseña vigente (no revela la contraseña: es un HMAC). */
-function passwordTag() {
-  return sign(`pw:${expectedPassword() ?? ""}`).slice(0, 16);
-}
-
 export function checkPassword(input: string) {
   const expected = expectedPassword();
   if (!expected) return false;
@@ -52,30 +54,36 @@ export function checkPassword(input: string) {
 }
 
 export async function createSession() {
-  const exp = Math.floor(Date.now() / 1000) + MAX_AGE;
-  const payload = `admin.${exp}.${passwordTag()}`;
-  (await cookies()).set(COOKIE, `${payload}.${sign(payload)}`, {
+  const session = newAdminToken(secret(), sessionCredential());
+  await storeAdminSession(session.hash, session.expiresAt);
+  (await cookies()).set(COOKIE, session.token, {
     httpOnly: true,
     secure: isProd,
-    sameSite: "lax",
+    sameSite: "strict",
     path: "/",
-    maxAge: MAX_AGE,
+    maxAge: ADMIN_SESSION_SECONDS,
   });
+  if (isProd) (await cookies()).delete("tp_admin");
 }
 
 export async function destroySession() {
-  (await cookies()).delete(COOKIE);
+  const jar = await cookies();
+  const raw = jar.get(COOKIE)?.value;
+  try {
+    const hash = raw ? verifyAdminToken(raw, secret(), sessionCredential()) : null;
+    if (hash) await revokeAdminSession(hash);
+  } finally {
+    jar.delete(COOKIE);
+    if (isProd) jar.delete("tp_admin");
+  }
 }
 
 export async function isAdmin() {
   const raw = (await cookies()).get(COOKIE)?.value;
   if (!raw) return false;
-  const i = raw.lastIndexOf(".");
-  const payload = raw.slice(0, i);
-  const sig = raw.slice(i + 1);
-  const [, exp, tag = ""] = payload.split(".");
   try {
-    return safeEqual(sig, sign(payload)) && Number(exp) > Date.now() / 1000 && safeEqual(tag, passwordTag());
+    const hash = verifyAdminToken(raw, secret(), sessionCredential());
+    return hash ? await touchAdminSession(hash) : false;
   } catch {
     return false;
   }

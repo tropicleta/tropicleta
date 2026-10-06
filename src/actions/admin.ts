@@ -16,9 +16,12 @@ import { isForeignKeyViolation, isUniqueViolation } from "@/lib/db-errors";
 import { emailLayout, escapeHtml, sendEmail } from "@/lib/email";
 import { formatCLP, slugify } from "@/lib/format";
 import { formToObject, zodErrors, type FormState } from "@/lib/forms";
-import { clearLoginFailures, loginBlocked, recordLoginFailure } from "@/lib/login-limit";
+import { clearLoginFailures, claimLoginAttempt } from "@/lib/login-limit";
 import { bookingStatusMessage, canTransitionOrder, orderStatusMessage } from "@/lib/order-status";
 import { uploadImage, validateImages } from "@/lib/upload";
+import { cookies } from "next/headers";
+import { adminAuthFingerprint, signLoginCode } from "@/lib/auth";
+import { issueLoginChallenge, removeLoginChallenge, LOGIN_CODE_SECONDS } from "@/lib/admin-login-challenge";
 
 /** Límites de destacados: los que caben en la home. */
 const MAX_FEATURED_SERVICES = 3;
@@ -43,14 +46,13 @@ export async function login(_prev: FormState, fd: FormData): Promise<FormState> 
   const password = String(fd.get("password") ?? "");
   if (!password || password.length > 256) return { message: "Ingresa una contraseña válida." };
   const configurationError = adminConfigurationError();
-  if (configurationError) return { message: configurationError };
+  if (configurationError) return { message: "El acceso al panel no está disponible. Contacta al administrador." };
   try {
   // Freno a fuerza bruta por IP, guardado en la BD para que valga entre instancias
   const ip = await clientIp();
-  if (await loginBlocked(ip)) return { message: "Demasiados intentos. Espera 15 minutos." };
+  if (!(await claimLoginAttempt(ip))) return { message: "Demasiados intentos. Espera 15 minutos." };
 
   if (!checkPassword(password)) {
-    await recordLoginFailure(ip);
     return { message: "Contraseña incorrecta" };
   }
   await clearLoginFailures(ip);
@@ -60,6 +62,19 @@ export async function login(_prev: FormState, fd: FormData): Promise<FormState> 
     // No continuar sin verificar el límite de intentos ni revelar consultas o credenciales.
     console.error("[admin-login]", error instanceof Error ? error.name : "UnknownError");
     return { message: "No pudimos verificar el acceso. Reintenta en unos minutos. Si persiste, revisa la conexión y las migraciones de la base de datos en Vercel." };
+  }
+  if (process.env.ADMIN_LOGIN_EMAIL) {
+    if (!process.env.RESEND_API_KEY) return { message: "El envío de códigos no está disponible. Contacta al administrador." };
+    if (!(await claimLoginAttempt("admin-email-codes"))) return { message: "Se alcanzó el límite de envío de códigos. Espera 15 minutos." };
+    const jar = await cookies(), cookieName = process.env.NODE_ENV === "production" ? "__Host-tp_login" : "tp_login";
+    const previous = jar.get(cookieName)?.value;
+    if (previous) await removeLoginChallenge(previous);
+    jar.delete(cookieName);
+    const challenge = await issueLoginChallenge(adminAuthFingerprint(), signLoginCode);
+    const sent = await sendEmail(process.env.ADMIN_LOGIN_EMAIL, "Tu código de acceso a Tropicleta", emailLayout("Código de acceso", `<p>Tu código para ingresar al administrador es:</p><p style="font-size:32px;letter-spacing:6px;font-weight:bold">${challenge.code}</p><p>Caduca en 10 minutos. No compartas este código. Si no solicitaste el ingreso, puedes ignorar este mensaje.</p>`));
+    if (!sent) { await removeLoginChallenge(challenge.token); return { message: "No pudimos enviar el código. Reintenta en unos minutos." }; }
+    jar.set(cookieName, challenge.token, {httpOnly:true, secure:process.env.NODE_ENV === "production", sameSite:"strict",path:"/",maxAge:LOGIN_CODE_SECONDS});
+    return { message: "Código enviado al correo autorizado." };
   }
   redirect("/admin/");
 }

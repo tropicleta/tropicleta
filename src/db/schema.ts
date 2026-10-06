@@ -205,6 +205,20 @@ export const contactMessages = pgTable("contact_messages", {
 
 /* ============================ PANEL ============================ */
 
+export const adminSessions = pgTable("admin_sessions", {
+  hash: varchar("hash", { length: 64 }).primaryKey(),
+  expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
+  lastSeenAt: timestamp("last_seen_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const adminLoginChallenges = pgTable("admin_login_challenges", {
+  hash: varchar("hash", { length: 64 }).primaryKey(),
+  codeHash: varchar("code_hash", { length: 64 }).notNull(),
+  authTag: varchar("auth_tag", { length: 16 }).notNull(),
+  attempts: integer("attempts").notNull().default(0),
+  expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
+});
+
 /** Intentos fallidos de ingreso al panel por IP (compartido entre instancias). */
 export const loginAttempts = pgTable("login_attempts", {
   key: varchar("key", { length: 80 }).primaryKey(),

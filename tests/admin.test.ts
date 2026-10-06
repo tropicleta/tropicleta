@@ -12,7 +12,7 @@ async function main() {
   (globalThis as Record<string, unknown>).__tpDb = db;
   try {
     await migrate(db, { migrationsFolder: "./drizzle" });
-    const { loginBlocked, recordLoginFailure, clearLoginFailures } = await import("../src/lib/login-limit");
+    const { loginBlocked, recordLoginFailure, clearLoginFailures, claimLoginAttempt } = await import("../src/lib/login-limit");
     const { searchWhere } = await import("../src/lib/admin-queries");
 
     // Transiciones: pendientes/rechazadas solo las mueve la pasarela
@@ -23,7 +23,7 @@ async function main() {
     assert.equal(canTransitionOrder("lista", "anulada"), true);
 
     // Límite de intentos por IP, persistido en la BD
-    for (let i = 0; i < 9; i++) await recordLoginFailure("1.1.1.1");
+    for (let i = 0; i < 4; i++) await recordLoginFailure("1.1.1.1");
     assert.equal(await loginBlocked("1.1.1.1"), false);
     await recordLoginFailure("1.1.1.1");
     assert.equal(await loginBlocked("1.1.1.1"), true);
@@ -35,6 +35,46 @@ async function main() {
     assert.equal(row.count, 1); // se reinicia el contador
     await clearLoginFailures("1.1.1.1");
     assert.equal((await db.select().from(schema.loginAttempts)).length, 0);
+    const concurrent = await Promise.all(Array.from({ length: 20 }, () => claimLoginAttempt("concurrent-ip")));
+    assert.equal(concurrent.filter(Boolean).length, 5);
+
+    const { newAdminToken, verifyAdminToken, ADMIN_IDLE_SECONDS } = await import("../src/lib/admin-session-token");
+    const { storeAdminSession, touchAdminSession, revokeAdminSession } = await import("../src/lib/admin-session-store");
+    const now = Date.now(), secret = "test-secret-with-32-characters-for-tests", password = "test-password";
+    const session = newAdminToken(secret, password, now);
+    assert.equal(verifyAdminToken(session.token, secret, password, now), session.hash);
+    assert.equal(verifyAdminToken(session.token, secret, "changed-password", now), null);
+    assert.equal(verifyAdminToken(session.token, "changed-secret", password, now), null);
+    assert.equal(verifyAdminToken(session.token + "x", secret, password, now), null);
+    assert.equal(verifyAdminToken(session.token, secret, password, session.expiresAt.getTime()), null);
+    assert.equal(verifyAdminToken("admin.9999999999.old.unsigned", secret, password, now), null);
+    await storeAdminSession(session.hash, session.expiresAt);
+    assert.equal(await touchAdminSession(session.hash), true);
+    await revokeAdminSession(session.hash);
+    assert.equal(await touchAdminSession(session.hash), false); // una copia de la cookie tampoco funciona
+    await storeAdminSession(session.hash, session.expiresAt);
+    await db.update(schema.adminSessions).set({lastSeenAt:new Date(now - (ADMIN_IDLE_SECONDS + 1) * 1000)});
+    assert.equal(await touchAdminSession(session.hash), false); // no revivir sesiones inactivas
+
+    const { issueLoginChallenge, consumeLoginChallenge } = await import("../src/lib/admin-login-challenge");
+    const { createHmac } = await import("node:crypto");
+    const signer = (value: string) => createHmac("sha256", secret).update(value).digest("hex");
+    const otp = await issueLoginChallenge("test-tag", signer);
+    const wrongCode = otp.code === "000000" ? "000001" : "000000";
+    assert.equal(await consumeLoginChallenge(otp.token, wrongCode, "test-tag", signer), false);
+    assert.equal(await consumeLoginChallenge(otp.token, otp.code, "wrong-tag", signer), false);
+    const confirmations = await Promise.all([
+      consumeLoginChallenge(otp.token, otp.code, "test-tag", signer),
+      consumeLoginChallenge(otp.token, otp.code, "test-tag", signer),
+    ]);
+    assert.equal(confirmations.filter(Boolean).length, 1); // solo un ingreso por código
+    assert.equal(await consumeLoginChallenge(otp.token, otp.code, "test-tag", signer), false);
+    const locked = await issueLoginChallenge("test-tag", signer);
+    for (let i=0;i<5;i++) assert.equal(await consumeLoginChallenge(locked.token, "invalid", "test-tag", signer), false);
+    assert.equal(await consumeLoginChallenge(locked.token, locked.code, "test-tag", signer), false);
+    const expired = await issueLoginChallenge("test-tag", signer);
+    await db.update(schema.adminLoginChallenges).set({expiresAt:new Date(Date.now()-1000)});
+    assert.equal(await consumeLoginChallenge(expired.token, expired.code, "test-tag", signer), false);
 
     // Violación de unicidad detectada por código de PostgreSQL
     await db.insert(schema.productCategories).values({ name: "A", slug: "a" });
