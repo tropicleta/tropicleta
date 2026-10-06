@@ -29,7 +29,6 @@ export default async function RecommendationsPage({ searchParams }: { searchPara
         {item.imageUrl && <img src={item.imageUrl} alt={item.name} width={480} height={320} loading="lazy" referrerPolicy="no-referrer" style={{ width: "100%", height: 220, objectFit: "contain", background: "#fff", borderRadius: 12 }} />}
         <span className="tp-kicker">{item.category}</span><h2>{item.name}</h2>
         {item.price != null && <p><strong style={{ fontSize: "1.4rem" }}>{formatCLP(item.price)}</strong><span className="tp-hint" style={{ display: "block" }}>Precio referencial · puede cambiar en Mercado Libre</span></p>}
-        <p>{item.reason}</p><p className="tp-hint">Confirma precio y disponibilidad en la publicación.</p>
         <a className="tp-btn tp-btn-primary" href={item.url} target="_blank" rel="sponsored nofollow noopener noreferrer">Ver en Mercado Libre ↗</a>
       </article>)}</div> : <div className="tp-catalog-empty"><h2>{categoria ? "No hay recomendaciones en esta categoría" : "Estamos preparando nuestra selección"}</h2><p>Pronto compartiremos productos con recomendaciones útiles para tus salidas.</p><Link className="tp-btn tp-btn-secondary" href={categoria ? "/recomendados/" : "/tienda/"}>{categoria ? "Ver todos los recomendados" : "Explorar la tienda Tropicleta"}</Link></div>}
     </div></section>
