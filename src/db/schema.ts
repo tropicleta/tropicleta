@@ -82,6 +82,8 @@ export const recommendations = pgTable("recommendations", {
   category: varchar("category", { length: 60 }).notNull(),
   reason: text("reason").notNull(),
   url: text("url").notNull(),
+  imageUrl: text("image_url"),
+  price: integer("price"),
   active: boolean("active").notNull().default(false),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 });

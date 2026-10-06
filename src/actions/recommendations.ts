@@ -12,6 +12,8 @@ export async function saveRecommendation(_previous: FormState, fd: FormData): Pr
   const parsed = recommendationSchema.safeParse({
     name: fd.get("name"), category: fd.get("category"), reason: fd.get("reason"),
     url: fd.get("url"), active: fd.get("active") === "on",
+    imageUrl: fd.get("imageUrl") || null,
+    price: fd.get("price") ? Number(fd.get("price")) : null,
   });
   if (!parsed.success) return { message: parsed.error.issues.map(i => i.message).join(" ") };
   const id = Number(fd.get("id"));
