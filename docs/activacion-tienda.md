@@ -8,7 +8,9 @@
 - Credenciales productivas habilitadas por el propietario en Mercado Pago. `MP_ACCESS_TOKEN`, `MP_WEBHOOK_SECRET` y `MP_SANDBOX=0` actualizados en Vercel, proyecto Tropicleta, únicamente en Producción. Son secretos y necesitan un nuevo despliegue productivo para aplicarse.
 - Notificaciones productivas guardadas en la nueva aplicación para eventos payment (Pagos legacy), hacia `https://www.tropicleta.com/api/mercadopago/webhook/`. Firma instalada en Vercel. No configurar otros tipos de eventos que esta ruta no maneja.
 - Compilación y comprobación de tipos verificadas; pruebas de catálogo, administración, contabilidad y tienda realizadas.
-- Rama de revisión: `codex/tienda-y-recomendados`. Vista previa en Vercel compilada correctamente y comprobada con la base del comercio (un producto publicado, sin incorporar el catálogo demo local). Pendiente publicar en el dominio principal; no se ha realizado un cobro real.
+- Publicado en el dominio principal con aprobación del propietario: PR #1 integrado en `main`, despliegue productivo `f5dc30a` listo en Vercel. Recomendados, catálogo y checkout comprobados en `www.tropicleta.com`, conservando el producto real del comercio.
+- Inicio de Mercado Pago productivo comprobado: creó la orden interna `TPC-PMLTRCLPWV` y abrió el checkout de Mercado Pago con el producto y monto correctos. Se volvió a la tienda sin efectuar el pago: la orden permanece pendiente, identificada como PRUEBA INTERNA; no descontó stock ni se registró una venta pagada. El panel solo permite gestionar estados posteriores al pago, por lo que la prueba no se anuló manualmente.
+- El webhook público rechazó una notificación sin firma con HTTP 401. Esto confirma la verificación de firma instalada; falta comprobar una notificación de pago real válido y el recorrido completo de una compra controlada.
 
 ## Recorridos
 
