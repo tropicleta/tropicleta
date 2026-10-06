@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { serviceDeletionBlocker } from "../src/lib/service-trash";
 const service={id:1,name:"Cambio de cámara de scooter",slug:"cambio-de-camara-trasera-scooter",removed:true,components:[]};
 assert.equal(serviceDeletionBlocker(service,[service],[]),null);
+assert.equal(serviceDeletionBlocker(service,[service,{id:2,name:"Pack con sugerencia",components:[{slug:service.slug,required:false,recommended:true}]}],[]),null);
 assert.match(serviceDeletionBlocker({...service,removed:false},[service],[])!,/primero/);
 assert.match(serviceDeletionBlocker(service,[service,{id:2,name:"Pack quitado",components:[{slug:service.slug,required:true}]}],[])!,/Pack quitado/);
 assert.match(serviceDeletionBlocker(service,[service],[{serviceNames:[],quoteSnapshot:{vehicles:[{calculation:{includedQuantities:{[service.slug]:1}}}]}}])!,/reservas/);

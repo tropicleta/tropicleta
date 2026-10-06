@@ -219,7 +219,7 @@ const money = z
   .pipe(z.number().int().min(0).max(10_000_000).nullable());
 
 const serviceSchema = z.object({
-  hierarchy: z.string().transform((text, ctx) => { try { return JSON.parse(text); } catch { ctx.addIssue({ code: "custom", message: "Configuración de paquete inválida" }); return z.NEVER; } }).pipe(z.object({ kind: z.enum(["individual", "package"]), vehicles: z.array(z.string().min(1).max(20)).min(1), requiresDoubleSuspension: z.boolean().default(false), excludesDoubleSuspension: z.boolean().default(false), individuallySelectable: z.boolean(), components: z.array(z.object({ slug: z.string().min(1), required: z.boolean() })).max(40) })),
+  hierarchy: z.string().transform((text, ctx) => { try { return JSON.parse(text); } catch { ctx.addIssue({ code: "custom", message: "Configuración de paquete inválida" }); return z.NEVER; } }).pipe(z.object({ kind: z.enum(["individual", "package"]), vehicles: z.array(z.string().min(1).max(20)).min(1), requiresDoubleSuspension: z.boolean().default(false), excludesDoubleSuspension: z.boolean().default(false), individuallySelectable: z.boolean(), components: z.array(z.object({ slug: z.string().min(1), required: z.boolean(), recommended: z.boolean().optional() })).max(43) })),
   id: z.coerce.number().int().optional(),
   name: z.string().trim().min(2, "Nombre requerido").max(120),
   slug: z.string().trim().max(120).optional(),
@@ -274,6 +274,9 @@ export async function saveService(_prev: FormState, fd: FormData): Promise<FormS
 
       const candidate = { ...current, ...data };
       const updatedRows=current?renameServiceReferences(rows,current.slug,data.slug):rows;
+      const extras=candidate.components.filter(c=>c.recommended);
+      if(extras.length>3)throw Error("Selecciona hasta tres extras recomendados.");
+      for(const extra of extras){const target=updatedRows.find(s=>s.slug===extra.slug);if(!target||target.removed||!target.active||target.kind!=="individual"||!target.individuallySelectable||candidate.vehicles.some(v=>!target.vehicles.includes(v))||target.slug===candidate.slug)throw Error("Un extra recomendado no está disponible o no es compatible.");}
       validateHierarchy([...updatedRows.filter(s => s.id !== d.id), candidate]);
       if(current && current.slug!==data.slug){
         for(const parent of updatedRows.filter(s=>s.id!==d.id&&rows.find(old=>old.id===s.id)!.components.some(c=>c.slug===current.slug))){
@@ -456,8 +459,11 @@ export async function removeService(fd: FormData) {
     const rows = await tx.select().from(schema.services).for("update");
     const s = rows.find(s => s.id === id);
     if (!s) return null;
-    const parents = rows.filter(p => !p.removed && p.id !== id && p.components.some(c => c.slug === s.slug));
+    const parents = rows.filter(p => !p.removed && p.id !== id && p.components.some(c => !c.recommended && c.slug === s.slug));
     if (parents.length) return { blocked:true, name:s.name };
+    for(const parent of rows.filter(p=>p.id!==id&&p.components.some(c=>c.recommended&&c.slug===s.slug))){
+      await tx.update(schema.services).set({components:parent.components.filter(c=>!c.recommended||c.slug!==s.slug)}).where(eq(schema.services.id,parent.id));
+    }
     await tx.update(schema.services).set({ active:false, featured:false, removed:true }).where(eq(schema.services.id,id));
     return { blocked:false, name:s.name };
   });
@@ -492,6 +498,9 @@ export async function deleteServicePermanently(fd: FormData) {
     const bookings=await tx.select({serviceNames:schema.bookings.serviceNames,quoteSnapshot:schema.bookings.quoteSnapshot}).from(schema.bookings);
     const blocked=serviceDeletionBlocker(service,catalog,bookings);
     if (blocked) return {blocked,name:service.name,slug:service.slug};
+    for(const parent of catalog.filter(p=>p.id!==id&&p.components.some(c=>c.recommended&&c.slug===service.slug))){
+      await tx.update(schema.services).set({components:parent.components.filter(c=>!c.recommended||c.slug!==service.slug)}).where(eq(schema.services.id,parent.id));
+    }
     await tx.delete(schema.services).where(and(eq(schema.services.id,id),eq(schema.services.removed,true)));
     return {blocked:null,name:service.name,slug:service.slug};
   });

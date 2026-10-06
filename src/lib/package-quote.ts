@@ -2,7 +2,11 @@ import type { QuoteService } from "./service-quote";
 export const vehicleLabels: Record<string,string> = { bicicleta: "Bicicleta", electrica: "Bicicleta eléctrica", scooter: "Scooter eléctrico" };
 export type Vehicle = string;
 export type QuoteVehicle = { slug: string; name: string };
-export type Component = { slug: string; required: boolean };
+// Recommended extras share the existing JSON storage but never enter composition or pricing.
+export type Component = { slug: string; required: boolean; recommended?: boolean };
+export function pricingCatalog<T extends {components: Component[]}>(catalog:T[]):T[] {
+  return catalog.map(s=>({...s,components:s.components.filter(c=>!c.recommended)}));
+}
 export type PackageService = QuoteService & { kind: string; components: Component[]; vehicles: Vehicle[]; individuallySelectable: boolean; active: boolean; removed?: boolean; requiresDoubleSuspension?: boolean; excludesDoubleSuspension?: boolean };
 export function supportsVehicle(s: PackageService, vehicle: Vehicle, doubleSuspension = false) {
   return s.vehicles.includes(vehicle) && (!s.requiresDoubleSuspension || (vehicle === "scooter" || doubleSuspension)) && (!doubleSuspension || !s.excludesDoubleSuspension);
@@ -11,6 +15,7 @@ export type Selection = { manual: string[]; packages: string[]; excluded: string
 export const emptySelection: Selection = { manual: [], packages: [], excluded: [] };
 
 export function validateHierarchy(catalog: PackageService[]) {
+  catalog = pricingCatalog(catalog);
   const map = new Map(catalog.map(s => [s.slug, s]));
   const visiting = new Set<string>(); const done = new Set<string>();
   function visit(s: PackageService) {
@@ -39,6 +44,7 @@ export function validateHierarchy(catalog: PackageService[]) {
 }
 
 export function packageLeaves(catalog: PackageService[], slug: string, requiredOnly = false): string[] {
+  catalog = pricingCatalog(catalog);
   const map = new Map(catalog.map(s => [s.slug, s])); const result = new Set<string>();
   const path = new Set<string>();
   function visit(key: string) {
@@ -94,6 +100,7 @@ export function toggleSelection(catalog: PackageService[], selection: Selection,
 
 /** Exact cover: each selected work belongs to precisely one charged line. */
 export function packageQuote(catalog: PackageService[], selection: Selection, vehicle: Vehicle, doubleSuspension = false) {
+  catalog = pricingCatalog(catalog);
   validateHierarchy(catalog);
   const map = new Map(catalog.map(s => [s.slug, s]));
   const allowed = catalog.filter(s => s.active && !s.removed && supportsVehicle(s, vehicle, doubleSuspension));

@@ -1,0 +1,27 @@
+import assert from "node:assert/strict";
+import { quoteMessage,quoteSavings,suggestedExtras } from "../src/lib/quote-presentation";
+import { packageQuote,type PackageService } from "../src/lib/package-quote";
+const item=(slug:string,price:number|null):PackageService=>({slug,name:slug,price,priceFrom:false,kind:"individual",components:[],vehicles:["bicicleta"],active:true,individuallySelectable:true});
+const catalog=[item("a",30000),item("b",35000),item("extra",15000),item("air",50000),item("bottles",35000),{...item("complete",50000),kind:"package",components:[{slug:"a",required:true},{slug:"b",required:true},{slug:"extra",required:false,recommended:true}]}];
+const selected={manual:[],packages:["complete"],excluded:[]};
+const calculation=packageQuote(catalog,selected,"bicicleta");
+assert.deepEqual(calculation.leaves,["a","b"]);
+assert.equal(quoteSavings(catalog,calculation.lines).savings,15000);
+assert.deepEqual(suggestedExtras(catalog,["complete"],calculation.leaves,"bicicleta").map(s=>s.slug),["extra"]);
+assert.deepEqual(suggestedExtras(catalog,["complete"],[...calculation.leaves,"extra"],"bicicleta"),[]);
+assert.deepEqual(suggestedExtras(catalog,["complete"],calculation.leaves,"scooter"),[]);
+assert.deepEqual(suggestedExtras(catalog.map(s=>s.slug==="extra"?{...s,active:false}:s),["complete"],calculation.leaves,"bicicleta"),[]);
+const message=quoteMessage(catalog,[{label:"Bicicleta 1",calculation}],true,"Tierra Amarilla","both",true);
+assert.ok(message.includes("• complete: $50.000"));
+assert.ok(!message.includes("Incluido:"));
+assert.ok(!message.includes("• a:"));
+assert.ok(message.includes("TOTAL ESTIMADO: $50.000")); // 50k minus 5k, plus 5k transport; pack saving isn't deducted twice.
+assert.ok(message.includes("Ahorro en packs: $15.000"));
+const partial={...calculation.lines[0],included:["a"]};
+assert.equal(quoteSavings(catalog,[partial]).incomplete,true);
+assert.equal(quoteSavings(catalog,[partial]).savings,0);
+const withExtra=packageQuote(catalog,{...selected,manual:["extra"]},"bicicleta");
+assert.ok(quoteMessage(catalog,[{label:"Bicicleta 1",calculation:withExtra}],false,"","both",true).includes("TOTAL ESTIMADO: $58.500"));
+const included=catalog.map(s=>s.slug==="air"?{...s,components:[{slug:"bottles",required:true},{slug:"extra",required:false,recommended:true}]}:s);
+assert.deepEqual(packageQuote(included,{manual:["air"],packages:[],excluded:[]},"bicicleta").leaves,["air","bottles"]);
+console.log("Ahorros, descuentos, mensajes breves y extras opcionales sin cobros automáticos verificados.");

@@ -17,7 +17,8 @@ export function ServiceForm({ service, categories, services, quoteVehicles, pack
   const [kind, setKind] = useState(packMode ? "package" : s?.kind ?? "individual");
   const [packPrice, setPackPrice] = useState(s?.price?.toString() ?? "");
   const [vehicles, setVehicles] = useState<Vehicle[]>(s?.vehicles ?? quoteVehicles.slice(0,1).map(v=>v.slug));
-  const [components, setComponents] = useState<Component[]>(s?.components ?? []);
+  const [components, setComponents] = useState<Component[]>(s?.components.filter(c=>!c.recommended) ?? []);
+  const [recommendations,setRecommendations]=useState<string[]>(s?.components.filter(c=>c.recommended).map(c=>c.slug)??[]);
   const [individual, setIndividual] = useState(s?.individuallySelectable ?? true);
   const [componentSearch, setComponentSearch] = useState("");
   const [showDrafts, setShowDrafts] = useState(false);
@@ -37,7 +38,7 @@ export function ServiceForm({ service, categories, services, quoteVehicles, pack
       {s && <input type="hidden" name="id" value={s.id} />}
 
       {Object.values(state.errors ?? {}).map((error,i)=><p key={i} className="tp-error" role="alert">{error}</p>)}
-      <input type="hidden" name="hierarchy" value={JSON.stringify({kind, vehicles, requiresDoubleSuspension:false, excludesDoubleSuspension:false, individuallySelectable:individual, components:kind === "package" ? components : components.map(c=>({...c,required:true}))})} />
+      <input type="hidden" name="hierarchy" value={JSON.stringify({kind, vehicles, requiresDoubleSuspension:false, excludesDoubleSuspension:false, individuallySelectable:individual, components:[...(kind === "package" ? components : components.map(c=>({...c,required:true}))),...recommendations.map(slug=>({slug,required:false,recommended:true}))]})} />
       <fieldset className="tp-fieldset"><legend className="tp-label">Tipo y compatibilidad</legend>
         <label className="tp-field">Tipo<select className="tp-input" value={kind} onChange={e=>setKind(e.target.value)}><option value="individual">Servicio individual</option><option value="package">Paquete de servicios</option></select></label>
         <div className="tp-options">{quoteVehicles.map(option=>{const v=option.slug;return <label className="tp-option" key={v}><input type="checkbox" checked={vehicles.includes(v)} onChange={()=>setVehicles(vehicles.includes(v)?vehicles.filter(x=>x!==v):[...vehicles,v])} /><span>{option.name}</span></label>;})}</div>
@@ -52,6 +53,7 @@ export function ServiceForm({ service, categories, services, quoteVehicles, pack
         {kind === "package" && <p className="tp-draft-note" role="status" aria-live="polite">{reference ? <>Valor individual {reference.estimated?"referencial":"sin descuento"}: <strong>{formatCLP(reference.reference)}</strong>. Precio del pack: <strong>{packPrice?formatCLP(Number(packPrice.replace(/\D/g,""))):"Por definir"}</strong>. {reference.savings!==null && <>{reference.savings<0?"El pack supera el valor individual en":"Ahorro"}: <strong>{formatCLP(Math.abs(reference.savings))}</strong>.</>}{reference.estimated&&<> Hay precios “desde”; el valor final se confirma al cotizar.</>}</> : referenceError || (components.length?"Hay componentes sin precio. Define sus precios para calcular el valor individual y el ahorro.":"Selecciona componentes para calcular el valor individual y el ahorro.")}</p>}
         {s && reference && requestedPackageReferences[s.slug] && requestedPackageReferences[s.slug]!==reference.reference && <p className="tp-alert">La referencia del documento era {formatCLP(requestedPackageReferences[s.slug])}; los servicios individuales actuales suman {formatCLP(reference.reference)}. Conservamos sus precios: revisa el pack antes de activarlo.</p>}
       </fieldset>}
+      <fieldset className="tp-fieldset"><legend className="tp-label">Extras recomendados (hasta 3)</legend><p className="tp-hint">Se ofrecen después de elegir este servicio o pack. Nunca se añaden automáticamente ni se ofrecen si ya están incluidos.</p>{categories.map(category=>{const rows=services.filter(c=>c.categoryId===category.id&&c.id!==s?.id&&(recommendations.includes(c.slug)||(!c.removed&&c.active&&c.kind==="individual"&&c.individuallySelectable&&compatibleComponent(c))));return rows.length>0&&<details key={category.id}><summary>{category.name}</summary><div className="tp-options">{rows.map(c=><label className="tp-option" key={c.slug}><input type="checkbox" checked={recommendations.includes(c.slug)} disabled={!recommendations.includes(c.slug)&&recommendations.length>=3} onChange={()=>setRecommendations(recommendations.includes(c.slug)?recommendations.filter(slug=>slug!==c.slug):[...recommendations,c.slug])}/><span>{c.name}<small>{c.price===null?"A cotizar":formatCLP(c.price)}</small></span></label>)}</div></details>})}</fieldset>
       <div className="tp-form-grid">
         <Field name="name" label="Nombre" state={state} defaultValue={s?.name} required />
         <Field name="categoryId" label="Categoría" as="select" state={state} defaultValue={s ? String(s.categoryId) : ""}>
