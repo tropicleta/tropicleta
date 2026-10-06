@@ -54,6 +54,8 @@ export function ChatWidget() {
   const [emotion, setEmotion] = useState<Emotion>("feliz");
   const [pulse, setPulse] = useState(0);
   const [teaser, setTeaser] = useState(false);
+  const [compact, setCompact] = useState(false);
+  const dismissed = useRef(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const bodyRef = useRef<HTMLDivElement>(null);
 
@@ -62,16 +64,25 @@ export function ChatWidget() {
     setPulse((p) => p + 1);
   }, []);
 
-  // Globo "¿Te ayudo?" una vez por sesión, a los 8 s
+  // Saludo breve una vez por sesión; después quedan solo los accesos compactos.
   useEffect(() => {
     let seen = false;
     try { seen = sessionStorage.getItem(TEASER_KEY) === "1"; } catch {}
-    if (seen) return;
-    const t = setTimeout(() => setTeaser(true), 8000);
-    return () => clearTimeout(t);
+    if (seen) { setCompact(true); return; }
+    const show = window.setTimeout(() => {
+      if (!dismissed.current) setTeaser(true);
+    }, 8000);
+    const hide = window.setTimeout(() => {
+      setTeaser(false);
+      setCompact(true);
+      try { sessionStorage.setItem(TEASER_KEY, "1"); } catch {}
+    }, 12000);
+    return () => { window.clearTimeout(show); window.clearTimeout(hide); };
   }, []);
 
   const toggle = useCallback((next: boolean) => {
+    dismissed.current = true;
+    setCompact(true);
     setOpen(next);
     setTeaser(false);
     try { sessionStorage.setItem(TEASER_KEY, "1"); } catch {}
@@ -132,7 +143,8 @@ export function ChatWidget() {
   return (
     <>
       {!open && (
-        <div className="tp-chat-launcher">
+        <div className={`tp-chat-launcher${compact ? " tp-chat-launcher--compact" : ""}`}>
+          <div className="tp-chat-launcher-row">
           {teaser && (
             <button type="button" className="tp-chat-teaser" onClick={() => toggle(true)}>
               ¿Te ayudo con tu bici? 🐾
@@ -149,6 +161,16 @@ export function ChatWidget() {
           >
             <TropiMascot emotion={teaser ? "emocionado" : "feliz"} pulse={teaser ? 1 : 0} size={46} reaction={false} />
           </button>
+          </div>
+          <div className="tp-chat-launcher-row">
+            {teaser && <a className="tp-chat-teaser" href={WA_CONSULTAR} target="_blank" rel="noopener noreferrer">Contáctanos</a>}
+            <a className="tp-chat-fab tp-chat-whatsapp" href={WA_CONSULTAR} target="_blank" rel="noopener noreferrer" aria-label="Contactar a Tropicleta por WhatsApp">
+              <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <path d="M21 11.5a9 9 0 0 1-13.5 8L3 21l1.5-4.5A9 9 0 1 1 21 11.5Z" />
+                <path d="m8 7 2 3-1 1c1 2 2 3 4 4l1-1 3 2c-1 2-3 2-5 1-3-1-5-3-6-6-1-2-1-4 1-5Z" />
+              </svg>
+            </a>
+          </div>
         </div>
       )}
 
