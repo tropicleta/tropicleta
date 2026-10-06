@@ -43,6 +43,7 @@ async function main() {
     const now = Date.now(), secret = "test-secret-with-32-characters-for-tests", password = "test-password";
     const session = newAdminToken(secret, password, now);
     assert.equal(verifyAdminToken(session.token, secret, password, now), session.hash);
+    assert.equal(verifyAdminToken(session.token.replace(/^v3/, "v2"), secret, password, now), null);
     assert.equal(verifyAdminToken(session.token, secret, "changed-password", now), null);
     assert.equal(verifyAdminToken(session.token, "changed-secret", password, now), null);
     assert.equal(verifyAdminToken(session.token + "x", secret, password, now), null);
@@ -58,6 +59,9 @@ async function main() {
 
     const { issueLoginChallenge, consumeLoginChallenge } = await import("../src/lib/admin-login-challenge");
     const { createHmac } = await import("node:crypto");
+    const legacyPayload = session.token.slice(0, session.token.lastIndexOf(".")).replace(/^v3/, "v2");
+    const legacyToken = `${legacyPayload}.${createHmac("sha256", secret).update(legacyPayload).digest("base64url")}`;
+    assert.equal(verifyAdminToken(legacyToken, secret, password, now), null); // incluso una sesión v2 correctamente firmada
     const signer = (value: string) => createHmac("sha256", secret).update(value).digest("hex");
     const otp = await issueLoginChallenge("test-tag", signer);
     const wrongCode = otp.code === "000000" ? "000001" : "000000";

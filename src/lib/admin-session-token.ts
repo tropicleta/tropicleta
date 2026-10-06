@@ -19,13 +19,13 @@ export function passwordFingerprint(password: string, secret: string) {
 export function newAdminToken(secret: string, password: string, now = Date.now()) {
   const id = randomBytes(32).toString("base64url");
   const expires = Math.floor(now / 1000) + ADMIN_SESSION_SECONDS;
-  const payload = `v2.${id}.${expires}.${passwordFingerprint(password, secret)}`;
+  const payload = `v3.${id}.${expires}.${passwordFingerprint(password, secret)}`;
   return { token: `${payload}.${sign(payload, secret)}`, hash: createHash("sha256").update(id).digest("hex"), expiresAt: new Date(expires * 1000) };
 }
 
 export function verifyAdminToken(raw: string, secret: string, password: string, now = Date.now()) {
   if (raw.length > 256) return null;
-  const match = /^v2\.([A-Za-z0-9_-]{43})\.(\d{10})\.([A-Za-z0-9_-]{16})\.([A-Za-z0-9_-]{43})$/.exec(raw);
+  const match = /^v3\.([A-Za-z0-9_-]{43})\.(\d{10})\.([A-Za-z0-9_-]{16})\.([A-Za-z0-9_-]{43})$/.exec(raw);
   if (!match) return null;
   const [, id, expiration, fingerprint, signature] = match;
   const expires = Number(expiration);

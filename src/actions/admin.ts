@@ -55,14 +55,6 @@ export async function login(_prev: FormState, fd: FormData): Promise<FormState> 
   if (!checkPassword(password)) {
     return { message: "Contraseña incorrecta" };
   }
-  await clearLoginFailures(ip);
-  await createSession();
-  await audit("login", "sesion", null, "Ingreso al panel");
-  } catch (error) {
-    // No continuar sin verificar el límite de intentos ni revelar consultas o credenciales.
-    console.error("[admin-login]", error instanceof Error ? error.name : "UnknownError");
-    return { message: "No pudimos verificar el acceso. Reintenta en unos minutos. Si persiste, revisa la conexión y las migraciones de la base de datos en Vercel." };
-  }
   if (process.env.ADMIN_LOGIN_EMAIL) {
     if (!process.env.RESEND_API_KEY) return { message: "El envío de códigos no está disponible. Contacta al administrador." };
     if (!(await claimLoginAttempt("admin-email-codes"))) return { message: "Se alcanzó el límite de envío de códigos. Espera 15 minutos." };
@@ -75,6 +67,15 @@ export async function login(_prev: FormState, fd: FormData): Promise<FormState> 
     if (!sent) { await removeLoginChallenge(challenge.token); return { message: "No pudimos enviar el código. Reintenta en unos minutos." }; }
     jar.set(cookieName, challenge.token, {httpOnly:true, secure:process.env.NODE_ENV === "production", sameSite:"strict",path:"/",maxAge:LOGIN_CODE_SECONDS});
     return { message: "Código enviado al correo autorizado." };
+  }
+  // Solo el acceso sin segundo factor puede crear aquí una sesión.
+  // Con correo configurado, la sesión la crea verifyLoginCode tras consumir el código.
+  await clearLoginFailures(ip);
+  await createSession();
+  await audit("login", "sesion", null, "Ingreso al panel");
+  } catch (error) {
+    console.error("[admin-login]", error instanceof Error ? error.name : "UnknownError");
+    return { message: "No pudimos verificar el acceso. Reintenta en unos minutos." };
   }
   redirect("/admin/");
 }
