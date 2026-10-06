@@ -63,7 +63,7 @@ export default async function GraciasCompraPage({ searchParams }: Props) {
               </h1>
               <p className="tp-hero-copy">
                 {order.status === "anulada" ? "Cancelaste el pago o expiró el tiempo." : "El pago fue rechazado."} No se
-                realizó ningún cobro. Tus productos siguen en el carrito.
+                tenemos un pago confirmado para esta orden. Tus productos siguen en el carrito. Si ves un cargo en tu cuenta, contáctanos antes de volver a pagar.
               </p>
             </>
           )}

@@ -19,7 +19,7 @@ export function Footer() {
         <a href={`mailto:${site.email}`}>{site.email}</a>
       </div>
       <nav className="tp-footer-navigation" aria-label="Enlaces del pie de página">
-        <div className="tp-footer-primary-links"><Link href="/servicios/">Servicios y cotización</Link><Link href="/tienda/">Tienda</Link><Link href="/eventos/">Taller móvil</Link></div>
+        <div className="tp-footer-primary-links"><Link href="/servicios/">Servicios y cotización</Link><Link href="/tienda/">Tienda</Link><Link href="/recomendados/">Recomendados</Link><Link href="/eventos/">Taller móvil</Link></div>
         <details className="tp-footer-help"><summary>Ayuda y más información</summary><ul>{[...footerLinks.taller.filter(l => !["/servicios/", "/eventos/"].includes(l.href)), ...footerLinks.ayuda].map(l => <li key={l.href}><Link href={l.href}>{l.label}</Link></li>)}</ul></details>
       </nav>
     </div>

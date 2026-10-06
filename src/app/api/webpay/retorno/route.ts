@@ -35,7 +35,10 @@ async function handle(params: URLSearchParams) {
 
     const order = claimed[0];
     try {
-      const r = (await webpayTransaction().commit(token)) as WebpayCommit;
+      const transaction = webpayTransaction();
+      let r: WebpayCommit;
+      try { r = (await transaction.commit(token)) as WebpayCommit; }
+      catch { r = (await transaction.status(token)) as WebpayCommit; }
       const approved = r.status === "AUTHORIZED" && r.response_code === 0 && r.amount === order.total && r.buy_order === order.code;
       const details = {
         provider: "webpay",
@@ -47,17 +50,21 @@ async function handle(params: URLSearchParams) {
         transaction_date: r.transaction_date,
       };
       if (approved) await markOrderPaid(order.id, { authorizationCode: r.authorization_code, details });
-      else await markOrderFailed(order.id, "rechazada", details);
+      else if (["FAILED", "REVERSED", "NULLIFIED"].includes(r.status)) await markOrderFailed(order.id, "rechazada", details);
+      else await db.update(orders).set({ paymentDetails: null, updatedAt: new Date() }).where(and(eq(orders.id, order.id), eq(orders.status, "pendiente")));
     } catch (e) {
       console.error("[webpay] commit falló", e);
-      await markOrderFailed(order.id, "rechazada", { provider: "webpay", error: String(e) });
+      // A network failure does not prove that no charge occurred. Allow a later return to retry/reconcile.
+      await db.update(orders).set({ paymentDetails: null, updatedAt: new Date() }).where(and(eq(orders.id, order.id), eq(orders.status, "pendiente")));
     }
     return go(`/checkout/gracias/?orden=${order.code}`);
   }
 
   if (buyOrder) {
     const [order] = await db.select().from(orders).where(eq(orders.code, buyOrder)).limit(1);
-    if (order) await markOrderFailed(order.id, "anulada", { provider: "webpay", aborted: true, timeout: !tbkToken });
+    const session = params.get("TBK_ID_SESION");
+    if (order?.paymentMethod === "webpay" && (tbkToken ? tbkToken === order.paymentToken : session === `s-${order.id}`))
+      await markOrderFailed(order.id, "anulada", { provider: "webpay", aborted: true, timeout: !tbkToken });
     return go(`/checkout/gracias/?orden=${buyOrder}`);
   }
 

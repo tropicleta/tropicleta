@@ -7,6 +7,7 @@ import { matchesSearch } from "@/lib/catalog-search";
 import { whatsappUrl } from "@/lib/whatsapp";
 import { ProductCard } from "@/components/shop/ProductCard";
 import { SortSelect } from "@/components/shop/SortSelect";
+import { ShopSections } from "@/components/shop/ShopSections";
 import { getProductCategories, getProducts, type ProductSort } from "@/lib/queries";
 
 export const dynamic = "force-dynamic";
@@ -51,6 +52,7 @@ export default async function TiendaPage({ searchParams }: Props) {
 
       <section className="tp-section" style={{ paddingTop: 48 }}>
         <div className="tp-shell">
+          <ShopSections current="tienda" />
           <CatalogSearch action="/tienda/" query={query} label="Buscar productos" placeholder="Ej.: cámara, lubricante, luces…" hidden={{ categoria, orden: sort }} />
           <div className="tp-shop-toolbar">
             <nav className="tp-chip-nav" aria-label="Categorías de productos">

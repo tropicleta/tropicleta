@@ -76,6 +76,16 @@ export const services = pgTable("services", {
 
 /* ============================ TIENDA ============================ */
 
+export const recommendations = pgTable("recommendations", {
+  id: serial("id").primaryKey(),
+  name: varchar("name", { length: 140 }).notNull(),
+  category: varchar("category", { length: 60 }).notNull(),
+  reason: text("reason").notNull(),
+  url: text("url").notNull(),
+  active: boolean("active").notNull().default(false),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
 export const productCategories = pgTable("product_categories", {
   id: serial("id").primaryKey(),
   slug: varchar("slug", { length: 60 }).notNull().unique(),

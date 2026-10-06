@@ -1,11 +1,13 @@
 import "server-only";
 import { Environment, IntegrationApiKeys, IntegrationCommerceCodes, Options, WebpayPlus } from "transbank-sdk";
+import { paymentConfiguration } from "@/lib/payment-config";
 
 /**
  * Webpay Plus. Sin TBK_ENV=production usa el ambiente de integración con las credenciales
  * públicas de prueba del SDK. Producción requiere código de comercio y API key propios.
  */
 export function webpayTransaction() {
+  if (!paymentConfiguration().webpayAvailable) throw new Error("Webpay no está configurado para este ambiente");
   if (process.env.TBK_ENV === "production") {
     const code = process.env.TBK_COMMERCE_CODE;
     const key = process.env.TBK_API_KEY;
