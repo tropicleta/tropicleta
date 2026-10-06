@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { EMOTION_LABEL, type Emotion } from "@/lib/chat-emotions";
 import { WA_CONSULTAR } from "@/lib/whatsapp";
@@ -20,7 +21,7 @@ const SUGGESTIONS = [
   "Mi bici hace ruido al pedalear",
   "¿Hacen despacho a Copiapó?",
 ];
-const TEASER_KEY = "tp-tropi-teaser";
+
 
 // Rutas internas (/servicios/x/) y enlaces de WhatsApp dentro de las respuestas → enlaces reales.
 // Sin lookbehind `(?<!…)`: Safari < 16.4 lo rechaza al parsear y rompe todo el JS de la página.
@@ -53,9 +54,8 @@ export function ChatWidget() {
   const [busy, setBusy] = useState(false);
   const [emotion, setEmotion] = useState<Emotion>("feliz");
   const [pulse, setPulse] = useState(0);
-  const [teaser, setTeaser] = useState(false);
+  const [teaser, setTeaser] = useState(true);
   const [compact, setCompact] = useState(false);
-  const dismissed = useRef(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const bodyRef = useRef<HTMLDivElement>(null);
 
@@ -64,28 +64,19 @@ export function ChatWidget() {
     setPulse((p) => p + 1);
   }, []);
 
-  // Saludo breve una vez por sesión; después quedan solo los accesos compactos.
+  // Mostrar ambos textos desde la entrada, durante cinco segundos.
   useEffect(() => {
-    let seen = false;
-    try { seen = sessionStorage.getItem(TEASER_KEY) === "1"; } catch {}
-    if (seen) { setCompact(true); return; }
-    const show = window.setTimeout(() => {
-      if (!dismissed.current) setTeaser(true);
-    }, 8000);
     const hide = window.setTimeout(() => {
       setTeaser(false);
       setCompact(true);
-      try { sessionStorage.setItem(TEASER_KEY, "1"); } catch {}
-    }, 12000);
-    return () => { window.clearTimeout(show); window.clearTimeout(hide); };
+    }, 5000);
+    return () => window.clearTimeout(hide);
   }, []);
 
   const toggle = useCallback((next: boolean) => {
-    dismissed.current = true;
     setCompact(true);
     setOpen(next);
     setTeaser(false);
-    try { sessionStorage.setItem(TEASER_KEY, "1"); } catch {}
     if (next) {
       setMsgs((m) => (m.length ? m : [HELLO]));
       feel(msgs.length ? emotion : "emocionado");
@@ -159,16 +150,13 @@ export function ChatWidget() {
             aria-expanded={false}
             aria-controls="tp-chat-panel"
           >
-            <TropiMascot emotion={teaser ? "emocionado" : "feliz"} pulse={teaser ? 1 : 0} size={46} reaction={false} />
+            <Image className="tp-chat-mascot-icon" src="/brand/mascota-oficial.webp" alt="" width={320} height={348} unoptimized />
           </button>
           </div>
           <div className="tp-chat-launcher-row">
             {teaser && <a className="tp-chat-teaser" href={WA_CONSULTAR} target="_blank" rel="noopener noreferrer">Contáctanos</a>}
             <a className="tp-chat-fab tp-chat-whatsapp" href={WA_CONSULTAR} target="_blank" rel="noopener noreferrer" aria-label="Contactar a Tropicleta por WhatsApp">
-              <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                <path d="M21 11.5a9 9 0 0 1-13.5 8L3 21l1.5-4.5A9 9 0 1 1 21 11.5Z" />
-                <path d="m8 7 2 3-1 1c1 2 2 3 4 4l1-1 3 2c-1 2-3 2-5 1-3-1-5-3-6-6-1-2-1-4 1-5Z" />
-              </svg>
+              <svg viewBox="0 0 24 24" width="30" height="30" fill="currentColor" aria-hidden="true"><path d="M20.52 3.48A11.91 11.91 0 0 0 12.04 0C5.46 0 .1 5.35.1 11.93c0 2.1.55 4.16 1.6 5.97L0 24l6.25-1.64a11.94 11.94 0 0 0 5.79 1.48h.01c6.57 0 11.94-5.35 11.95-11.93a11.87 11.87 0 0 0-3.48-8.43ZM12.05 21.83a9.9 9.9 0 0 1-5.04-1.38l-.36-.22-3.71.98.99-3.62-.24-.38a9.86 9.86 0 0 1-1.51-5.28c0-5.47 4.45-9.91 9.92-9.91a9.85 9.85 0 0 1 7.01 2.91 9.85 9.85 0 0 1 2.9 7.01c0 5.47-4.45 9.9-9.96 9.9Zm5.44-7.41c-.3-.15-1.77-.87-2.04-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.64.07-.3-.15-1.26-.46-2.39-1.47-.88-.79-1.48-1.77-1.65-2.06-.17-.3-.02-.46.13-.61l.45-.52c.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.61-.92-2.21-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.8.37-.27.3-1.04 1.02-1.04 2.49s1.07 2.89 1.22 3.09c.15.2 2.1 3.2 5.08 4.49.71.31 1.27.49 1.71.63.72.23 1.37.2 1.89.12.57-.09 1.77-.72 2.02-1.42.25-.7.25-1.29.17-1.42-.07-.12-.27-.2-.57-.35Z" /></svg>
             </a>
           </div>
         </div>

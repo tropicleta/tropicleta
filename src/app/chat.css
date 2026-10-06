@@ -252,12 +252,14 @@
   .tp-tropi-reaction { opacity: 0; }
 }
 
-/* Accesos discretos: saludo de cuatro segundos y botones compactos. */
+/* Accesos discretos: saludo de cinco segundos y botones compactos. */
 .tp-chat-launcher { flex-direction:column; align-items:flex-end; gap:8px; bottom:calc(18px + env(safe-area-inset-bottom)); }
 .tp-chat-launcher-row { display:flex; align-items:center; justify-content:flex-end; gap:10px; }
 .tp-chat-launcher .tp-chat-fab { transition:width .3s,height .3s,transform .2s,background .2s; }
-.tp-chat-launcher--compact .tp-chat-fab { width:48px; height:48px; }
-.tp-chat-launcher--compact .tp-chat-fab .tp-tropi { transform:scale(.78); }
+.tp-chat-launcher--compact .tp-chat-fab { width:52px; height:52px; }
+.tp-chat-launcher .tp-chat-fab { padding:0; }
+.tp-chat-mascot-icon { display:block; width:44px; height:auto; object-fit:contain; }
+.tp-chat-launcher--compact .tp-chat-mascot-icon { width:36px; }
 .tp-chat-launcher .tp-tropi { transition:transform .3s; }
 .tp-chat-whatsapp { background:#128c4a; border-color:#25d366; color:#fff; padding:0; }
 .tp-chat-whatsapp:hover { background:#107b41; transform:translateY(-2px); }
