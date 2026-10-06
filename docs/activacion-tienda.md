@@ -5,10 +5,10 @@
 - Aplicación Mercado Pago creada: **Tropicleta Tienda Web**, ID **8095070185425190**, Checkout Pro con API de Preferences.
 - Ambiente de pruebas generado con comprador y vendedor. Token de pruebas instalado únicamente en `.env.local`, excluido de Git.
 - Conexión real al servicio de preferencias probada sin efectuar cobros. Checkout local crea la orden y redirige al dominio sandbox de Mercado Pago.
-- Credenciales productivas habilitadas por el propietario en Mercado Pago; todavía deben instalarse en el servidor junto con la firma de notificaciones.
-- Notificaciones productivas guardadas en la nueva aplicación para eventos payment (Pagos legacy), hacia `https://www.tropicleta.com/api/mercadopago/webhook/`. Firma generada por Mercado Pago; pendiente su instalación en el servidor. No configurar otros tipos de eventos que esta ruta no maneja.
+- Credenciales productivas habilitadas por el propietario en Mercado Pago. `MP_ACCESS_TOKEN`, `MP_WEBHOOK_SECRET` y `MP_SANDBOX=0` actualizados en Vercel, proyecto Tropicleta, únicamente en Producción. Son secretos y necesitan un nuevo despliegue productivo para aplicarse.
+- Notificaciones productivas guardadas en la nueva aplicación para eventos payment (Pagos legacy), hacia `https://www.tropicleta.com/api/mercadopago/webhook/`. Firma instalada en Vercel. No configurar otros tipos de eventos que esta ruta no maneja.
 - Compilación y comprobación de tipos verificadas; pruebas de catálogo, administración, contabilidad y tienda realizadas.
-- Cambios aún locales: no se han publicado ni se ha realizado un cobro real.
+- Rama de revisión: `codex/tienda-y-recomendados`. Vista previa en Vercel compilada correctamente y comprobada con la base del comercio (un producto publicado, sin incorporar el catálogo demo local). Pendiente publicar en el dominio principal; no se ha realizado un cobro real.
 
 ## Recorridos
 
