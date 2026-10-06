@@ -264,4 +264,10 @@
 .tp-chat-whatsapp { background:#128c4a; border-color:#25d366; color:#fff; padding:0; }
 .tp-chat-whatsapp:hover { background:#107b41; transform:translateY(-2px); }
 .tp-chat-launcher .tp-chat-teaser { text-decoration:none; }
+@media (max-width: 639px) {
+  .tp-chat-launcher .tp-chat-teaser { display:none; }
+  .tp-chat-launcher .tp-chat-fab { width:44px; height:44px; }
+  .tp-chat-launcher .tp-chat-mascot-icon { width:32px; }
+  .tp-chat-launcher { right:12px; gap:6px; }
+}
 @media(prefers-reduced-motion:reduce) { .tp-chat-launcher .tp-chat-fab,.tp-chat-launcher .tp-tropi { transition:none; } }
