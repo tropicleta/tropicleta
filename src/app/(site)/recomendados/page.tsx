@@ -21,11 +21,11 @@ export default async function RecommendationsPage({ searchParams }: { searchPara
       <h1 className="tp-display">Para tu próxima <span>salida.</span></h1>
       <p className="tp-hero-copy">Accesorios, herramientas y equipo que recomendamos. Descubre por qué los elegimos y compra directamente en Mercado Libre.</p>
     </div></section>
-    <section className="tp-section"><div className="tp-shell">
+    <section className="tp-section tp-recommendations"><div className="tp-shell">
       <ShopSections current="recomendados" />
       <div className="tp-panel" style={{ marginBottom: 24 }}><strong>Compras en Mercado Libre</strong><p>Estos productos no se agregan al carrito de Tropicleta. El precio, stock, envío, cambios y garantía los informa Mercado Libre y el vendedor de cada publicación.</p><p className="tp-hint">Enlaces de afiliado: Tropicleta puede recibir una comisión si compras a través de estos enlaces.</p></div>
       {categories.length > 0 && <nav className="tp-chip-nav" aria-label="Categorías de recomendados"><Link className="tp-chip" href="/recomendados/" aria-current={!categoria ? "page" : undefined}>Todos</Link>{categories.map(category => <Link className="tp-chip" key={category} href={`/recomendados/?categoria=${encodeURIComponent(category)}`} aria-current={categoria === category ? "page" : undefined}>{category}</Link>)}</nav>}
-      {items.length ? <div className="tp-product-grid" style={{ marginTop: 24 }}>{items.map(item => <article className="tp-panel tp-stack" key={item.id}>
+      {items.length ? <div className="tp-product-grid tp-recommendation-grid" style={{ marginTop: 24 }}>{items.map(item => <article className="tp-panel tp-stack" key={item.id}>
         {item.imageUrl && <img src={item.imageUrl} alt={item.name} width={480} height={320} loading="lazy" referrerPolicy="no-referrer" style={{ width: "100%", height: 220, objectFit: "contain", background: "#fff", borderRadius: 12 }} />}
         <span className="tp-kicker">{item.category}</span><h2>{item.name}</h2>
         {item.price != null && <p><strong style={{ fontSize: "1.4rem" }}>{formatCLP(item.price)}</strong><span className="tp-hint" style={{ display: "block" }}>Precio referencial · puede cambiar en Mercado Libre</span></p>}
