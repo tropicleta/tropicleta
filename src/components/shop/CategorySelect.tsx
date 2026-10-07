@@ -2,7 +2,8 @@
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
-export function CategorySelect({ categories, value }: { categories: string[]; value?: string }) {
+export function CategorySelect({ categories, value }: { categories: (string | { value: string; label: string })[]; value?: string }) {
+  const options = categories.map(category => typeof category === "string" ? { value: category, label: category } : category);
   const router = useRouter();
   const pathname = usePathname();
   const params = useSearchParams();
@@ -15,8 +16,8 @@ export function CategorySelect({ categories, value }: { categories: string[]; va
       router.push(`${pathname}${next.size ? "?" + next.toString() : ""}`);
     }}>
       <option value="">Todas las categorías</option>
-      {value && !categories.includes(value) && <option value={value}>{value}</option>}
-      {categories.map(category => <option key={category} value={category}>{category}</option>)}
+      {value && !options.some(option => option.value === value) && <option value={value}>{value}</option>}
+      {options.map(option => <option key={option.value} value={option.value}>{option.label}</option>)}
     </select>
   </label>;
 }

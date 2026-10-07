@@ -1,7 +1,7 @@
 import { siteUrl } from "@/lib/site-url";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { CatalogIcon } from "@/components/CatalogIcon";
+import { CategorySelect } from "@/components/shop/CategorySelect";
 import { CatalogSearch } from "@/components/CatalogSearch";
 import { matchesSearch } from "@/lib/catalog-search";
 import { whatsappUrl } from "@/lib/whatsapp";
@@ -27,15 +27,6 @@ export default async function TiendaPage({ searchParams }: Props) {
   const [categories, allProducts] = await Promise.all([getProductCategories(), getProducts({ category: categoria, sort })]);
   const products = allProducts.filter((p) => matchesSearch(query, p.name, p.description));
 
-  const href = (cat?: string) => {
-    const p = new URLSearchParams();
-    if (cat) p.set("categoria", cat);
-    if (query) p.set("q", query);
-    if (sort !== "recientes") p.set("orden", sort);
-    const q = p.toString();
-    return `/tienda/${q ? "?" + q : ""}`;
-  };
-
   return (
     <>
       <section className="tp-hero tp-page-hero">
@@ -55,17 +46,7 @@ export default async function TiendaPage({ searchParams }: Props) {
           <ShopSections current="tienda" />
           <CatalogSearch action="/tienda/" query={query} label="Buscar productos" placeholder="Ej.: cámara, lubricante, luces…" hidden={{ categoria, orden: sort }} />
           <div className="tp-shop-toolbar">
-            <nav className="tp-chip-nav" aria-label="Categorías de productos">
-              <Link className="tp-chip" href={href()} aria-current={!categoria ? "true" : undefined}>
-                Todo
-              </Link>
-              {categories.map((c) => (
-                <Link key={c.slug} className="tp-chip" href={href(c.slug)} aria-current={categoria === c.slug ? "true" : undefined}>
-                  <CatalogIcon slug={c.slug} size={16} />
-                  {c.name}
-                </Link>
-              ))}
-            </nav>
+            <CategorySelect categories={categories.map(category => ({ value: category.slug, label: category.name }))} value={categoria} />
             <SortSelect value={sort} />
           </div>
           <p className="tp-catalog-count">{products.length} {products.length === 1 ? "producto" : "productos"}{query ? ` para “${query}”` : ""}</p>
