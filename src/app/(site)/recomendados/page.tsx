@@ -8,6 +8,7 @@ import { siteUrl } from "@/lib/site-url";
 import { formatCLP } from "@/lib/format";
 import { CatalogSearch } from "@/components/CatalogSearch";
 import { SortSelect } from "@/components/shop/SortSelect";
+import { CategorySelect } from "@/components/shop/CategorySelect";
 import { matchesSearch } from "@/lib/catalog-search";
 
 export const dynamic = "force-dynamic";
@@ -25,13 +26,6 @@ export default async function RecommendationsPage({ searchParams }: { searchPara
     if (b.price == null) return -1;
     return sort === "precio-asc" ? a.price - b.price : b.price - a.price;
   });
-  const href = (category?: string) => {
-    const params = new URLSearchParams();
-    if (category) params.set("categoria", category);
-    if (query) params.set("q", query);
-    if (sort !== "recientes") params.set("orden", sort);
-    return `/recomendados/${params.size ? "?" + params.toString() : ""}`;
-  };
   return <>
     <section className="tp-hero tp-page-hero"><div className="tp-shell">
       <span className="tp-kicker">La selección de Tropicleta</span>
@@ -43,7 +37,7 @@ export default async function RecommendationsPage({ searchParams }: { searchPara
       <div className="tp-panel" style={{ marginBottom: 24 }}><strong>Compras en Mercado Libre</strong><p>Estos productos no se agregan al carrito de Tropicleta. El precio, stock, envío, cambios y garantía los informa Mercado Libre y el vendedor de cada publicación.</p><p className="tp-hint">Enlaces de afiliado: Tropicleta puede recibir una comisión si compras a través de estos enlaces.</p></div>
       <CatalogSearch action="/recomendados/" query={query} label="Buscar recomendados" placeholder="Ej.: cadena, frenos, luces…" hidden={{ categoria, orden: sort }} />
       <div className="tp-shop-toolbar">
-        {categories.length > 0 && <nav className="tp-chip-nav" aria-label="Categorías de recomendados"><Link className="tp-chip" href={href()} aria-current={!categoria ? "page" : undefined}>Todos</Link>{categories.map(category => <Link className="tp-chip" key={category} href={href(category)} aria-current={categoria === category ? "page" : undefined}>{category}</Link>)}</nav>}
+        <CategorySelect categories={categories} value={categoria} />
         <SortSelect value={sort} />
       </div>
       <p className="tp-catalog-count">{items.length} {items.length === 1 ? "recomendación" : "recomendaciones"}{query ? ` para “${query}”` : ""}</p>
