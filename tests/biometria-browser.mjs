@@ -22,6 +22,8 @@ try {
   page.on("request", (request) => { if (request.url().startsWith("http") && !request.url().startsWith(origin)) externalRequests.push(request.url()); });
   await page.setViewport({ width: 1440, height: 1000 });
   await page.goto(`${origin}/biometria/`, { waitUntil: "networkidle0" });
+  await page.select("#fit-discipline", "dh");
+  assert.ok(await page.evaluate(() => document.body.textContent.includes("No interpretes ese rango como un objetivo de downhill")));
   assert.equal(await page.$eval("button.tp-btn-primary", (button) => button.disabled), true);
   // The example demonstrates the workflow without consent, a camera or inference.
   await page.evaluate(() => [...document.querySelectorAll("button")].find((button) => button.textContent === "Ver ejemplo de resultados").click());

@@ -1,31 +1,21 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { PageHero } from "@/components/PageHero";
 import { siteUrl } from "@/lib/site-url";
-import { SagCalculator } from "./SagCalculator";
+import { SuspensionGuide } from "./SuspensionGuide";
 import styles from "./sag.module.css";
 
 export const metadata: Metadata = {
-  title: "Calculador de SAG de suspensión",
-  description: "Calcula el SAG objetivo y medido de tu horquilla y amortiguador. Guía para bicicletas hardtail y doble suspensión con referencias de fabricantes.",
+  title: "Ajusta tu suspensión: SAG y rebote",
+  description: "Aprende a configurar tu suspensión en tres pasos: prepara tu bici, calcula el SAG y afina el rebote con una prueba práctica.",
   alternates: { canonical: siteUrl("/calculador-sag/") },
 };
 
 export default function SagPage() {
   return <>
-    <PageHero kicker="Ajusta tu bicicleta" title="Calculador de" highlight="SAG." intro="El SAG es cuánto se hunde la suspensión con tu peso y equipo en posición de conducción. Convierte tu objetivo en milímetros y compáralo con tu medición." />
+    <PageHero kicker="Aprende con tu bici" title="Ajusta tu" highlight="suspensión." intro="Tres pasos para ganar control y comodidad: prepara, mide el SAG y afina el rebote." />
     <section className="tp-section"><div className="tp-shell">
-      <section className={styles.benefits} aria-labelledby="sag-benefits">
-        <div className={styles.benefitIntro}><h2 id="sag-benefits" className="tp-display">¿Por qué medir el SAG?</h2><p>Es el punto de partida para ajustar la suspensión a tu peso y equipo.</p></div>
-        <div className={styles.benefitGrid}>
-          <div><h3>Contacto con el terreno</h3><p>Deja margen para que la rueda siga las irregularidades.</p></div>
-          <div><h3>Aprovecha el recorrido</h3><p>Equilibra el margen para comprimirse y extenderse.</p></div>
-          <div><h3>Repite tu ajuste</h3><p>Comprueba qué cambia al llevar otra mochila o equipo.</p></div>
-        </div>
-      </section>
-      <div id="sag-calculator" className={styles.calculatorAnchor}>
-      <SagCalculator />
-      </div>
+      <div id="sag-calculator" className={styles.calculatorAnchor}><SuspensionGuide /></div>
+      <details className={styles.details}><summary>Profundizar: medición, rangos y fuentes</summary>
       <div className={styles.supportGrid}><section className={styles.guide} aria-labelledby="sag-measure">
         <span className="tp-kicker">Paso a paso</span><h2 id="sag-measure" className="tp-display">Cómo medir el hundimiento</h2>
         <ol className={styles.steps}>
@@ -58,10 +48,10 @@ export default function SagPage() {
           <li><a href="https://www.simplon.com/en/About-us/Magazine/How-to-adjust-your-MTB-s-suspension_bba_10490" target="_blank" rel="noopener noreferrer">SIMPLON: guía de ajuste por disciplina (2025)</a></li>
         </ul>
         <p>Fuentes consultadas el 7 de octubre de 2026. La conversión matemática usa tus datos; la elección del objetivo y la medición son aproximadas. La posición, fricción y geometría influyen. El porcentaje trasero corresponde al amortiguador: no predice el desplazamiento de rueda, cuya relación puede variar durante el recorrido.</p>
-        <p>Esta herramienta no calcula presión de aire a partir del peso ni ajustes de rebote o compresión. Para presión inicial necesitas la tabla del modelo, año y fabricante; el peso por sí solo no basta.</p>
+        <p>La calculadora no determina presión de aire a partir del peso ni un número universal de clics de rebote o compresión. Para presión inicial necesitas la tabla del modelo, año y fabricante; el peso por sí solo no basta.</p>
         </details>
-        <Link href="/contacto/" className="tp-btn tp-btn-primary">Pedir ayuda al taller</Link>
-      </section></div>
+      </section></div></details>
     </div></section>
   </>;
 }
+

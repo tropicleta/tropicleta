@@ -3,11 +3,14 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { assessPose, sidePoints, type BikeSide, type PosePoint } from "@/lib/bike-fit";
 import styles from "./BikeFit.module.css";
+import { cyclingDisciplines } from "@/data/cycling-disciplines";
 
 type Mode = "idle" | "loading" | "camera" | "photo" | "frozen" | "demo";
 const initialMessage = "Acepta el procesamiento local y elige cámara o fotografía.";
 
 export function BikeFit() {
+  const [discipline, setDiscipline] = useState("unknown");
+  const selectedDiscipline = cyclingDisciplines.find(item => item.id === discipline)!;
   const [consent, setConsent] = useState(false);
   const [framing, setFraming] = useState(false);
   const [bottom, setBottom] = useState(false);
@@ -34,6 +37,7 @@ export function BikeFit() {
   const busy = useRef(false);
   const inFlight = useRef(false);
   const fileInput = useRef<HTMLInputElement>(null);
+  const stage = useRef<HTMLDivElement>(null);
 
   function stopTracks() {
     stream.current?.getTracks().forEach((track) => track.stop());
@@ -256,28 +260,32 @@ export function BikeFit() {
       for (const [id, x, y] of [[0,440,85], [11,420,130], [13,500,165], [15,560,180], [23,340,200], [25,400,275], [27,414,370], [29,410,375], [31,455,375]]) sample[id] = { x: x / 760, y: y / 430, visibility: 1 };
       setSide("left"); setDimensions({ width: 760, height: 430 }); setPoints(sample); setHasPreview(true);
       activeMode.current = "demo"; setMode("demo"); setMessage("Ejemplo ilustrativo: estos ángulos están simulados. No se está usando tu cámara ni analizando una persona.");
+      requestAnimationFrame(() => stage.current?.scrollIntoView({ block: "start", behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" }));
     } catch { setMessage("No pudimos abrir el ejemplo. Puedes activar la cámara o elegir una foto."); }
   }
   const nextStep = demo ? "Así se verá el análisis. Ahora prueba con tu cámara o una foto." : mode === "loading" ? message : mode === "idle" ? consent ? "Activa la cámara o elige una foto para comenzar." : "Primero acepta el análisis local, o explora el ejemplo sin cámara." : !points.length ? message : !assessment.valid ? assessment.message : !framing ? "Cuerpo detectado. Confirma abajo que la toma es de perfil para ver los ángulos." : mode === "camera" ? "Encuadre listo para medir. Detén y revisa con el pedal del lado visible abajo." : !bottom ? "Ángulos listos. Confirma la posición del pedal para comparar la rodilla." : "Comparación lista. Revisa la referencia y sus límites.";
 
   return <>
     <section className={styles.benefits} aria-labelledby="fit-benefits">
-      <span className="tp-kicker">Mira tu postura con otra perspectiva</span>
-      <h2 id="fit-benefits" className="tp-display">Conoce cómo te colocas sobre la bici</h2>
-      <p>Una imagen lateral te permite observar detalles que cuesta ver mientras pedaleas. Esta herramienta añade ángulos orientativos para ayudarte a revisar la toma y preparar una conversación con un especialista.</p>
+      <div className={styles.benefitIntro}><h2 id="fit-benefits" className="tp-display">Conoce tu postura</h2><p>Observa tu posición con una foto o cámara, sin equipamiento especializado.</p></div>
       <div className={styles.benefitGrid}>
-        <div><h3>Haz visible tu posición</h3><p>Observa la flexión de rodilla, cadera y codo, y la inclinación del tronco sobre una misma imagen.</p></div>
-        <div><h3>Revisa con una referencia</h3><p>En una captura estática con el pedal abajo, puedes comparar la rodilla con una referencia publicada y decidir si conviene revisar la toma.</p></div>
-        <div><h3>Consulta con más contexto</h3><p>Identifica qué parte de tu postura quieres revisar en un bike fitting profesional. La estimación no indica por sí sola cuánto mover el sillín.</p></div>
+        <div><h3>Observa</h3><p>Visualiza articulaciones y ángulos sobre tu imagen.</p></div>
+        <div><h3>Comprende</h3><p>Aprende a leer una referencia estática de rodilla.</p></div>
+        <div><h3>Revisa</h3><p>Repite la toma con el mismo encuadre y apoyo.</p></div>
       </div>
-      <p className={styles.small}>Los ángulos no garantizan comodidad ni previenen lesiones. La herramienta no evalúa dolor, movilidad o ajuste completo de la bicicleta.</p>
-      <a className="tp-btn tp-btn-primary" href="#fit-capture">Observar mi posición</a>
     </section>
+    <p className={styles.purpose}>Una primera aproximación gratuita para conocer el bike fitting a tu ritmo. Los resultados son estimaciones; se recomienda una sesión con un profesional para evaluar tu posición y hacer un ajuste personalizado.</p>
     <div id="fit-capture" className={styles.captureAnchor}>
     <div className={styles.workflow} aria-label="Pasos del análisis">
       <div data-active={mode === "idle"}><b>01 · Prepara</b><span>Bicicleta estable y cámara de perfil.</span></div>
       <div data-active={mode === "loading" || mode === "camera"}><b>02 · Captura</b><span>Activa la cámara o elige una foto.</span></div>
       <div data-active={still || demo}><b>03 · Revisa</b><span>Confirma el encuadre y lee los ángulos.</span></div>
+    </div>
+    <div className={styles.disciplineRow}>
+      <label className={styles.field} htmlFor="fit-discipline">¿Qué disciplina practicas?
+        <select id="fit-discipline" value={discipline} onChange={event => setDiscipline(event.target.value)}>{cyclingDisciplines.map(item => <option key={item.id} value={item.id}>{item.label}</option>)}</select>
+      </label>
+      <div className={styles.disciplineInfo} aria-live="polite"><b>Prepara la toma para tu uso</b><p>{selectedDiscipline.fit}</p><small>Esta selección adapta la guía, no cambia los ángulos ni define un ajuste ideal.</small></div>
     </div>
     <div className={styles.visualGuide}>
       <img src="/biometria/encuadre.svg" width="760" height="430" alt="Referencia de encuadre: ciclista de perfil, cabeza, manos, pies y bicicleta completos; cámara a la altura de la cadera y pedal cercano abajo." />
@@ -308,8 +316,8 @@ export function BikeFit() {
         <label className={styles.field}>O elige una foto lateral (JPG, PNG o WebP; máximo 15 MB)
           <input ref={fileInput} type="file" accept="image/jpeg,image/png,image/webp" disabled={!consent || mode === "loading"} onChange={(event) => loadPhoto(event.target.files?.[0])} />
         </label>
-        <div className={styles.stage}>
-          {!hasPreview && !cameraReady && <div className={styles.placeholder}><img src="/biometria/encuadre.svg" width="760" height="430" alt="Deja todo el cuerpo y la bicicleta dentro del encuadre lateral" /><span>{mode === "loading" ? "Preparando tu análisis…" : "Aquí aparecerá tu cámara o fotografía"}</span></div>}
+        <div ref={stage} className={styles.stage}>
+          {!hasPreview && !cameraReady && <div className={styles.placeholder}><span className={styles.cameraSymbol} aria-hidden="true">◎</span><span>{mode === "loading" ? "Preparando tu análisis…" : "Aquí aparecerá tu cámara o fotografía"}</span><small>Usa la guía de arriba para preparar el encuadre</small></div>}
           <video ref={video} muted playsInline aria-label="Vista de cámara mientras se prepara el análisis" style={{ display: cameraReady && !hasPreview ? "block" : "none" }} />
           <canvas ref={preview} width={dimensions.width} height={dimensions.height} aria-label={demo ? "Ejemplo ilustrativo con ángulos simulados" : "Vista local del ciclista"} style={{ display: hasPreview ? "block" : "none" }} />
           <canvas ref={overlay} width={dimensions.width} height={dimensions.height} className={styles.overlay} aria-hidden="true" />
@@ -317,7 +325,7 @@ export function BikeFit() {
           {mode === "camera" && <span className={styles.liveBadge}><i className={styles.pulse} />En vivo · {readings} lecturas</span>}
           {demo && <span className={styles.liveBadge}>Ejemplo · datos simulados</span>}
         </div>
-        <div className={styles.status} role="status" aria-live="polite">{message}</div>
+        <div className={styles.status} role="status" aria-live="polite">{!demo && points.length ? !assessment.valid ? assessment.message : `${message} ${!framing ? "Cuerpo detectado: confirma la vista de perfil para ver los ángulos." : "Puntos visibles: revisa que las líneas sigan tus articulaciones."}` : message}</div>
         <p className={styles.small}>Al cambiar de pestaña se apaga la cámara y se borra la sesión. No hay grabación, historial ni identificación de personas.</p>
       </div>
       <div className={styles.card}>

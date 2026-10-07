@@ -1,14 +1,26 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 430" role="img" aria-labelledby="title desc">
 <title id="title">Ejemplo de ciclista de perfil con el pedal abajo</title><desc id="desc">Cabeza, manos, pies y bicicleta completos, cámara horizontal a la altura de la cadera. Ilustración de encuadre, no de una postura ideal universal.</desc>
+<defs><linearGradient id="jersey" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffb34d"/><stop offset="1" stop-color="#cf6811"/></linearGradient><radialGradient id="bg"><stop stop-color="#1e292c"/><stop offset="1" stop-color="#111517"/></radialGradient></defs>
+<style>.jointHalo{animation:focus 4s ease-in-out infinite;transform-box:fill-box;transform-origin:center}.jointHalo:nth-child(2){animation-delay:1.3s}.jointHalo:nth-child(3){animation-delay:2.6s}@keyframes focus{0%,70%,100%{opacity:.2}35%{opacity:.85}}@media(prefers-reduced-motion:reduce){.jointHalo{animation:none;opacity:.45}}</style>
 <rect width="760" height="430" fill="#111517"/><rect x="34" y="32" width="692" height="366" rx="16" fill="none" stroke="#526064" stroke-width="2" stroke-dasharray="8 7"/>
+<rect x="40" y="70" width="680" height="318" rx="12" fill="url(#bg)"/>
+<g stroke="#7e9a9f" stroke-width="1" opacity=".3"><path d="M230 252V388M162 320H298M182 272L278 368M182 368L278 272M600 252V388M532 320H668M552 272L648 368M552 368L648 272"/></g>
 <path d="M70 389H690" stroke="#465155" stroke-width="2"/>
 <g fill="none" stroke="#76858b" stroke-width="8" stroke-linejoin="round"><circle cx="230" cy="320" r="68"/><circle cx="600" cy="320" r="68"/><path d="M230 320L340 218L400 290L230 320M340 218L560 217L400 290M560 217L600 320M340 218L335 204M552 217L545 184L566 180"/><path d="M308 201H358" stroke="#c1cace" stroke-linecap="round"/></g>
 <g fill="none" stroke="#68717a" stroke-width="13" stroke-linecap="round"><path d="M340 200L340 272L400 291L428 296"/></g>
 <path d="M400 290V370M380 370H432" stroke="#c1cace" stroke-width="5"/>
 <g fill="none" stroke="#f28a17" stroke-width="15" stroke-linecap="round" stroke-linejoin="round"><path d="M340 200L420 130L500 165L560 180M340 200L400 275L414 370L455 375M420 130L438 108"/></g>
 <circle cx="440" cy="85" r="25" fill="#f28a17"/><path d="M450 65L468 86H447" fill="none" stroke="#111517" stroke-width="5"/>
+<path d="M415 71Q432 48 452 61L466 72L417 80Z" fill="#f5f5f2"/><path d="M425 64L431 73M437 60L443 71M448 63L454 73" stroke="#697b82" stroke-width="3"/>
+<path d="M420 121L433 139L357 208L330 197L351 173Z" fill="url(#jersey)" stroke="#ffc776" stroke-width="1.5"/>
+<path d="M352 187L365 202L351 217L329 208L325 197Z" fill="#34434a"/>
+<path d="M421 138L437 143" stroke="#f5f5f2" stroke-width="4" stroke-linecap="round"/>
+<path d="M548 173L568 177L567 187L550 185Z" fill="#d8e1e3"/>
+<path d="M408 365L426 366L439 371L456 371L461 379L411 379Z" fill="#e9eeef" stroke="#a5b6bc" stroke-width="2"/>
+<path d="M418 373H441" stroke="#485d66" stroke-width="2"/>
+<g fill="none" stroke="#72cec0" stroke-width="2"><circle class="jointHalo" cx="340" cy="200" r="16"/><circle class="jointHalo" cx="400" cy="275" r="16"/><circle class="jointHalo" cx="500" cy="165" r="16"/></g>
 <g fill="#fff"><circle cx="420" cy="130" r="6"/><circle cx="500" cy="165" r="6"/><circle cx="560" cy="180" r="6"/><circle cx="340" cy="200" r="6"/><circle cx="400" cy="275" r="6"/><circle cx="414" cy="370" r="6"/></g>
-<g font-family="Arial,sans-serif" font-size="17" fill="#e6ebed"><text x="62" y="62">Deja margen alrededor</text><text x="460" y="46">Cabeza y manos visibles</text><text x="471" y="373">Pedal abajo ↓</text><text x="65" y="422">Bicicleta estable · Vista de perfil · Cámara sin inclinación</text></g>
+<g font-family="Arial,sans-serif" font-size="16" fill="#e6ebed"><text x="62" y="59">01 · Cuerpo y bicicleta completos</text><text x="472" y="59">02 · Vista de perfil</text><text x="471" y="373">03 · Pedal abajo ↓</text><text x="116" y="421">Encuadre de ejemplo · No representa una postura ideal</text></g>
 <path d="M96 200H297" stroke="#72cec0" stroke-width="2" stroke-dasharray="5 5"/><rect x="66" y="183" width="31" height="30" rx="5" fill="#72cec0"/><path d="M97 190L108 184V212L97 206" fill="#72cec0"/>
 <text x="58" y="167" font-family="Arial,sans-serif" font-size="15" fill="#72cec0">Altura de cadera</text>
 </svg>

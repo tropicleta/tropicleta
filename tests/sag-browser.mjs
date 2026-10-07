@@ -11,6 +11,11 @@ try {
   await page.setViewport({ width: 1440, height: 1000 });
   await page.goto(`${process.env.SAG_TEST_ORIGIN || "http://localhost:3012"}/calculador-sag/`, { waitUntil: "networkidle0" });
   assert.equal(await page.$$eval('input[type="radio"]', nodes => nodes.length), 2);
+  await page.select("#sag-discipline", "enduro");
+  assert.ok(await page.$eval("#sag-discipline", node => node.value === "enduro"));
+  assert.ok(await page.evaluate(() => document.body.textContent.includes("25–35 %")));
+  assert.equal(await page.$eval("#fork-target", node => node.value), "20");
+  assert.equal(await page.evaluate(() => document.body.textContent.includes("Pedir ayuda al taller")), false);
   await page.select("#fork-brand", "FOX");
   await page.select("#fork-model", "36 · 2024");
   assert.equal(await page.$eval("#fork-target", node => node.value), "20");
