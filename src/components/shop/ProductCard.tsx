@@ -7,7 +7,7 @@ export function ProductCard({ product }: { product: Product }) {
   const soldOut = product.stock <= 0;
   const onSale = product.compareAtPrice && product.compareAtPrice > product.price;
   return (
-    <Link className="tp-product-card" href={`/tienda/${product.slug}/`}>
+    <article className="tp-product-card">
       <ProductMedia
         name={product.name}
         image={product.images[0]}
@@ -19,13 +19,13 @@ export function ProductCard({ product }: { product: Product }) {
           ) : null
         }
       />
-      <div className="tp-product-body">
+      <Link className="tp-product-body" href={`/tienda/${product.slug}/`}>
         <h3 className="tp-product-name">{product.name}</h3>
         <div className="tp-product-price">
           {formatCLP(product.price)}
           {onSale && <s>{formatCLP(product.compareAtPrice!)}</s>}
         </div>
-      </div>
-    </Link>
+      </Link>
+    </article>
   );
 }

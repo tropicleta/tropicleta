@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { AddToCart } from "@/components/cart/AddToCart";
-import { ProductMedia } from "@/components/shop/ProductMedia";
+import { ProductGallery } from "@/components/shop/ProductGallery";
 import { getProduct } from "@/lib/queries";
 import { formatCLP } from "@/lib/format";
 import { whatsappUrl } from "@/lib/whatsapp";
@@ -60,16 +60,7 @@ export default async function ProductoPage({ params }: Props) {
         </nav>
 
         <div className="tp-two-col tp-two-col-even">
-          <div className="tp-product-gallery">
-            <ProductMedia name={p.name} image={p.images[0]} sizes="(max-width: 979px) 100vw, 560px" preload />
-            {p.images.length > 1 && (
-              <div className="tp-mini-products">
-                {p.images.slice(1).map((img) => (
-                  <ProductMedia key={img} name={p.name} image={img} />
-                ))}
-              </div>
-            )}
-          </div>
+          <ProductGallery name={p.name} images={p.images} />
 
           <div>
             {category && <span className="tp-kicker">{category.name}</span>}

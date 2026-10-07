@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { ImageZoom } from "./ImageZoom";
 
 type Props = { name: string; image?: string | null; badge?: React.ReactNode; sizes?: string; preload?: boolean };
 
@@ -11,7 +12,7 @@ export function ProductMedia({ name, image, badge, sizes = "(max-width: 639px) 5
   return (
     <div className="tp-product-media">
       {image ? (
-        <Image src={image} alt={name} fill sizes={sizes} preload={preload} unoptimized={!optimizable(image)} />
+        <><Image src={image} alt={name} fill sizes={sizes} preload={preload} unoptimized={!optimizable(image)} /><ImageZoom src={image} name={name} /></>
       ) : (
         <span className="tp-product-initial" aria-hidden="true">
           {name.trim().charAt(0).toUpperCase()}
