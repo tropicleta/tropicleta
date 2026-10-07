@@ -72,9 +72,16 @@ export default async function HomePage() {
         <div className="tp-shell tp-mobile-summary-grid">
           <div className="tp-home-discover">
             <div><span className="tp-kicker">Taller móvil</span><h2 className="tp-display tp-section-title">Nos vemos en tu próxima ruta.</h2><p className="tp-section-intro">Asistencia mecánica para carreras, cicletadas y eventos en Atacama. Coordinamos el apoyo para tu próxima salida.</p><Link className="tp-btn tp-btn-secondary" href="/eventos/">Conocer el taller móvil →</Link></div>
-            <div className="tp-home-shopping"><span className="tp-kicker">Equipa tu próxima salida</span><ShopSections /></div>
           </div>
           <Link href="/eventos/" className="tp-mobile-summary-photo"><Image src="/taller/taller-movil-presentacion.jpeg" alt="Taller móvil Tropicleta: asistencia mecánica en terreno para eventos ciclistas" width={720} height={1056} sizes="(max-width: 700px) 80vw, 300px" /></Link>
+        </div>
+      </section>
+
+      <section className="tp-section tp-home-marketplace" aria-labelledby="home-marketplace-title">
+        <div className="tp-shell">
+          <span className="tp-kicker">Para seguir pedaleando</span>
+          <h2 id="home-marketplace-title" className="tp-display tp-section-title">Equipa tu próxima salida.</h2>
+          <ShopSections showcase />
         </div>
       </section>
 

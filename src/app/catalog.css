@@ -140,3 +140,22 @@
 .tp-recommendation-grid > article > img { flex-shrink:0; }
 .tp-recommendation-grid > article > h2 { overflow-wrap:anywhere; }
 .tp-recommendation-grid > article > .tp-btn { margin-top:auto; width:100%; }
+
+/* Accesos editoriales de la portada, independientes del taller móvil. */
+.tp-home-marketplace { background: #10171a; padding-block: 38px; }
+.tp-home-marketplace .tp-section-title { margin-bottom: 22px; }
+.tp-shop-showcase { margin-bottom: 0; gap: 18px; }
+.tp-shop-showcase .tp-shop-section { position: relative; isolation: isolate; overflow: hidden; align-items: flex-start; min-height: 220px; padding: 28px; border: 1px solid #ffad3240; }
+.tp-shop-showcase .tp-shop-direct { background: linear-gradient(140deg,#493019,#211d18); }
+.tp-shop-showcase .tp-shop-curated { background: linear-gradient(140deg,#1b3e3c,#162527); border-color: #8cd2bd40; }
+.tp-shop-showcase .tp-shop-section::after { content: ""; position: absolute; width: 190px; height: 190px; border: 24px solid #ffffff06; border-radius: 50%; right: -75px; bottom: -80px; z-index: -1; }
+.tp-shop-showcase .tp-shop-section > svg { width: 36px; height: 36px; padding: 8px; box-sizing: content-box; background: #ffffff0a; border-radius: 14px; }
+.tp-shop-showcase .tp-shop-curated > svg { color: #9bd8c6; }
+.tp-shop-showcase .tp-shop-section strong { font-family: var(--font-display); font-size: clamp(24px,2.6vw,32px); line-height: 1.12; margin: 10px 0; }
+.tp-shop-showcase .tp-shop-section small { max-width: 35ch; }
+.tp-shop-eyebrow { display: block; font-size: 11px; text-transform: uppercase; letter-spacing: 1.3px; color: #f5c187; font-weight: 700; }
+.tp-shop-curated .tp-shop-eyebrow { color: #9bd8c6; }
+.tp-shop-cta { display: inline-flex; gap: 12px; align-items: center; margin-top: 20px; font-weight: 800; font-size: 14px; }
+.tp-shop-showcase .tp-shop-section-arrow { display: none; }
+.tp-shop-showcase .tp-shop-section:hover { border-color: #ffad32; filter: brightness(1.08); }
+@media(max-width:700px) { .tp-shop-showcase .tp-shop-section { min-height: 0; padding: 22px 18px; gap: 14px; } .tp-shop-showcase .tp-shop-section > svg { width: 26px; height: 26px; } .tp-home-marketplace { padding-block: 28px; } }
