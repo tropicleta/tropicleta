@@ -14,6 +14,7 @@ export default function SagPage() {
   return <>
     <PageHero kicker="Aprende con tu bici" title="Ajusta tu" highlight="suspensión." intro="Tres pasos para ganar control y comodidad: prepara, mide el SAG y afina el rebote." />
     <section className="tp-section"><div className="tp-shell">
+      <p className={styles.purpose}>Una primera aproximación gratuita para entender tu suspensión a tu ritmo. Los objetivos y ajustes son orientativos; se recomienda una sesión con un profesional para una puesta a punto personalizada.</p>
       <div id="sag-calculator" className={styles.calculatorAnchor}><SuspensionGuide /></div>
       <details className={styles.details}><summary>Profundizar: medición, rangos y fuentes</summary>
       <div className={styles.supportGrid}><section className={styles.guide} aria-labelledby="sag-measure">

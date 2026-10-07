@@ -10,6 +10,7 @@ try {
   page.on("pageerror", error => errors.push(error.message));
   await page.setViewport({ width: 1440, height: 1000 });
   await page.goto(`${process.env.SAG_TEST_ORIGIN || "http://localhost:3012"}/calculador-sag/`, { waitUntil: "networkidle0" });
+  await page.evaluate(() => { document.querySelectorAll("nav button").forEach(button => { if (button.textContent.includes("Mide el SAG")) button.click(); }); document.querySelectorAll("details").forEach(node => node.open = true); });
   assert.equal(await page.$$eval('input[type="radio"]', nodes => nodes.length), 2);
   await page.select("#sag-discipline", "enduro");
   assert.ok(await page.$eval("#sag-discipline", node => node.value === "enduro"));
@@ -29,6 +30,11 @@ try {
   await page.type("#shock-length", "55");
   await page.type("#shock-measured", "16,5");
   assert.ok(await page.$eval("#shock-result", node => node.textContent.includes("30") && node.textContent.includes("coincide")));
+  await page.evaluate(() => { document.querySelectorAll("nav button").forEach(button => { if (button.textContent.includes("Ajusta el rebote")) button.click(); }); });
+  await page.evaluate(() => { [...document.querySelectorAll("button")].find(button => button.textContent === "Vuelve con un golpe").click(); });
+  assert.ok(await page.evaluate(() => document.body.textContent.includes("Prueba un clic hacia más lento")));
+  await page.evaluate(() => { document.querySelectorAll("nav button").forEach(button => { if (button.textContent.includes("Mide el SAG")) button.click(); }); });
+  assert.equal(await page.$eval("#fork-length", node => node.value), "140");
   for (const width of [1440, 390]) {
     await page.setViewport({ width, height: 900 });
     assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
@@ -37,3 +43,4 @@ try {
   assert.deepEqual(errors, []);
   console.log("SAG: selección, cálculo, decimales y distribución móvil/escritorio OK.");
 } finally { await browser.close(); }
+
