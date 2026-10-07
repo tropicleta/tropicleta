@@ -133,3 +133,10 @@
 .tp-shop-section:focus-visible { outline:3px solid #fff; outline-offset:4px; }
 @media(max-width:700px) { .tp-shop-sections { grid-template-columns:1fr; gap:12px; } .tp-shop-section { min-height:88px; padding:18px; gap:12px; } .tp-shop-section strong { font-size:19px; } }
 @media(prefers-reduced-motion:reduce) { .tp-shop-section { transition:none; } }
+
+/* Botones de Recomendados alineados al pie de cada fila. */
+.tp-recommendation-grid { align-items:stretch; }
+.tp-recommendation-grid > article { display:flex; flex-direction:column; min-width:0; gap:14px; }
+.tp-recommendation-grid > article > img { flex-shrink:0; }
+.tp-recommendation-grid > article > h2 { overflow-wrap:anywhere; }
+.tp-recommendation-grid > article > .tp-btn { margin-top:auto; width:100%; }
