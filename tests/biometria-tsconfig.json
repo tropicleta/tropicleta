@@ -1,0 +1,12 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": { "incremental": false },
+  "files": ["../node_modules/next/types/global.d.ts"],
+  "include": [
+    "../src/app/(site)/biometria/**/*.tsx",
+    "../src/components/biometria/**/*.tsx",
+    "../src/lib/bike-fit.ts",
+    "./bike-fit.test.ts"
+  ],
+  "exclude": ["../.next", "../node_modules"]
+}

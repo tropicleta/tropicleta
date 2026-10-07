@@ -1,0 +1,28 @@
+.grid { display:grid; grid-template-columns:minmax(0,1.5fr) minmax(280px,1fr); gap:24px; align-items:start }
+.card { padding:24px; background:var(--tp-card); border:1px solid var(--tp-border); border-radius:var(--tp-radius) }
+.card h2 { font-size:24px }
+.card p, .card li { color:var(--tp-grey) }
+.card a { color:var(--tp-orange); text-decoration:underline }
+.guide { padding-left:22px; margin-bottom:24px }
+.guide li { margin-bottom:10px }
+.stage { position:relative; background:#090a0b; border-radius:10px; overflow:hidden; width:100%; min-height:180px; margin:20px 0 }
+.stage canvas { display:block; width:100%; height:auto }
+.overlay { position:absolute; inset:0 }
+.placeholder { min-height:240px; display:grid; place-content:center; text-align:center; padding:30px; border:2px dashed var(--tp-grey-dark); border-radius:10px; color:var(--tp-grey) }
+.actions { display:flex; flex-wrap:wrap; gap:12px; align-items:center }
+.actions button { cursor:pointer }
+.actions button:disabled { opacity:.5; cursor:default }
+.check { display:flex; gap:10px; align-items:flex-start; margin:16px 0; font-size:14px }
+.check input { margin-top:5px; accent-color:var(--tp-orange) }
+.field { display:flex; flex-direction:column; gap:8px; margin:16px 0 }
+.field select, .field input { padding:12px; border:1px solid var(--tp-border); border-radius:8px; background:var(--tp-black-2); color:var(--tp-white); width:100% }
+.status { min-height:48px; margin-top:16px; padding:12px; border-left:3px solid var(--tp-orange); background:var(--tp-black-2) }
+.metrics { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:20px 0 }
+.metric { padding:14px; border:1px solid var(--tp-border); border-radius:8px }
+.metric dt { color:var(--tp-grey); font-size:13px }
+.metric dd { margin:4px 0 0; font-size:28px; font-weight:800; color:var(--tp-orange) }
+.small { font-size:13px }
+.details { margin-top:24px; line-height:1.7 }
+.details summary { cursor:pointer; font-weight:700 }
+.reference { border:1px solid var(--tp-border); border-radius:8px; padding:16px }
+@media(max-width:800px) { .grid { grid-template-columns:1fr } .card { padding:18px } }

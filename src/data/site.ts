@@ -38,6 +38,8 @@ export const footerLinks = {
     { href: "/servicios/", label: "Servicios y cotización" },
     { href: "/eventos/", label: "Taller móvil para eventos" },
     { href: "/consejos/", label: "Consejos" },
+    { href: "/biometria/", label: "Biometría y bike fitting" },
+    { href: "/calculador-sag/", label: "Calculador de SAG" },
     { href: "/nosotros/", label: "Nosotros" },
   ],
   ayuda: [

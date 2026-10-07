@@ -17,6 +17,12 @@ export default function ConsejosPage() {
       <PageHero kicker="Consejos" title="Desde el" highlight="taller." intro="Guías cortas para cuidar tu bici entre visitas al taller." />
       <section className="tp-section">
         <div className="tp-shell tp-post-grid">
+          <Link href="/calculador-sag/" className="tp-post-card">
+            <span className="tp-meta">Herramienta interactiva · Suspensión</span>
+            <h2 className="tp-display">Calculador de SAG</h2>
+            <p>Calcula el hundimiento objetivo de horquilla y amortiguador, compara tu medición y aprende a medirlo.</p>
+            <span className="tp-service-link">Calcular SAG →</span>
+          </Link>
           {posts.map((p) => (
             <Link key={p.slug} href={`/consejos/${p.slug}/`} className="tp-post-card">
               <span className="tp-meta">

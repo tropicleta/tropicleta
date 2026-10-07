@@ -1,0 +1,21 @@
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap: 24px; }
+.card { padding: clamp(20px, 4vw, 32px); border: 1px solid var(--tp-border); border-radius: var(--tp-radius); background: var(--tp-card); }
+.card h2 { font-size: 32px; }
+.card p, .note { color: var(--tp-grey); line-height: 1.7; }
+.types { display: flex; flex-wrap: wrap; gap: 12px; padding: 0; border: 0; margin: 0 0 24px; }
+.types legend { font-weight: 800; margin-bottom: 16px; font-size: 20px; }
+.choice { flex: 1 1 230px; display: flex; align-items: center; gap: 12px; cursor: pointer; padding: 18px; border: 1px solid var(--tp-border); border-radius: var(--tp-radius); background: var(--tp-card); }
+.choice:has(input:checked) { border-color: var(--tp-orange); }
+.choice input { accent-color: var(--tp-orange); width: 20px; height: 20px; }
+.choice small { display: block; color: var(--tp-grey); margin-top: 4px; }
+.field { display: grid; gap: 8px; margin: 20px 0; font-weight: 600; }
+.field input { width: 100%; min-height: 48px; border: 1px solid var(--tp-grey-dark); border-radius: 8px; background: var(--tp-black); color: var(--tp-white); padding: 12px; font: inherit; }
+.result { background: var(--tp-black-2); border-radius: var(--tp-radius); padding: 24px; margin-top: 28px; }
+.result strong { display: block; color: var(--tp-orange); font-size: 36px; }
+.result p:last-child { margin-bottom: 0; }
+.guide { margin-top: 48px; max-width: 900px; }
+.guide li { padding: 6px 0; line-height: 1.7; color: var(--tp-grey); }
+.guide a { text-decoration: underline; color: var(--tp-orange); }
+.tableWrap { overflow-x: auto; }
+.tableWrap table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+.tableWrap th, .tableWrap td { text-align: left; padding: 14px; border-bottom: 1px solid var(--tp-border); }

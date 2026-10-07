@@ -1,0 +1,15 @@
+import assert from "node:assert/strict";
+import { calculateSag, parseSagInput } from "../src/lib/sag";
+
+assert.deepEqual(calculateSag(140, 20, 28), { targetMm: 28, measuredPercent: 20, differenceMm: 0 });
+assert.deepEqual(calculateSag(55, 30, 16.5), { targetMm: 16.5, measuredPercent: 30, differenceMm: 0 });
+assert.equal(calculateSag(100, 20, 0).measuredPercent, 0);
+assert.equal(calculateSag(100, 20).measuredPercent, undefined);
+assert.equal(calculateSag(100, 20, 30).differenceMm, 10);
+for (const length of [0, -1, NaN, Infinity]) assert.ok(calculateSag(length, 20).error);
+for (const target of [0, -1, 100, NaN, Infinity]) assert.ok(calculateSag(100, target).error);
+for (const measured of [-1, 101, NaN, Infinity]) assert.ok(calculateSag(100, 20, measured).error);
+assert.equal(parseSagInput("16,5"), 16.5);
+assert.ok(Number.isNaN(parseSagInput(" ")));
+assert.ok(Number.isNaN(parseSagInput("abc")));
+console.log("SAG: conversiones y validación correctas.");
