@@ -2,6 +2,7 @@ import { desc } from "drizzle-orm";
 import { db, schema } from "@/db";
 import { requireAdmin } from "@/lib/auth";
 import { RecommendationForm } from "@/components/admin/RecommendationForm";
+import { AffiliateListPreview } from "@/components/admin/AffiliateListPreview";
 
 export const dynamic = "force-dynamic";
 export default async function RecommendationsAdmin() {
@@ -11,6 +12,7 @@ export default async function RecommendationsAdmin() {
     <div className="tp-stack">
       <h1>Recomendados de Mercado Libre</h1>
       <p>Abre una recomendación para editarla. Desmarca Publicar para ocultarla de la página.</p>
+      <AffiliateListPreview />
       <details className="tp-panel">
         <summary style={{ cursor: "pointer", fontWeight: 700 }}>Nueva recomendación</summary>
         <RecommendationForm />

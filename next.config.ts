@@ -6,7 +6,10 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [{ source: "/sobre-tropicleta/", destination: "/nosotros/", permanent: true }];
   },
-  serverExternalPackages: ["@electric-sql/pglite", "pg"],
+  serverExternalPackages: ["@electric-sql/pglite", "pg", "@sparticuz/chromium", "puppeteer-core"],
+  outputFileTracingIncludes: {
+    "/api/admin/affiliate-list-preview": ["./node_modules/@sparticuz/chromium/bin/**"],
+  },
   // Solo `next dev`: permite abrir el sitio desde la red local (ej. http://192.168.1.122:3000 en el celular).
   // Sin esto Next bloquea el JS de desarrollo y ningún botón responde.
   allowedDevOrigins: ["192.168.*.*", "10.*.*.*", "*.local"],
