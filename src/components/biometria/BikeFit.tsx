@@ -215,17 +215,26 @@ export function BikeFit() {
   const showComparison = still && bottom && valid && assessment.valid;
 
   return <>
-    <div className={styles.grid}>
-      <div className={styles.card}>
-        <h2 className="tp-display">Prepara tu toma</h2>
+    <div className={styles.workflow} aria-label="Pasos del análisis">
+      <div><b>01 · Prepara</b><span>Bicicleta estable y cámara de perfil.</span></div>
+      <div><b>02 · Captura</b><span>Activa la cámara o elige una foto.</span></div>
+      <div><b>03 · Revisa</b><span>Confirma el encuadre y lee los ángulos.</span></div>
+    </div>
+    <details className={`${styles.card} ${styles.preparation}`}>
+      <summary>Cómo preparar una toma útil</summary>
         <ol className={styles.guide}>
           <li>Usa una bicicleta fija o rodillo estable. Pide ayuda para colocar la cámara; no uses el teléfono mientras circulas.</li>
           <li>Coloca la cámara de perfil, perpendicular a la bicicleta, aproximadamente a la altura de la cadera. Evita el gran angular y las tomas inclinadas.</li>
           <li>Incluye bicicleta completa, cabeza, manos y pies, dejando margen. Usa buena luz, ropa ajustada y deja sólo a una persona visible.</li>
           <li>Para comparar la rodilla, permanece sentado, con las manos en el manillar y el pedal del lado visible en su punto más bajo. Detén la captura.</li>
         </ol>
+    </details>
+    <div className={styles.grid}>
+      <div className={styles.card}>
+        <span className="tp-kicker">Captura</span>
+        <h2 className="tp-display">Tu vista lateral</h2>
         <label className={styles.check}><input type="checkbox" checked={consent} onChange={(event) => { setConsent(event.target.checked); if (!event.target.checked) reset(); }} />
-          <span>Acepto procesar mi cámara o foto en este dispositivo. No se envían ni guardan imágenes; puedo borrar la sesión cuando quiera. La cámara se activa sólo al pulsar el botón.</span>
+          <span>Acepto el análisis en este dispositivo. Las imágenes no se envían ni guardan. Tú decides cuándo activar la cámara y borrar la sesión.</span>
         </label>
         <div className={styles.actions}>
           <button className="tp-btn tp-btn-primary" disabled={!consent || mode === "loading" || mode === "camera"} onClick={startCamera}>Activar cámara</button>
@@ -245,6 +254,7 @@ export function BikeFit() {
         <p className={styles.small}>Al cambiar de pestaña se apaga la cámara y se borra la sesión. No hay grabación, historial ni identificación de personas.</p>
       </div>
       <div className={styles.card}>
+        <span className="tp-kicker">Resultados</span>
         <h2 className="tp-display">Tu posición, en ángulos</h2>
         <label className={styles.field}>Lado del cuerpo cercano a la cámara
           <select value={side} onChange={(event) => { setSide(event.target.value as BikeSide); setBottom(false); }}><option value="left">Izquierdo del ciclista</option><option value="right">Derecho del ciclista</option></select>
@@ -256,7 +266,8 @@ export function BikeFit() {
         <dl className={styles.metrics}>
           {[["Flexión de rodilla", assessment.valid ? assessment.knee : null], ["Ángulo de cadera", assessment.valid ? assessment.hip : null], ["Ángulo de codo", assessment.valid ? assessment.elbow : null], ["Tronco respecto a horizontal", assessment.valid ? assessment.torso : null]].map(([label, value]) => <div key={label} className={styles.metric}><dt>{label}</dt><dd>{valid && typeof value === "number" ? `${Math.round(value)}°` : "—"}</dd></div>)}
         </dl>
-        <p className={styles.small}>Rodilla: 0° corresponde a una pierna recta. Cadera: hombro–cadera–rodilla. Codo: hombro–codo–muñeca. Son proyecciones 2D, sin calibración de distancias.</p>
+        <details className={styles.metricHelp}><summary>Cómo leer estos ángulos</summary><p className={styles.small}>Rodilla: 0° corresponde a una pierna recta. Cadera: hombro–cadera–rodilla. Codo: hombro–codo–muñeca. Son proyecciones 2D, sin calibración de distancias.</p></details>
+        <h3 className={styles.comparisonTitle}>Compara una captura estática</h3>
         <label className={styles.check}><input type="checkbox" checked={bottom} disabled={!still || !valid} onChange={(event) => setBottom(event.target.checked)} />
           <span>En esta captura estática estoy sentado y el pedal del lado elegido está en su punto más bajo.</span>
         </label>

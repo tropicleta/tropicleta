@@ -10,6 +10,9 @@ function Suspension({ rear = false }: { rear?: boolean }) {
   const [length, setLength] = useState("");
   const [target, setTarget] = useState(rear ? "30" : "20");
   const [measured, setMeasured] = useState("");
+  const [brand, setBrand] = useState("unknown");
+  const [model, setModel] = useState("unknown");
+  const knownModel = brand === "FOX" && model !== "unknown";
   const result = calculateSag(parseSagInput(length), parseSagInput(target), measured.trim() === "" ? undefined : parseSagInput(measured));
   const id = rear ? "shock" : "fork";
   const fields = [
@@ -20,17 +23,33 @@ function Suspension({ rear = false }: { rear?: boolean }) {
   return <section className={styles.card} aria-labelledby={`${id}-title`}>
     <span className="tp-kicker">{rear ? "Suspensión trasera" : "Suspensión delantera"}</span>
     <h2 id={`${id}-title`} className="tp-display">{rear ? "Amortiguador" : "Horquilla"}</h2>
+    <div className={styles.inputGrid}>
+      <label className={styles.field} htmlFor={`${id}-brand`}>Marca de {rear ? "amortiguador" : "horquilla"}
+        <select id={`${id}-brand`} value={brand} onChange={event => { setBrand(event.target.value); setModel("unknown"); }}>
+          <option value="unknown">No sé qué marca tengo</option>
+          {["FOX", "RockShox", "SR Suntour", "Öhlins", "Otra"].map(name => <option key={name}>{name}</option>)}
+        </select>
+      </label>
+      {brand === "FOX" && <label className={styles.field} htmlFor={`${id}-model`}>Modelo y año de referencia
+        <select id={`${id}-model`} value={model} onChange={event => { setModel(event.target.value); if (event.target.value !== "unknown") setTarget(rear ? "30" : "20"); }}>
+          <option value="unknown">Otro modelo / no lo sé</option>
+          {(rear ? ["FLOAT DPS · 2018", "FLOAT DPX2 · 2018"] : ["36 · 2024", "38 · 2024"]).map(name => <option key={name}>{name}</option>)}
+        </select>
+      </label>}
+    </div>
+    <div className={styles.modelHelp}>
+      {knownModel ? <><b>Referencia para FOX {model}</b><p>Rango del manual: {rear ? "25–30" : "15–20"} %. Elige un punto de partida:</p><div className={styles.presets}>{[rear ? 25 : 15, rear ? 30 : 20].map(percent => <button type="button" key={percent} aria-pressed={target === String(percent)} onClick={() => setTarget(String(percent))}>{percent} %</button>)}</div><p>Confirma también la recomendación del fabricante de tu bicicleta. El recorrido o carrera varía según la versión: ingrésalo abajo.</p></> : <><b>{brand === "unknown" ? "¿No sabes cuál tienes?" : `Tu suspensión: ${brand}`}</b><p>{brand === "unknown" ? "Busca la marca y el modelo en las etiquetas de la suspensión. La marca de la bicicleta puede ser distinta." : "La marca por sí sola no define el ajuste. Busca el modelo, año y objetivo de SAG en su manual."} Puedes calcular con el ejemplo inicial, pero no es una recomendación para tu modelo.</p></>}
+    </div>
     <p id={`${id}-help`}>{rear ? "Usa la carrera indicada en la ficha técnica: en 210 × 55 mm, ingresa 55. No uses 210 ni el recorrido de la rueda trasera; el vástago visible tampoco siempre equivale a la carrera útil." : "Busca el recorrido útil en la ficha técnica de tu horquilla. La longitud visible de las barras puede ser diferente."}</p>
-    {fields.map(field => <label className={styles.field} key={field.key} htmlFor={`${id}-${field.key}`}>
+    <div className={styles.inputGrid}>{fields.map(field => <label className={styles.field} key={field.key} htmlFor={`${id}-${field.key}`}>
       {field.label}
       <input id={`${id}-${field.key}`} type="text" inputMode="decimal" value={field.value} placeholder={field.placeholder} aria-describedby={`${id}-help ${id}-result`} onChange={event => field.set(event.target.value)} />
-    </label>)}
+    </label>)}</div>
     <div id={`${id}-result`} className={styles.result} aria-live="polite" aria-atomic="true">
       {result.error ? <p>{length === "" ? "Ingresa las medidas de tu suspensión para calcular." : result.error}</p> : <>
-        <span>SAG objetivo</span><strong>{fmt(result.targetMm!)} mm</strong>
-        <p>{fmt(parseSagInput(length))} mm × {fmt(parseSagInput(target))} % ÷ 100</p>
+        <div className={styles.resultMetrics}><div><span>Tu objetivo</span><strong>{fmt(result.targetMm!)} <small>mm</small></strong><span>{fmt(parseSagInput(target))} % de {fmt(parseSagInput(length))} mm</span></div>
+        <div><span>Tu medición</span><strong>{result.measuredPercent === undefined ? "—" : fmt(result.measuredPercent)} <small>%</small></strong><span>{measured.trim() === "" ? "Medición opcional" : `${measured} mm de hundimiento`}</span></div></div>
         {result.measuredPercent !== undefined ? <>
-          <span>SAG medido</span><strong>{fmt(result.measuredPercent)} %</strong>
           <p>{Math.abs(result.differenceMm!) < 0.05 ? "Tu medición coincide con el objetivo." : `${fmt(Math.abs(result.differenceMm!))} mm ${result.differenceMm! > 0 ? "por encima" : "por debajo"} del objetivo. ${result.differenceMm! > 0 ? "Hay más hundimiento del elegido." : "Hay menos hundimiento del elegido."}`}</p>
         </> : <p>Agrega tu medición para comparar con el objetivo.</p>}
       </>}
@@ -43,13 +62,15 @@ export function SagCalculator() {
   return <div>
     <fieldset className={styles.types}>
       <legend>1. Elige tu bicicleta</legend>
-      {[ ["hardtail", "Rígida / hardtail", "Con suspensión delantera"], ["full", "Doble suspensión", "Horquilla y amortiguador"], ["none", "Sin suspensión", "Horquilla y cuadro rígidos"] ].map(([value, label, detail]) => <label key={value} className={styles.choice}>
+      {[ ["hardtail", "Hardtail", "Solo suspensión delantera"], ["full", "Doble suspensión", "Horquilla y amortiguador"] ].map(([value, label, detail]) => <label key={value} className={styles.choice}>
         <input type="radio" name="bike-sag" value={value} checked={bike === value} onChange={() => setBike(value)} /><span><b>{label}</b><small>{detail}</small></span>
       </label>)}
     </fieldset>
-    {bike === "none" ? <div className={styles.card}><h2 className="tp-display">Aquí no hay SAG que ajustar</h2><p>El SAG de suspensión no aplica a una bicicleta sin horquilla ni amortiguador. La deformación de neumáticos es otra medida y no se calcula con esta herramienta.</p></div> : <>
-      <p className={styles.note}>2. Ingresa tus medidas. Los objetivos iniciales de 20 % delante y 30 % detrás son ejemplos editables, no una recomendación universal. Usa primero el manual de tu bicicleta y suspensión.</p>
+    <>
+      <h2 className={styles.stepTitle}>2. Calcula y compara</h2>
+      <p className={styles.note}>Ingresa el recorrido y el porcentaje indicado en tu manual. Agrega el hundimiento medido para compararlo.</p>
       <div className={styles.grid}><Suspension />{bike === "full" && <Suspension rear />}</div>
-    </>}
+      <p className={styles.note}>20 % delante y 30 % detrás son ejemplos editables. El objetivo correcto depende de tu bicicleta y suspensión.</p>
+    </>
   </div>;
 }
