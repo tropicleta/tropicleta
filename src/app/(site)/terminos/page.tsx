@@ -27,7 +27,7 @@ Los pagos se procesan en la plataforma de Mercado Pago. Tropicleta no almacena d
 Se rigen por nuestras políticas de Garantía y de Envíos y devoluciones, y por la Ley N° 19.496 sobre Protección de los Derechos de los Consumidores.
 
 ## 6. Contacto
-Para cualquier consulta sobre estos términos escríbenos por WhatsApp o a hola@tropicleta.com.`}
+Para consultas sobre estos términos, revisa los canales disponibles en Contacto.`}
     />
   );
 }

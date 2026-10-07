@@ -5,7 +5,6 @@ import { multiVehicleQuote,vehicleQuotesSchema,setSelectionQuantity,cleanSelecti
 import { PackageSelector, type PackageCatalog } from "./PackageSelector";
 import { supportsVehicle, toggleSelection, emptySelection, type QuoteVehicle, type Selection } from "@/lib/package-quote";
 import { formatCLP } from "@/lib/format";
-import { whatsappUrl } from "@/lib/whatsapp";
 import { serviceQuote, pickupPrices, oneWayPrices, transportLabels, type TransportMode, type QuoteService } from "@/lib/service-quote";
 import { useActionState, useState, useEffect, useRef } from "react";
 
@@ -15,7 +14,7 @@ import { SubmitButton } from "@/components/SubmitButton";
 import { deliveryCommunes } from "@/data/shop";
 import type { FormState } from "@/lib/forms";
 
-import { quoteMessage, quoteSavings } from "@/lib/quote-presentation";
+import { quoteSavings } from "@/lib/quote-presentation";
 type Catalog = PackageCatalog;
 
 export function BookingForm({ catalog, vehicles, preselected, initialVehicleSlug, minDate }: { catalog: Catalog; vehicles:QuoteVehicle[]; preselected?: string; initialVehicleSlug?:string; minDate: string }) {
@@ -51,7 +50,6 @@ export function BookingForm({ catalog, vehicles, preselected, initialVehicleSlug
   const priceLabel=(s:QuoteService)=>s.price===null?"A cotizar":(s.priceFrom?"Desde ":"")+formatCLP(s.price);
 
   const savings=quoteSavings(all,chosen);
-  const message=quoteMessage(all,groups,pickup,commune,transportMode,firstService);
   const incomplete=groups.some(g=>!g.calculation.leaves.length);
   useEffect(()=>{if(step>1&&(!chosen.length||incomplete||selectionError))setStep(1);},[chosen.length,incomplete,selectionError,step]);
   const val = (k: string) => (typeof state.values?.[k] === "string" ? (state.values[k] as string) : undefined);
@@ -119,7 +117,7 @@ export function BookingForm({ catalog, vehicles, preselected, initialVehicleSlug
         )}
       </fieldset>
 
-<details className="tp-reservation-fields" open={!!state.errors||!!state.message}><summary>Prefiero solicitar una hora desde aquí (opcional)</summary><p className="tp-hint">Para enviar por WhatsApp, usa el botón de tu resumen. Para registrar una solicitud de hora, completa estos datos.</p>
+<details className="tp-reservation-fields" open={step===3||!!state.errors||!!state.message}><summary>Enviar cotización y solicitar hora</summary><p className="tp-hint">Completa estos datos para enviar tu cotización al taller y solicitar una hora.</p>
       <fieldset className="tp-fieldset">
         <legend className="tp-label">¿Cuándo te acomoda?</legend>
         <div className="tp-form-grid">
@@ -174,7 +172,6 @@ export function BookingForm({ catalog, vehicles, preselected, initialVehicleSlug
         </dl>
         {quote.pending && <p>Hay servicios o transporte pendientes de cotizar; no están incluidos en la suma.</p>}
         <p className="tp-hint">El taller confirma el valor final tras el diagnóstico gratuito. Repuestos y trabajos adicionales se cotizan aparte. Revisaremos si los servicios elegidos incluyen trabajos en común.</p>
-        {step===3&&chosen.length > 0 && !selectionError && !incomplete && <a className="tp-btn tp-btn-primary" href={whatsappUrl(message)} target="_blank" rel="noopener noreferrer">Enviar cotización por WhatsApp</a>}
         {step<3&&<button type="button" className="tp-btn tp-btn-secondary tp-btn-sm" disabled={!chosen.length||incomplete||!!selectionError} onClick={()=>goStep(3)}>Revisar y enviar</button>}
         {savings.savings>0&&<p className="tp-hint">El ahorro del pack ya está aplicado a sus precios. El descuento del primer servicio es adicional.</p>}
       </aside>

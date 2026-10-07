@@ -4,7 +4,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { nav } from "@/data/site";
-import { WA_COORDINAR } from "@/lib/whatsapp";
 import { CartButton } from "./cart/CartButton";
 import { BrandLogo } from "./BrandLogo";
 
@@ -34,14 +33,7 @@ export function Header() {
           </nav>
 
           <div className="tp-header-actions">
-          <a
-            className="tp-btn tp-btn-primary tp-btn-sm tp-header-cta"
-            href={WA_COORDINAR}
-            target="_blank"
-            rel="noopener"
-          >
-            Coordinar por WhatsApp
-          </a>
+
 
           <CartButton />
 
@@ -64,9 +56,7 @@ export function Header() {
               {item.label}
             </Link>
           ))}
-          <a className="tp-btn tp-btn-primary" href={WA_COORDINAR} target="_blank" rel="noopener">
-            Coordinar por WhatsApp
-          </a>
+
         </nav>
       </div>
     </header>

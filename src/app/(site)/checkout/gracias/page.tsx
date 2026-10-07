@@ -5,7 +5,6 @@ import { ClearCart } from "@/components/cart/ClearCart";
 import { formatCLP } from "@/lib/format";
 import { getOrderByCode, syncMercadoPagoPayment } from "@/lib/orders";
 import { mpEnabled } from "@/lib/payments/mercadopago";
-import { whatsappUrl } from "@/lib/whatsapp";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = { title: "Estado de tu compra", robots: { index: false } };
@@ -77,14 +76,7 @@ export default async function GraciasCompraPage({ searchParams }: Props) {
                 Intentar de nuevo
               </Link>
             )}
-            <a
-              className="tp-btn tp-btn-secondary"
-              href={whatsappUrl(`Hola Tropicleta, tengo una consulta sobre mi orden ${order.code}.`)}
-              target="_blank"
-              rel="noopener"
-            >
-              Consultar por WhatsApp
-            </a>
+
           </div>
         </div>
 

@@ -2,7 +2,6 @@ import { siteUrl } from "@/lib/site-url";
 import type { Metadata } from "next";
 import { PageHero } from "@/components/PageHero";
 import { faqs } from "@/data/faq";
-import { WA_CONSULTAR } from "@/lib/whatsapp";
 
 export const metadata: Metadata = { alternates: { canonical: siteUrl("/preguntas-frecuentes/") },
   title: "Preguntas frecuentes",
@@ -20,9 +19,7 @@ export default function FaqPage() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <PageHero kicker="Ayuda" title="Preguntas" highlight="frecuentes." intro="Lo que más nos preguntan. Si no encuentras tu respuesta, escríbenos.">
-        <a className="tp-btn tp-btn-primary" href={WA_CONSULTAR} target="_blank" rel="noopener">
-          Preguntar por WhatsApp
-        </a>
+
       </PageHero>
       <section className="tp-section">
         <div className="tp-shell" style={{ maxWidth: 860 }}>

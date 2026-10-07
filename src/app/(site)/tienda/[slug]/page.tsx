@@ -6,7 +6,6 @@ import { AddToCart } from "@/components/cart/AddToCart";
 import { ProductGallery } from "@/components/shop/ProductGallery";
 import { getProduct } from "@/lib/queries";
 import { formatCLP } from "@/lib/format";
-import { whatsappUrl } from "@/lib/whatsapp";
 
 export const dynamic = "force-dynamic";
 
@@ -91,15 +90,7 @@ export default async function ProductoPage({ params }: Props) {
               <li>Despacho a Tierra Amarilla, Paipote y Copiapó</li>
               <li>Pago con Mercado Pago</li>
             </ul>
-            <a
-              className="tp-link-btn"
-              style={{ display: "inline-block", marginTop: 18 }}
-              href={whatsappUrl(`Hola Tropicleta, tengo una consulta sobre ${p.name}.`)}
-              target="_blank"
-              rel="noopener"
-            >
-              ¿Dudas? Pregúntanos por WhatsApp
-            </a>
+
           </div>
         </div>
       </div>

@@ -25,7 +25,7 @@ Si dentro de los 14 días siguientes a la entrega un ajuste o trabajo realizado 
 Los repuestos que vendemos o instalamos tienen la garantía legal del fabricante. Te ayudamos a gestionarla.
 
 ## Cómo hacerla válida
-Escríbenos por WhatsApp con tu código de solicitud o boleta y coordinamos la revisión. Si la bici está en Tierra Amarilla, Paipote o Copiapó podemos retirarla según disponibilidad.`}
+Solicita la revisión desde Contacto, indicando tu código de solicitud o boleta. Si la bici está en Tierra Amarilla, Paipote o Copiapó podemos retirarla según disponibilidad.`}
     />
   );
 }

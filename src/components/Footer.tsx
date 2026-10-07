@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { BrandLogo } from "./BrandLogo";
 import { footerLinks, site } from "@/data/site";
-import { WA_CONSULTAR } from "@/lib/whatsapp";
 import { SocialIcon } from "./SocialIcon";
 
 export function Footer() {
@@ -13,7 +12,7 @@ export function Footer() {
         <div className="tp-socials">{site.socials.map(s => <a key={s.name} href={s.href} target="_blank" rel="noopener" aria-label={s.name}><SocialIcon name={s.name} /></a>)}</div>
       </div>
       <div className="tp-footer-contact">
-        <a className="tp-footer-whatsapp" href={WA_CONSULTAR} target="_blank" rel="noopener">WhatsApp {site.whatsappDisplay}</a>
+
         <a href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(site.address + ", Atacama, Chile")}`} target="_blank" rel="noopener">{site.address} ↗</a>
         <span>Atención con coordinación previa</span>
         <a href={`mailto:${site.email}`}>{site.email}</a>

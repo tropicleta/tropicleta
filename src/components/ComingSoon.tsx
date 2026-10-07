@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { WA_COORDINAR } from "@/lib/whatsapp";
 
 type Props = {
   kicker: string;
@@ -20,9 +19,7 @@ export function ComingSoon({ kicker, title, highlight, intro, phase }: Props) {
         </h1>
         <p className="tp-hero-copy">{intro}</p>
         <div className="tp-actions">
-          <a className="tp-btn tp-btn-primary" href={WA_COORDINAR} target="_blank" rel="noopener">
-            Coordinar por WhatsApp
-          </a>
+
           <Link className="tp-btn tp-btn-secondary" href="/">
             Volver al inicio
           </Link>

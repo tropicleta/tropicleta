@@ -2,7 +2,6 @@ import { siteUrl } from "@/lib/site-url";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { PageHero } from "@/components/PageHero";
-import { WA_CONSULTAR } from "@/lib/whatsapp";
 
 export const metadata: Metadata = { alternates: { canonical: siteUrl("/nosotros/") },
   title: "Nosotros",
@@ -85,9 +84,7 @@ export default function NosotrosPage() {
             <Link className="tp-btn tp-btn-primary" href="/agendar/">
               Solicitar hora
             </Link>
-            <a className="tp-btn tp-btn-secondary" href={WA_CONSULTAR} target="_blank" rel="noopener">
-              Hablar con Tropicleta
-            </a>
+
           </div>
         </div>
       </section>

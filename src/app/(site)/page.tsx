@@ -7,7 +7,6 @@ import { getFeaturedProducts } from "@/lib/queries";
 import { ShopSections } from "@/components/shop/ShopSections";
 import { ProductCard } from "@/components/shop/ProductCard";
 import { site } from "@/data/site";
-import { WA_CONSULTAR, WA_COORDINAR } from "@/lib/whatsapp";
 import { WorkshopGallery } from "@/components/WorkshopGallery";
 import { AnimatedEmblem } from "@/components/AnimatedEmblem";
 
@@ -45,15 +44,7 @@ export default async function HomePage() {
               </p>
 
               <div className="tp-actions">
-                <a
-                  className="tp-btn tp-btn-primary"
-                  href={WA_COORDINAR}
-                  target="_blank"
-                  rel="noopener"
-                  aria-label="Coordinar servicio con Tropicleta por WhatsApp"
-                >
-                  WhatsApp
-                </a>
+
                 <Link className="tp-btn tp-btn-secondary" href="/servicios/">
                   Cotizar servicios
                 </Link>
@@ -119,7 +110,7 @@ export default async function HomePage() {
                       Escríbenos para consultar productos y disponibilidad.
                     </div>
                   </div>
-                  <a className="tp-btn tp-btn-secondary" href={WA_CONSULTAR} target="_blank" rel="noopener">Consultar productos</a>
+
                 </>
               )}
             </div>
@@ -144,9 +135,7 @@ export default async function HomePage() {
               <li className="tp-local-item">Taller móvil para eventos ciclistas en la Región de Atacama.</li>
             </ul>
             <div className="tp-actions">
-              <a className="tp-btn tp-btn-primary" href={WA_CONSULTAR} target="_blank" rel="noopener">
-                Hablar con Tropicleta
-              </a>
+
               <Link className="tp-btn tp-btn-secondary" href="/contacto/">
                 Ver ubicación y contacto
               </Link>

@@ -2,7 +2,6 @@ import { siteUrl } from "@/lib/site-url";
 import type { Metadata } from "next";
 import { PageHero } from "@/components/PageHero";
 import { ContactForm } from "@/components/forms/ContactForm";
-import { whatsappUrl } from "@/lib/whatsapp";
 import { MobileWorkshopGallery } from "@/components/MobileWorkshopGallery";
 
 export const metadata: Metadata = { alternates: { canonical: siteUrl("/eventos/") },
@@ -27,14 +26,7 @@ export default function EventosPage() {
         highlight="a tu evento."
         intro="Tu bici, nuestro apoyo donde nos necesites. Asistencia mecánica en terreno y apoyo en rutas y eventos ciclistas de Atacama, con coordinación previa."
       >
-        <a
-          className="tp-btn tp-btn-primary"
-          href={whatsappUrl("Hola Tropicleta, quiero cotizar el taller móvil para un evento.")}
-          target="_blank"
-          rel="noopener"
-        >
-          Cotizar por WhatsApp
-        </a>
+
         <a className="tp-btn tp-btn-secondary" href="#cotizar">
           Formulario de cotización
         </a>

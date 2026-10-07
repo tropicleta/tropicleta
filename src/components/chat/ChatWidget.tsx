@@ -212,7 +212,6 @@ export function ChatWidget() {
               <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M4 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
             </button>
           </form>
-          <a className="tp-chat-wa" href={WA_CONSULTAR} target="_blank" rel="noopener">¿Prefieres hablar con una persona? Escríbenos por WhatsApp</a>
         </section>
       )}
     </>

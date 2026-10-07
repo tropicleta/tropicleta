@@ -4,7 +4,6 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getService } from "@/lib/queries";
 import { formatCLP } from "@/lib/format";
-import { whatsappUrl } from "@/lib/whatsapp";
 
 export const dynamic = "force-dynamic";
 
@@ -70,14 +69,7 @@ export default async function ServicioPage({ params }: Props) {
               <Link className="tp-btn tp-btn-primary tp-btn-block" href={`/servicios/?servicio=${s.slug}`}>
                 Agregar a mi cotización
               </Link>
-              <a
-                className="tp-btn tp-btn-secondary tp-btn-block"
-                href={whatsappUrl(`Hola Tropicleta, quiero consultar por el servicio "${s.name}".`)}
-                target="_blank"
-                rel="noopener"
-              >
-                Consultar por WhatsApp
-              </a>
+
             </div>
           </aside>
         </div>

@@ -1,6 +1,5 @@
 import Image from "next/image";
 import Link from "next/link";
-import { whatsappUrl } from "@/lib/whatsapp";
 
 export function MobileWorkshop() {
   return <section className="tp-section tp-mobile" aria-labelledby="mobile-title">
@@ -18,7 +17,7 @@ export function MobileWorkshop() {
           <li className="tp-local-item">Disponibilidad y alcance con coordinación previa.</li>
         </ul>
         <div className="tp-actions">
-          <a className="tp-btn tp-btn-primary" href={whatsappUrl("Hola Tropicleta, quiero cotizar el taller móvil. Mi evento es en: __. Fecha: __. Participantes aproximados: __.")} target="_blank" rel="noopener">Cotizar mi evento</a>
+
           <Link className="tp-btn tp-btn-secondary" href="/eventos/">Conocer el taller móvil →</Link>
         </div>
       </div>
@@ -29,6 +28,6 @@ export function MobileWorkshop() {
 export function PickupRates() {
   return <section id="retiro-entrega" className="tp-section tp-pickup-visual" aria-labelledby="pickup-title"><div className="tp-shell tp-pickup-grid">
     <div><span className="tp-kicker">Tu bici también viaja con nosotros</span><h2 id="pickup-title" className="tp-display tp-section-title">Del taller<br />a tu puerta.</h2><p className="tp-section-intro">Nos acercamos a tu bici. Coordinamos el retiro y su regreso en Tierra Amarilla, Paipote y Copiapó para que tú solo pienses en volver a pedalear.</p><p className="tp-muted">Elige tu zona al cotizar y verás el transporte sumado al total. Para solo retiro, solo entrega u otras zonas, escríbenos.</p><div className="tp-actions"><Link className="tp-btn tp-btn-primary" href="/servicios/">Cotizar servicio + transporte →</Link></div></div>
-    <div className="tp-pickup-poster"><div className="tp-pickup-crop"><Image src="/catalogo/4.jpg" alt="Tarifas de retiro y entrega: Tierra Amarilla $3.000 un trayecto o $5.000 ambos; Paipote $8.000 o $15.000; Copiapó $12.000 o $20.000" width={720} height={1280} sizes="(max-width: 760px) 100vw, 500px" /></div><a className="tp-btn tp-btn-primary tp-pickup-link" href={whatsappUrl("Hola Tropicleta, quiero coordinar retiro o entrega de mi bicicleta. Mi zona es: __. Necesito: solo retiro / solo entrega / ambos.")} target="_blank" rel="noopener noreferrer">Coordinar retiro o entrega ↗</a></div>
+    <div className="tp-pickup-poster"><div className="tp-pickup-crop"><Image src="/catalogo/4.jpg" alt="Tarifas de retiro y entrega: Tierra Amarilla $3.000 un trayecto o $5.000 ambos; Paipote $8.000 o $15.000; Copiapó $12.000 o $20.000" width={720} height={1280} sizes="(max-width: 760px) 100vw, 500px" /></div></div>
   </div></section>;
 }

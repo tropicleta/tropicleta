@@ -4,7 +4,6 @@ import Link from "next/link";
 import { CategorySelect } from "@/components/shop/CategorySelect";
 import { CatalogSearch } from "@/components/CatalogSearch";
 import { matchesSearch } from "@/lib/catalog-search";
-import { whatsappUrl } from "@/lib/whatsapp";
 import { ProductCard } from "@/components/shop/ProductCard";
 import { SortSelect } from "@/components/shop/SortSelect";
 import { ShopSections } from "@/components/shop/ShopSections";
@@ -64,7 +63,7 @@ export default async function TiendaPage({ searchParams }: Props) {
                 <p>{query ? "Prueba con otra palabra o consulta por la pieza que buscas." : "Estamos preparando nuestro catálogo online. Escríbenos con el modelo de tu bicicleta y te ayudamos a encontrar lo que necesitas."}</p>
                 <div className="tp-actions">
                   {(query || categoria) && <Link className="tp-btn tp-btn-secondary" href="/tienda/">Ver todo el catálogo</Link>}
-                  <a className="tp-btn tp-btn-primary" href={whatsappUrl(`Hola Tropicleta, quiero consultar disponibilidad ${query ? `de ${query}` : "de repuestos y accesorios"}.`)} target="_blank" rel="noopener">Consultar por WhatsApp</a>
+
                 </div>
               </div>
             </div>

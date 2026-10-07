@@ -4,7 +4,6 @@ import { eq } from "drizzle-orm";
 import { notFound } from "next/navigation";
 import { db, schema } from "@/db";
 import { formatDate } from "@/lib/format";
-import { whatsappUrl } from "@/lib/whatsapp";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = { title: "Solicitud recibida", robots: { index: false } };
@@ -18,9 +17,6 @@ export default async function GraciasAgendarPage({ searchParams }: Props) {
   if (!b) notFound();
 
   const slot = b.timeSlot === "manana" ? "mañana" : "tarde";
-  const wa = whatsappUrl(
-    `Hola Tropicleta, envié la solicitud ${b.code}: ${b.serviceNames.join(", ")}. ${b.notes ?? ""} Para el ${formatDate(b.preferredDate)} en la ${slot}.`,
-  );
 
   return (
     <section className="tp-hero tp-page-hero">
@@ -31,13 +27,10 @@ export default async function GraciasAgendarPage({ searchParams }: Props) {
             ¡Listo, <span>{b.name.split(" ")[0]}!</span>
           </h1>
           <p className="tp-hero-copy">
-            Recibimos tu solicitud. Te escribiremos por WhatsApp para confirmar el día y la hora. Si quieres acelerar
-            la coordinación, envíanos el resumen ahora.
+            Recibimos tu solicitud. Te escribiremos por WhatsApp para confirmar el día y la hora.
           </p>
           <div className="tp-actions">
-            <a className="tp-btn tp-btn-primary" href={wa} target="_blank" rel="noopener">
-              Enviar resumen por WhatsApp
-            </a>
+
             <Link className="tp-btn tp-btn-secondary" href="/">
               Volver al inicio
             </Link>
