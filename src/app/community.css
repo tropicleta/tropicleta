@@ -302,3 +302,10 @@
 .tp-footer-compact .tp-footer-bottom { margin-top:16px; padding-top:12px; gap:8px 16px; }
 @media(max-width:979px) { .tp-footer-main { grid-template-columns:210px 1fr; gap:20px; } .tp-footer-navigation { grid-column:1/-1; } }
 @media(max-width:599px) { .tp-footer-main { grid-template-columns:1fr; gap:16px; } .tp-footer-compact .tp-footer-brand { display:flex; align-items:center; justify-content:space-between; gap:12px; } .tp-footer-compact .tp-brand-stacked .tp-brand-mascot { width:48px; } .tp-footer-compact .tp-footer-wordmark { width:100px; } .tp-footer-compact .tp-footer-tagline { font-size:9px; } .tp-footer-compact .tp-socials { display:grid; grid-template-columns:repeat(2,36px); margin:0; gap:5px; } .tp-footer-contact { gap:5px; } .tp-footer-compact .tp-footer-bottom { font-size:11px; } }
+
+/* Resumen compacto del taller móvil en la portada. */
+.tp-mobile-summary { padding-block:32px; }
+.tp-mobile-summary-grid { gap:36px; }
+.tp-mobile-summary-photo { width:min(100%,250px); }
+.tp-mobile-summary .tp-section-intro { margin-bottom:18px; }
+@media(max-width:700px) { .tp-mobile-summary { padding-block:28px; } .tp-mobile-summary-grid { gap:20px; } .tp-mobile-summary-photo { width:min(100%,220px); } }
