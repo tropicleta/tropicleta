@@ -23,6 +23,13 @@ try {
   await page.setViewport({ width: 1440, height: 1000 });
   await page.goto(`${origin}/biometria/`, { waitUntil: "networkidle0" });
   assert.equal(await page.$eval("button.tp-btn-primary", (button) => button.disabled), true);
+  // The example demonstrates the workflow without consent, a camera or inference.
+  await page.evaluate(() => [...document.querySelectorAll("button")].find((button) => button.textContent === "Ver ejemplo de resultados").click());
+  await page.waitForFunction(() => document.querySelector('[role="status"]').textContent.includes("Ejemplo ilustrativo"));
+  assert.equal(await page.$$eval("dd", (items) => items.every((item) => item.textContent.includes("°"))), true);
+  assert.equal(await page.$eval("video", (video) => video.srcObject), null);
+  assert.equal(await page.$eval('input[type="checkbox"]', (input) => input.checked), false);
+  await page.evaluate(() => [...document.querySelectorAll("button")].find((button) => button.textContent === "Apagar y borrar").click());
   await page.screenshot({ path: join(tmpdir(), "tropicleta-biometria-desktop.png"), fullPage: true });
   await page.setViewport({ width: 390, height: 844 });
   assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
@@ -42,6 +49,7 @@ try {
   if (fixture) {
     await (await page.$('input[type="file"]')).uploadFile(fixture);
     await page.waitForFunction(() => document.querySelector('[role="status"]').textContent.includes("Análisis local activo"), { timeout: 90000 });
+    await page.select("select", "left");
     // Explicitly select the framing checkbox (second checkbox in DOM).
     const checks = await page.$$('input[type="checkbox"]');
     if (!(await checks[1].evaluate((input) => input.checked))) await checks[1].click();
