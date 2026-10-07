@@ -105,14 +105,14 @@ async function sendOrderEmails(orderId: number) {
 
 /** Consulta un pago en Mercado Pago y actualiza la orden (webhook y página de retorno). */
 export async function syncMercadoPagoPayment(paymentId: string) {
-  const { mpPayment } = await import("@/lib/payments/mercadopago");
+  const { mpPayment, mpPaymentEnvironmentMatches } = await import("@/lib/payments/mercadopago");
   const p = await mpPayment().get({ id: paymentId });
   if (!p.external_reference) return null;
   const [order] = await db.select().from(orders).where(eq(orders.code, p.external_reference)).limit(1);
   if (!order || order.paymentMethod !== "mercadopago") return null;
 
   if (p.status === "approved") {
-    if (p.currency_id !== "CLP" || p.transaction_amount !== order.total || p.live_mode !== (process.env.MP_SANDBOX !== "1")) {
+    if (p.currency_id !== "CLP" || p.transaction_amount !== order.total || !(await mpPaymentEnvironmentMatches(p))) {
       console.error(`[mp] pago incompatible con ${order.code}: monto, moneda o ambiente incorrectos`);
       await flagMercadoPagoIssue(order, "pago_incompatible", p, `El pago aprobado no coincide con el monto, moneda CLP o ambiente esperado. La orden suma ${formatCLP(order.total)}. Revisar en Mercado Pago antes de entregar.`);
       return order.code;

@@ -1,9 +1,10 @@
 import assert from "node:assert/strict";
+import { createHmac } from "node:crypto";
 import { PGlite } from "@electric-sql/pglite";
 import { drizzle } from "drizzle-orm/pglite";
 import { migrate } from "drizzle-orm/pglite/migrator";
 import { eq } from "drizzle-orm";
-import { Payment } from "mercadopago";
+import { Payment, User } from "mercadopago";
 import { WebpayPlus } from "transbank-sdk";
 import { NextRequest } from "next/server";
 import * as schema from "../src/db/schema";
@@ -26,10 +27,12 @@ async function main() {
   const db = drizzle(client, { schema });
   (globalThis as Record<string, unknown>).__tpDb = db;
   const originalGet = Payment.prototype.get;
+  const originalUserGet = User.prototype.get;
   const originalCommit = WebpayPlus.Transaction.prototype.commit;
   const originalStatus = WebpayPlus.Transaction.prototype.status;
   const previousToken = process.env.MP_ACCESS_TOKEN;
   const previousSandbox = process.env.MP_SANDBOX;
+  const previousWebhookSecret = process.env.MP_WEBHOOK_SECRET;
   process.env.MP_ACCESS_TOKEN = "test-token";
   process.env.MP_SANDBOX = "1";
   try {
@@ -48,13 +51,49 @@ async function main() {
     payment = { ...payment, transaction_amount: 2000, live_mode: true };
     await syncMercadoPagoPayment("123");
     assert.equal((await db.select().from(schema.orders).where(eq(schema.orders.id, order.id)))[0].status, "pendiente");
-    payment = { ...payment, live_mode: false };
+    User.prototype.get = async () => ({ id: 999, tags: [], api_response: payment.api_response });
+    payment = { ...payment, collector_id: 999 };
+    await syncMercadoPagoPayment("123");
+    assert.equal((await db.select().from(schema.orders).where(eq(schema.orders.id, order.id)))[0].status, "pendiente");
+    User.prototype.get = async () => ({ id: 998, tags: ["test_user"], api_response: payment.api_response });
+    await syncMercadoPagoPayment("123");
+    assert.equal((await db.select().from(schema.orders).where(eq(schema.orders.id, order.id)))[0].status, "pendiente");
+    User.prototype.get = async () => ({ id: 999, tags: ["test_user"], api_response: payment.api_response });
     await syncMercadoPagoPayment("123");
     await syncMercadoPagoPayment("123");
     assert.equal((await db.select().from(schema.products).where(eq(schema.products.id, product.id)))[0].stock, 3);
     assert.equal(await markOrderPaid(order.id, {}), false);
     await markOrderFailed(order.id, "rechazada");
     assert.equal((await db.select().from(schema.orders).where(eq(schema.orders.id, order.id)))[0].status, "pagada");
+    const { POST: mpWebhook } = await import("../src/app/api/mercadopago/webhook/route");
+    process.env.MP_WEBHOOK_SECRET = "isolated-webhook-test-secret";
+    const [webhookProduct] = await db.insert(schema.products).values({ slug: "webhook-test", name: "Webhook", price: 1000, stock: 2 }).returning();
+    const [webhookOrder] = await db.insert(schema.orders).values({ code: "MP-WEBHOOK", customerName: "Prueba", customerEmail: "test@example.com", customerPhone: "56911111111", deliveryMethod: "retiro", subtotal: 1000, shipping: 0, total: 1000, paymentMethod: "mercadopago" }).returning();
+    await db.insert(schema.orderItems).values({ orderId: webhookOrder.id, productId: webhookProduct.id, name: webhookProduct.name, unitPrice: 1000, quantity: 1 });
+    payment = { ...payment, id: 456, external_reference: webhookOrder.code, transaction_amount: 1000 };
+    const webhookRequest = (signature = true, id = "456") => {
+      const ts = String(Math.floor(Date.now() / 1000));
+      const requestId = "isolated-request";
+      const hash = createHmac("sha256", process.env.MP_WEBHOOK_SECRET!).update(`id:${id};request-id:${requestId};ts:${ts};`).digest("hex");
+      return new NextRequest(`http://localhost/api/mercadopago/webhook/?data.id=${id}&type=payment`, { method: "POST", headers: { "content-type": "application/json", "x-request-id": requestId, ...(signature ? { "x-signature": `ts=${ts},v1=${hash}` } : {}) }, body: JSON.stringify({ type: "payment", data: { id } }) });
+    };
+    assert.equal((await mpWebhook(webhookRequest(false))).status, 401);
+    assert.equal((await db.select().from(schema.orders).where(eq(schema.orders.id, webhookOrder.id)))[0].status, "pendiente");
+    const tampered = webhookRequest();
+    tampered.headers.set("x-signature", "ts=123,v1=invalid");
+    assert.equal((await mpWebhook(tampered)).status, 401);
+    assert.equal((await mpWebhook(webhookRequest())).status, 200);
+    assert.equal((await mpWebhook(webhookRequest())).status, 200);
+    assert.equal((await db.select().from(schema.orders).where(eq(schema.orders.id, webhookOrder.id)))[0].status, "pagada");
+    assert.equal((await db.select().from(schema.products).where(eq(schema.products.id, webhookProduct.id)))[0].stock, 1);
+    for (const status of ["rejected", "cancelled"] as const) {
+      const [failed] = await db.insert(schema.orders).values({ code: `MP-${status}`, customerName: "Prueba", customerEmail: "test@example.com", customerPhone: "56911111111", deliveryMethod: "retiro", subtotal: 1000, shipping: 0, total: 1000, paymentMethod: "mercadopago" }).returning();
+      await db.insert(schema.orderItems).values({ orderId: failed.id, productId: webhookProduct.id, name: webhookProduct.name, unitPrice: 1000, quantity: 1 });
+      payment = { ...payment, external_reference: failed.code, status };
+      assert.equal((await mpWebhook(webhookRequest())).status, 200);
+      assert.equal((await db.select().from(schema.orders).where(eq(schema.orders.id, failed.id)))[0].status, status === "rejected" ? "rechazada" : "anulada");
+      assert.equal((await db.select().from(schema.products).where(eq(schema.products.id, webhookProduct.id)))[0].stock, 1);
+    }
     const [recommendation] = await db.insert(schema.recommendations).values({ name: "Luces", category: "Seguridad", reason: "Para mejorar visibilidad.", url: "https://meli.la/abc" }).returning();
     assert.equal(recommendation.active, false);
     await db.update(schema.recommendations).set({ active: true }).where(eq(schema.recommendations.id, recommendation.id));
@@ -82,10 +121,12 @@ async function main() {
     console.log("OK: Mercado Pago, Webpay, recuperación de conexión, duplicados, stock y recomendados.");
   } finally {
     Payment.prototype.get = originalGet;
+    User.prototype.get = originalUserGet;
     WebpayPlus.Transaction.prototype.commit = originalCommit;
     WebpayPlus.Transaction.prototype.status = originalStatus;
     if (previousToken === undefined) delete process.env.MP_ACCESS_TOKEN; else process.env.MP_ACCESS_TOKEN = previousToken;
     if (previousSandbox === undefined) delete process.env.MP_SANDBOX; else process.env.MP_SANDBOX = previousSandbox;
+    if (previousWebhookSecret === undefined) delete process.env.MP_WEBHOOK_SECRET; else process.env.MP_WEBHOOK_SECRET = previousWebhookSecret;
     await client.close();
   }
 }
