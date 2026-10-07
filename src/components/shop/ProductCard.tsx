@@ -20,7 +20,7 @@ export function ProductCard({ product }: { product: Product }) {
         }
       />
       <Link className="tp-product-body" href={`/tienda/${product.slug}/`}>
-        <h3 className="tp-product-name">{product.name}</h3>
+        <h3 className="tp-product-name" title={product.name}>{product.name}</h3>
         <div className="tp-product-price">
           {formatCLP(product.price)}
           {onSale && <s>{formatCLP(product.compareAtPrice!)}</s>}

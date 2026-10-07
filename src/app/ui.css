@@ -1286,3 +1286,6 @@
 .tp-recommendation-card { display: flex; flex-direction: column; }
 .tp-recommendation-card .tp-product-body { flex: 1; display: flex; flex-direction: column; gap: 8px; }
 .tp-recommendation-card .tp-product-body .tp-btn { margin-top: auto; padding: 10px 12px; font-size: 13px; }
+.tp-product-card .tp-product-name { min-height: 2.6em; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; }
+.tp-product-card .tp-product-body { text-align: left; }
+

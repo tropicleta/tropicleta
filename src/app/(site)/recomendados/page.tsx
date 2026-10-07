@@ -45,7 +45,7 @@ export default async function RecommendationsPage({ searchParams }: { searchPara
       {items.length ? <div className="tp-product-grid" style={{ marginTop: 24 }}>{items.map(item => <article className="tp-product-card tp-recommendation-card" key={item.id}>
         <ProductMedia name={item.name} image={item.imageUrl} />
         <div className="tp-product-body">
-          <span className="tp-hint">{item.category}</span><h2 className="tp-product-name">{item.name}</h2>
+          <span className="tp-hint">{item.category}</span><h2 className="tp-product-name" title={item.name}>{item.name}</h2>
           {item.price != null && <div className="tp-product-price">{formatCLP(item.price)}</div>}
           <span className="tp-hint">Precio referencial en Mercado Libre</span>
           <a className="tp-btn tp-btn-primary" href={item.url} target="_blank" rel="sponsored nofollow noopener noreferrer">Ver en Mercado Libre ↗</a>
