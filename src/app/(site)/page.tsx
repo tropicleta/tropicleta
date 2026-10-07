@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { ServiceCarousel } from "@/components/ServiceCarousel";
 import { getFeaturedProducts } from "@/lib/queries";
+import { ShopSections } from "@/components/shop/ShopSections";
 import { ProductCard } from "@/components/shop/ProductCard";
 import { site } from "@/data/site";
 import { WA_CONSULTAR, WA_COORDINAR } from "@/lib/whatsapp";
@@ -69,7 +70,10 @@ export default async function HomePage() {
 
       <section className="tp-section tp-mobile-summary">
         <div className="tp-shell tp-mobile-summary-grid">
-          <div><span className="tp-kicker">Taller móvil</span><h2 className="tp-display tp-section-title">Nos vemos en tu próxima ruta.</h2><p className="tp-section-intro">Llevamos la mecánica de Tropicleta a carreras, cicletadas y jornadas comunitarias en Atacama. Coordinamos el apoyo según las necesidades de tu evento.</p><Link className="tp-btn tp-btn-secondary" href="/eventos/">Conocer el taller móvil →</Link></div>
+          <div className="tp-home-discover">
+            <div><span className="tp-kicker">Taller móvil</span><h2 className="tp-display tp-section-title">Nos vemos en tu próxima ruta.</h2><p className="tp-section-intro">Asistencia mecánica para carreras, cicletadas y eventos en Atacama. Coordinamos el apoyo para tu próxima salida.</p><Link className="tp-btn tp-btn-secondary" href="/eventos/">Conocer el taller móvil →</Link></div>
+            <div className="tp-home-shopping"><span className="tp-kicker">Equipa tu próxima salida</span><ShopSections /></div>
+          </div>
           <Link href="/eventos/" className="tp-mobile-summary-photo"><Image src="/taller/taller-movil-presentacion.jpeg" alt="Taller móvil Tropicleta: asistencia mecánica en terreno para eventos ciclistas" width={720} height={1056} sizes="(max-width: 700px) 80vw, 300px" /></Link>
         </div>
       </section>

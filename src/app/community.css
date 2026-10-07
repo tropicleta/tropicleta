@@ -306,6 +306,19 @@
 /* Resumen compacto del taller móvil en la portada. */
 .tp-mobile-summary { padding-block:32px; }
 .tp-mobile-summary-grid { gap:36px; }
-.tp-mobile-summary-photo { width:min(100%,250px); }
+.tp-mobile-summary-photo { width:min(100%,300px); }
 .tp-mobile-summary .tp-section-intro { margin-bottom:18px; }
-@media(max-width:700px) { .tp-mobile-summary { padding-block:28px; } .tp-mobile-summary-grid { gap:20px; } .tp-mobile-summary-photo { width:min(100%,220px); } }
+@media(max-width:700px) { .tp-mobile-summary { padding-block:28px; } .tp-mobile-summary-grid { gap:20px; } .tp-mobile-summary-photo { width:min(100%,300px); } }
+
+/* Taller y compras comparten el espacio de la primera sección. */
+.tp-mobile-summary-grid { grid-template-columns:minmax(260px,.7fr) minmax(0,1.3fr); }
+.tp-home-discover { display:grid; gap:24px; }
+.tp-home-shopping { padding-top:20px; border-top:1px solid #ffffff20; }
+.tp-home-shopping .tp-kicker { display:block; margin-bottom:12px; }
+.tp-home-shopping .tp-shop-sections { margin-bottom:0; gap:12px; }
+.tp-home-shopping .tp-shop-section { padding:16px; gap:12px; min-height:112px; }
+.tp-home-shopping .tp-shop-section strong { font-size:18px; }
+.tp-home-shopping .tp-shop-section > svg { width:28px; height:28px; }
+.tp-home-shopping .tp-shop-section small { font-size:12px; }
+@media(max-width:979px) { .tp-home-shopping .tp-shop-sections { grid-template-columns:1fr; } }
+@media(max-width:700px) { .tp-mobile-summary-grid { grid-template-columns:1fr; } }
