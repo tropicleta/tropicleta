@@ -59,7 +59,7 @@
   align-items: center;
   gap: 6px;
   padding: 4px 10px;
-  border-radius: 999px;
+  border-radius:var(--tp-radius);
   background: rgba(255, 255, 255, 0.06);
   border: 1px solid var(--tp-border);
   color: var(--tp-grey);
@@ -103,7 +103,7 @@
   padding: 18px 20px;
   background: rgba(255, 255, 255, 0.035);
   border: 1px solid transparent;
-  border-radius: 15px;
+  border-radius:var(--tp-radius);
   transition:
     border-color 0.2s ease,
     background 0.2s ease;
@@ -169,7 +169,7 @@
   align-items: center;
   gap: 8px;
   padding: 10px 16px;
-  border-radius: 999px;
+  border-radius:var(--tp-radius);
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid var(--tp-border);
   color: var(--tp-grey);
@@ -258,7 +258,7 @@
   padding: 13px 16px;
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid var(--tp-border);
-  border-radius: 14px;
+  border-radius:var(--tp-radius);
   color: var(--tp-white);
   font-family: inherit;
   font-size: 16px;
@@ -326,7 +326,7 @@
   padding: 14px 16px;
   background: rgba(255, 255, 255, 0.035);
   border: 1px solid transparent;
-  border-radius: 15px;
+  border-radius:var(--tp-radius);
   cursor: pointer;
   font-size: 14px;
   font-weight: 700;
@@ -374,7 +374,7 @@
 
 .tp-alert {
   padding: 14px 18px;
-  border-radius: 14px;
+  border-radius:var(--tp-radius);
   border: 1px solid rgba(248, 113, 113, 0.4);
   background: rgba(248, 113, 113, 0.08);
   color: #fecaca;
@@ -423,7 +423,7 @@
   overflow: hidden;
   background: var(--tp-card);
   border: 1px solid var(--tp-border);
-  border-radius: 18px;
+  border-radius:var(--tp-radius);
   transition:
     transform 0.2s ease,
     border-color 0.2s ease;
@@ -523,7 +523,7 @@
 }
 
 .tp-mini-products .tp-product-card {
-  border-radius: 15px;
+  border-radius:var(--tp-radius);
   background: rgba(255, 255, 255, 0.035);
 }
 
@@ -549,7 +549,7 @@
   display: inline-flex;
   align-items: center;
   border: 1px solid var(--tp-border);
-  border-radius: 999px;
+  border-radius:var(--tp-radius);
   background: rgba(255, 255, 255, 0.04);
 }
 
@@ -586,7 +586,7 @@
   padding: 0;
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid var(--tp-border);
-  border-radius: 999px;
+  border-radius:var(--tp-radius);
   color: var(--tp-white);
   cursor: pointer;
   transition: border-color 0.2s ease;
@@ -605,7 +605,7 @@
   display: grid;
   place-items: center;
   padding: 0 5px;
-  border-radius: 999px;
+  border-radius:var(--tp-radius);
   background: var(--tp-orange);
   color: #111;
   font-size: 11px;
@@ -681,7 +681,7 @@
 .tp-cart-thumb {
   width: 64px;
   height: 64px;
-  border-radius: 12px;
+  border-radius:var(--tp-radius);
   overflow: hidden;
 }
 
@@ -831,7 +831,7 @@
 .tp-admin-side nav a,
 .tp-admin-side nav button {
   padding: 9px 13px;
-  border-radius: 12px;
+  border-radius:var(--tp-radius);
   color: var(--tp-grey);
   font-size: 14px;
   font-weight: 700;
@@ -874,7 +874,7 @@
   padding: 18px;
   background: var(--tp-card);
   border: 1px solid var(--tp-border);
-  border-radius: 18px;
+  border-radius:var(--tp-radius);
 }
 
 .tp-stat strong {
@@ -896,7 +896,7 @@
   overflow-x: auto;
   background: var(--tp-card);
   border: 1px solid var(--tp-border);
-  border-radius: 18px;
+  border-radius:var(--tp-radius);
 }
 
 .tp-table {
@@ -946,7 +946,7 @@
   min-height: 36px;
   padding: 6px 34px 6px 10px;
   font-size: 13px;
-  border-radius: 10px;
+  border-radius:var(--tp-radius);
 }
 
 .tp-inline-form .tp-btn {
@@ -1093,7 +1093,7 @@
 .tp-faq details {
   background: var(--tp-card);
   border: 1px solid var(--tp-border);
-  border-radius: 16px;
+  border-radius:var(--tp-radius);
   transition: border-color 0.2s ease;
 }
 
@@ -1225,7 +1225,7 @@
   display: grid;
   place-items: center;
   border: 1px solid var(--tp-border);
-  border-radius: 999px;
+  border-radius:var(--tp-radius);
   background: rgba(255, 255, 255, 0.04);
   color: var(--tp-grey);
   transition:
@@ -1263,7 +1263,7 @@
 .tp-category-form { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; flex: 1 1 520px; }
 .tp-category-form .tp-input { min-height: 36px; flex: 1 1 140px; }
 .tp-image-list { list-style: none; margin: 0 0 10px; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 10px; }
-.tp-image-list li { background: var(--tp-card); border: 1px solid var(--tp-border); border-radius: 12px; overflow: hidden; }
+.tp-image-list li { background: var(--tp-card); border: 1px solid var(--tp-border); border-radius:var(--tp-radius); overflow: hidden; }
 .tp-image-list img { display: block; width: 100%; aspect-ratio: 1; object-fit: cover; }
 .tp-image-list div { display: flex; justify-content: space-between; padding: 4px 8px; }
 .tp-audit-summary { max-width: 520px; }

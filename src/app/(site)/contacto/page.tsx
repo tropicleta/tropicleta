@@ -91,7 +91,7 @@ export default function ContactoPage() {
               title="Mapa del taller: Carlos Condell 105, Tierra Amarilla"
               src={`https://www.google.com/maps?q=${encodeURIComponent(site.address + ", Atacama, Chile")}&output=embed`}
               loading="lazy"
-              style={{ width: "100%", height: 260, border: 0, borderRadius: 22, filter: "grayscale(1) invert(.9) contrast(.9)" }}
+              style={{ width: "100%", height: 260, border: 0, borderRadius: "var(--tp-radius)", filter: "grayscale(1) invert(.9) contrast(.9)" }}
             />
           </div>
         </div>

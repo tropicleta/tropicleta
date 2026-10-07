@@ -46,11 +46,11 @@
 .tp-workshop-heading{display:flex;align-items:center;justify-content:space-between;gap:24px;margin-bottom:32px}
 .tp-workshop-heading .tp-section-intro{margin-bottom:0}
 .tp-workshop-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px}
-.tp-workshop-card{overflow:hidden;border:1px solid #383838;border-radius:18px;background:#101010;color:inherit;text-decoration:none;transition:transform .2s,border-color .2s}
+.tp-workshop-card{overflow:hidden;border:1px solid #383838;border-radius:var(--tp-radius);background:#101010;color:inherit;text-decoration:none;transition:transform .2s,border-color .2s}
 .tp-workshop-card:hover{transform:translateY(-4px);border-color:#f59600}
 .tp-workshop-photo{position:relative;aspect-ratio:4/3;overflow:hidden}
 .tp-workshop-photo img{object-fit:cover}
-.tp-workshop-photo span{position:absolute;bottom:12px;right:12px;padding:8px 12px;background:#111e;color:#fff;border-radius:20px;font-size:12px;font-weight:700}
+.tp-workshop-photo span{position:absolute;bottom:12px;right:12px;padding:8px 12px;background:#111e;color:#fff;border-radius:var(--tp-radius);font-size:12px;font-weight:700}
 .tp-workshop-caption{padding:22px}
 .tp-workshop-caption h3{font-size:19px;line-height:1.3;margin:0 0 10px}
 .tp-workshop-caption p{font-size:14px;line-height:1.6;color:#bbb;margin:0}
