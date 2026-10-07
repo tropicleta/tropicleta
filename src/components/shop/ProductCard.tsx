@@ -8,7 +8,7 @@ export function ProductCard({ product }: { product: Product }) {
   const onSale = product.compareAtPrice && product.compareAtPrice > product.price;
   return (
     <article className="tp-product-card">
-      <ProductMedia
+      <Link href={`/tienda/${product.slug}/`} aria-label={`Ver ${product.name}`}><ProductMedia
         name={product.name}
         image={product.images[0]}
         badge={
@@ -18,7 +18,7 @@ export function ProductCard({ product }: { product: Product }) {
             <span className="tp-badge tp-badge-orange">Oferta</span>
           ) : null
         }
-      />
+      /></Link>
       <Link className="tp-product-body" href={`/tienda/${product.slug}/`}>
         <h3 className="tp-product-name" title={product.name}>{product.name}</h3>
         <div className="tp-product-price">
