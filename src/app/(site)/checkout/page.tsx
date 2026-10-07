@@ -17,8 +17,7 @@ export default async function CheckoutPage({ searchParams }: Props) {
         <h1 className="tp-display tp-section-title">Finalizar compra</h1>
         <CheckoutForm
           mpAvailable={config.mpAvailable}
-          webpayAvailable={config.webpayAvailable}
-          testPayments={(config.webpayAvailable && config.webpayTest) || (config.mpAvailable && config.mpTest)}
+          testPayments={config.mpAvailable && config.mpTest}
           notice={error ? "No pudimos procesar el pago. Revisa tus datos e intenta nuevamente." : undefined}
         />
       </div>

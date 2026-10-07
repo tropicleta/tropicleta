@@ -18,10 +18,10 @@ tropicleta.com es operado por Tropicleta, taller de bicicletas ubicado en Tierra
 Las solicitudes de hora hechas en el sitio son una preferencia de fecha. La hora queda confirmada cuando Tropicleta la confirma por WhatsApp o correo. Los precios publicados corresponden a mano de obra y pueden variar tras el diagnóstico; siempre informaremos el presupuesto antes de trabajar.
 
 ## 3. Compras en la tienda
-Los precios están en pesos chilenos e incluyen IVA. La compra se confirma una vez aprobado el pago por Webpay o Mercado Pago. Si un producto quedara sin stock después del pago, te contactaremos para ofrecer un cambio o la devolución total.
+Los precios están en pesos chilenos e incluyen IVA. La compra se confirma una vez aprobado el pago por Mercado Pago. Si un producto quedara sin stock después del pago, te contactaremos para ofrecer un cambio o la devolución total.
 
 ## 4. Medios de pago
-Los pagos se procesan en las plataformas de Transbank (Webpay) y Mercado Pago. Tropicleta no almacena datos de tarjetas.
+Los pagos se procesan en la plataforma de Mercado Pago. Tropicleta no almacena datos de tarjetas.
 
 ## 5. Garantía y devoluciones
 Se rigen por nuestras políticas de Garantía y de Envíos y devoluciones, y por la Ley N° 19.496 sobre Protección de los Derechos de los Consumidores.

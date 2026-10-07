@@ -112,7 +112,7 @@ export default async function GraciasCompraPage({ searchParams }: Props) {
             </div>
             <div>
               <dt>Medio de pago</dt>
-              <dd>{order.paymentMethod === "webpay" ? "Webpay" : "Mercado Pago"}</dd>
+              <dd>{order.paymentMethod === "mercadopago" ? "Mercado Pago" : "Pago con tarjeta"}</dd>
             </div>
             {order.authorizationCode && (
               <div>

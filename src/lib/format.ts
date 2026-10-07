@@ -46,7 +46,7 @@ export function shortCode(prefix: string, length = 6): string {
 }
 
 export function paymentLabel(method: string): string {
-  return method === "webpay" ? "Webpay" : method === "mercadopago" ? "Mercado Pago" : method;
+  return method === "webpay" ? "Pago con tarjeta" : method === "mercadopago" ? "Mercado Pago" : method;
 }
 
 export function deliveryLabel(order: { deliveryMethod: string; commune?: string | null }): string {

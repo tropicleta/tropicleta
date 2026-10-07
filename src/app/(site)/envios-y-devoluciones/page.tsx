@@ -36,7 +36,7 @@ Tienes 10 días desde que recibes tu compra para solicitar un cambio o devoluci�
 Si un producto llega con falla, escríbenos dentro de los primeros 10 días y lo cambiamos o te devolvemos el dinero, según prefieras, de acuerdo con la Ley del Consumidor.
 
 ## Reembolsos
-Los reembolsos se hacen al mismo medio de pago usado en la compra (Webpay o Mercado Pago) y pueden tardar según los plazos de cada banco.`}
+Los reembolsos se hacen al mismo medio de pago usado en la compra (Mercado Pago) y pueden tardar según los plazos de cada banco.`}
     />
   );
 }

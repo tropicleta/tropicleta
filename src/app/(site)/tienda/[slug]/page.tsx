@@ -98,7 +98,7 @@ export default async function ProductoPage({ params }: Props) {
             <ul className="tp-check-list tp-small" style={{ marginTop: 26 }}>
               <li>Retiro gratis en el taller (Tierra Amarilla)</li>
               <li>Despacho a Tierra Amarilla, Paipote y Copiapó</li>
-              <li>Pago con Webpay o Mercado Pago</li>
+              <li>Pago con Mercado Pago</li>
             </ul>
             <a
               className="tp-link-btn"

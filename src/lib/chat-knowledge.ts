@@ -51,7 +51,7 @@ export async function buildKnowledge(): Promise<string> {
     .map(([commune, cost]) => `${commune} ${formatCLP(cost)}`)
     .join(", ");
   parts.push(`COMPRAS
-- Pago con Webpay o Mercado Pago. Retiro gratis en el taller o despacho: ${shipping}.`);
+- Pago con Mercado Pago. Retiro gratis en el taller o despacho: ${shipping}.`);
 
   parts.push(`PREGUNTAS FRECUENTES\n${faqs.map((f) => `- ${f.q} ${f.a}`).join("\n")}`);
   parts.push(`CONSEJOS PUBLICADOS\n${posts.map((p) => `- ${p.title} → /consejos/${p.slug}/`).join("\n")}`);

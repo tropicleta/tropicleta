@@ -22,7 +22,7 @@ Nombre, teléfono, email y, cuando corresponde, dirección de retiro o despacho.
 No enviamos publicidad sin tu consentimiento ni vendemos tus datos.
 
 ## Con quién los compartimos
-Solo con los proveedores necesarios para operar: procesadores de pago (Transbank, Mercado Pago), el servicio de correo transaccional y el proveedor de hosting. Los datos de tu tarjeta los recibe directamente el procesador de pago.
+Solo con los proveedores necesarios para operar: procesadores de pago (Mercado Pago), el servicio de correo transaccional y el proveedor de hosting. Los datos de tu tarjeta los recibe directamente el procesador de pago.
 
 ## Almacenamiento local
 Guardamos tu carrito de compras en tu navegador para que no se pierda al recargar la página.

@@ -93,7 +93,7 @@ export const checkoutSchema = z
     commune: z.string().optional(),
     address: z.string().trim().max(200).optional(),
     notes: z.string().trim().max(500).optional(),
-    paymentMethod: z.enum(["webpay", "mercadopago"], { error: "Elige un medio de pago" }),
+    paymentMethod: z.literal("mercadopago", { error: "El pago se realiza con Mercado Pago" }),
     items: z
       .string()
       .transform((v, ctx) => {

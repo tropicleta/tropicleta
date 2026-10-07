@@ -6,15 +6,13 @@ import { shortCode } from "@/lib/format";
 import { getProductsByIds } from "@/lib/queries";
 import { shippingCost } from "@/data/shop";
 import { checkoutSchema } from "@/lib/validation";
-import { webpayTransaction } from "@/lib/payments/webpay";
 import { mpEnabled, mpPreference } from "@/lib/payments/mercadopago";
 import { siteUrl } from "@/lib/site-url";
 import { eq } from "drizzle-orm";
-import { paymentConfiguration } from "@/lib/payment-config";
 
 export type CheckoutState = FormState & {
-  /** Webpay: el cliente hace POST de token_ws a esta URL. Mercado Pago: redirección simple. */
-  redirect?: { kind: "webpay"; url: string; token: string } | { kind: "url"; url: string };
+  /** Redirección al pago en Mercado Pago. */
+  redirect?: { kind: "url"; url: string };
   /** Productos cuyo stock o precio cambió: el cliente debe actualizar su carrito. */
   stockIssues?: { productId: number; available: number }[];
 };
@@ -34,12 +32,8 @@ async function checkout(fd: FormData): Promise<CheckoutState> {
   if (!parsed.success) return { errors: zodErrors(parsed.error), values };
   const d = parsed.data;
 
-  if (d.paymentMethod === "webpay" && !paymentConfiguration().webpayAvailable) {
-    return { errors: { paymentMethod: "Webpay aún no está disponible. Elige otro medio de pago." }, values };
-  }
-
   if (d.paymentMethod === "mercadopago" && !mpEnabled()) {
-    return { errors: { paymentMethod: "Mercado Pago aún no está disponible. Elige otro medio de pago." }, values };
+    return { errors: { paymentMethod: "Mercado Pago aún no está disponible. Intenta nuevamente más tarde." }, values };
   }
 
   // 1) Recalcular todo en el servidor desde la BD (nunca confiar en precios del cliente)
@@ -66,7 +60,7 @@ async function checkout(fd: FormData): Promise<CheckoutState> {
   const subtotal = lines.reduce((n, l) => n + l.product.price * l.quantity, 0);
   const shipping = shippingCost(d.deliveryMethod, d.commune);
   const total = subtotal + shipping;
-  const code = shortCode("TPC", 10); // ≤ 26 caracteres para Webpay
+  const code = shortCode("TPC", 10);
 
   // 2) Crear la orden pendiente
   const order = await db.transaction(async (tx) => {
@@ -95,15 +89,6 @@ async function checkout(fd: FormData): Promise<CheckoutState> {
 
   // 3) Iniciar el pago
   try {
-    if (d.paymentMethod === "webpay") {
-      const resp = (await webpayTransaction().create(code, `s-${order.id}`, total, siteUrl("/api/webpay/retorno/"))) as {
-        token: string;
-        url: string;
-      };
-      await db.update(schema.orders).set({ paymentToken: resp.token }).where(eq(schema.orders.id, order.id));
-      return { redirect: { kind: "webpay", url: resp.url, token: resp.token } };
-    }
-
     const isHttps = siteUrl().startsWith("https://");
     const pref = await mpPreference().create({
       body: {

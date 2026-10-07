@@ -8,7 +8,7 @@ export const faqs: { q: string; a: string; group: string }[] = [
   { group: "Taller", q: "¿Los precios incluyen repuestos?", a: "No, los precios publicados son de mano de obra. Si se necesita un repuesto te lo cotizamos antes." },
   { group: "Retiro y entrega", q: "¿Van a buscar la bici a mi casa?", a: "Sí, en sectores definidos de Tierra Amarilla, Paipote y Copiapó. Elige la opción de retiro al solicitar hora y te confirmamos el costo según tu sector." },
   { group: "Retiro y entrega", q: "¿Tienen taller móvil?", a: "Sí, llevamos el taller a cicletadas, carreras y eventos ciclistas en la Región de Atacama. Cotízalo en la página de eventos." },
-  { group: "Tienda", q: "¿Cómo pago en la tienda?", a: "Con Webpay (débito, crédito y prepago) o Mercado Pago. El pago se procesa en la plataforma de cada proveedor; nosotros no guardamos datos de tu tarjeta." },
+  { group: "Tienda", q: "¿Cómo pago en la tienda?", a: "Con Mercado Pago. El pago se procesa en la plataforma de Mercado Pago; nosotros no guardamos datos de tu tarjeta." },
   { group: "Tienda", q: "¿Hacen despacho?", a: "Despachamos a Tierra Amarilla, Paipote y Copiapó. También puedes retirar gratis en el taller." },
   { group: "Tienda", q: "¿Me ayudan a elegir el repuesto correcto?", a: "Claro. Escríbenos con el modelo de tu bici o una foto del componente y te decimos qué te sirve." },
 ];

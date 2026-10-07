@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useActionState, useEffect, useRef, useState } from "react";
+import { useActionState, useEffect, useState } from "react";
 import { startCheckout, type CheckoutState } from "@/actions/checkout";
 import { useCart } from "@/components/cart/CartProvider";
 import { Field } from "@/components/Field";
@@ -10,20 +10,18 @@ import { deliveryCommunes, shopRules } from "@/data/shop";
 import { formatCLP } from "@/lib/format";
 import { NationalShippingQuote } from "@/components/cart/NationalShippingQuote";
 
-export function CheckoutForm({ mpAvailable, webpayAvailable, testPayments, notice }: { mpAvailable: boolean; webpayAvailable: boolean; testPayments: boolean; notice?: string }) {
+export function CheckoutForm({ mpAvailable, testPayments, notice }: { mpAvailable: boolean; testPayments: boolean; notice?: string }) {
   const { items, subtotal, ready, setQuantity } = useCart();
   const [state, action] = useActionState<CheckoutState, FormData>(startCheckout, {});
   const [method, setMethod] = useState<"retiro" | "despacho">(
     state.values?.deliveryMethod === "despacho" ? "despacho" : "retiro",
   );
   const [commune, setCommune] = useState<string>((state.values?.commune as string) ?? "");
-  const webpayForm = useRef<HTMLFormElement>(null);
 
   // Redirección a la pasarela
   useEffect(() => {
     if (!state.redirect) return;
-    if (state.redirect.kind === "webpay") webpayForm.current?.submit();
-    else window.location.href = state.redirect.url;
+    window.location.href = state.redirect.url;
   }, [state.redirect]);
 
   // Ajusta el carrito si el servidor detectó falta de stock
@@ -38,7 +36,6 @@ export function CheckoutForm({ mpAvailable, webpayAvailable, testPayments, notic
         {state.errors[k]}
       </span>
     );
-  const val = (k: string) => (typeof state.values?.[k] === "string" ? (state.values[k] as string) : undefined);
 
   if (!ready) return <div className="tp-panel tp-empty">Cargando…</div>;
   if (!items.length && !state.redirect) {
@@ -54,12 +51,6 @@ export function CheckoutForm({ mpAvailable, webpayAvailable, testPayments, notic
 
   return (
     <>
-      {state.redirect?.kind === "webpay" && (
-        <form ref={webpayForm} method="post" action={state.redirect.url} hidden>
-          <input type="hidden" name="token_ws" value={state.redirect.token} />
-        </form>
-      )}
-
       <form action={action} className="tp-two-col" noValidate>
         <div className="tp-panel tp-form">
           {(notice || state.message) && (
@@ -126,17 +117,10 @@ export function CheckoutForm({ mpAvailable, webpayAvailable, testPayments, notic
           <fieldset className="tp-fieldset">
             <legend className="tp-label">3. Pago</legend>
             {testPayments && <p className="tp-alert">Hay medios de pago en modo de prueba. Los pagos de prueba no son compras reales.</p>}
-            {!webpayAvailable && !mpAvailable && <p className="tp-alert">Estamos habilitando los pagos online. Tu carrito se conserva para cuando estén disponibles.</p>}
-            <div className="tp-options tp-options-2">
-              <label className="tp-option">
-                <input type="radio" name="paymentMethod" value="webpay" disabled={!webpayAvailable} defaultChecked={webpayAvailable && (val("paymentMethod") ?? "webpay") === "webpay"} />
-                <span>
-                  Webpay
-                  <small>{webpayAvailable ? "Débito, crédito y prepago" : "Próximamente"}</small>
-                </span>
-              </label>
+            {!mpAvailable && <p className="tp-alert">Estamos habilitando los pagos online. Tu carrito se conserva para cuando estén disponibles.</p>}
+            <div className="tp-options">
               <label className="tp-option" style={mpAvailable ? undefined : { opacity: 0.5 }}>
-                <input type="radio" name="paymentMethod" value="mercadopago" disabled={!mpAvailable} defaultChecked={mpAvailable && (val("paymentMethod") === "mercadopago" || !webpayAvailable)} />
+                <input type="radio" name="paymentMethod" value="mercadopago" disabled={!mpAvailable} defaultChecked={mpAvailable} />
                 <span>
                   Mercado Pago
                   <small>{mpAvailable ? "Tarjetas y saldo en cuenta" : "Próximamente"}</small>
@@ -179,7 +163,7 @@ export function CheckoutForm({ mpAvailable, webpayAvailable, testPayments, notic
               Redirigiendo al pago…
             </button>
           ) : (
-            <SubmitButton disabled={!webpayAvailable && !mpAvailable} className="tp-btn tp-btn-primary tp-btn-block" pendingText="Conectando con el pago…">
+            <SubmitButton disabled={!mpAvailable} className="tp-btn tp-btn-primary tp-btn-block" pendingText="Conectando con el pago…">
               Pagar {formatCLP(subtotal + shipping)}
             </SubmitButton>
           )}
