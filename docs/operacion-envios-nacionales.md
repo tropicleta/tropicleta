@@ -2,7 +2,7 @@
 
 Preparación: 6 de octubre de 2026.
 
-**Estado actual:** propuesta aplazada por el propietario. Se retiró la cotización manual de la web y se mantiene solo reparto local con tarifa fija: Tierra Amarilla $3.000, Paipote $5.000 y Copiapó $10.000. Al ampliar el catálogo, preparar un cotizador automático nacional antes del pago. El flujo siguiente es una referencia histórica y no está habilitado.
+**Estado actual:** propuesta aplazada por el propietario. Se retiró la cotización manual de la web y se mantiene solo reparto local con tarifa fija: Tierra Amarilla $3.000, Paipote $5.000 y Copiapó $8.000. Al ampliar el catálogo, preparar un cotizador automático nacional antes del pago. El flujo siguiente es una referencia histórica y no está habilitado.
 
 ## Flujo inicial
 

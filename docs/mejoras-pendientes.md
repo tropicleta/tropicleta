@@ -10,7 +10,7 @@ El dominio tropicleta.com ya se verificó en Resend mediante los registros autor
 
 Decisión del propietario (6 de octubre de 2026): al ampliar el catálogo, conectar obligatoriamente un cotizador nacional que muestre el precio del despacho antes del pago. Preparar peso y medidas con embalaje, origen de despacho, cálculo de paquetes para compras con varios productos y acceso al servicio de cotización del transportista elegido.
 
-Mientras tanto, solo reparto local con tarifa fija por pedido: Tierra Amarilla $3.000, Paipote $5.000 y Copiapó $10.000; retiro en taller gratis. La cotización nacional manual queda desactivada. No crear una automatización ni contratar transportistas sin una nueva solicitud.
+Mientras tanto, solo reparto local con tarifa fija por pedido: Tierra Amarilla $3.000, Paipote $5.000 y Copiapó $8.000; retiro en taller gratis. La cotización nacional manual queda desactivada. No crear una automatización ni contratar transportistas sin una nueva solicitud.
 
 ## Seguridad de la cuenta Vercel
 

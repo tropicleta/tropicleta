@@ -51,7 +51,7 @@ export function CartView() {
           <strong>{formatCLP(subtotal)}</strong>
         </div>
         <p className="tp-hint" style={{ margin: 0 }}>
-          Retiro gratis. Reparto: Tierra Amarilla $3.000, Paipote $5.000 y Copiapó $10.000. Elige tu zona al finalizar la compra.
+          Retiro gratis. Reparto: Tierra Amarilla $3.000, Paipote $5.000 y Copiapó $8.000. Elige tu zona al finalizar la compra.
         </p>
         <Link className="tp-btn tp-btn-primary tp-btn-block" href="/checkout/">
           Ir a pagar

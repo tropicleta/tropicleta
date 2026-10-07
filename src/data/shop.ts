@@ -12,7 +12,7 @@ export const shopRules = {
   shippingByCommune: {
     "Tierra Amarilla": 3000,
     Paipote: 5000,
-    Copiapó: 10000,
+    Copiapó: 8000,
   } satisfies Record<DeliveryCommune, number>,
   maxQtyPerItem: 10,
 };
