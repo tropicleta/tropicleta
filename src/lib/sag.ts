@@ -9,3 +9,12 @@ export function calculateSag(length: number, target: number, measured?: number) 
 export function parseSagInput(value: string): number {
   return value.trim() === "" ? NaN : Number(value.replace(",", "."));
 }
+
+/** General SIMPLON discipline ranges are provisional; a model's manual wins. */
+export function suggestSag(discipline: string, rear: boolean, foxModel: boolean) {
+  if (foxModel) return { value: rear ? 27.5 : 17.5, range: rear ? "25–30 %" : "15–20 %", source: "Manual FOX del modelo seleccionado" };
+  const ranges: Record<string, [number, number]> = { xc: [20, 25], trail: [25, 30], enduro: [25, 35], dh: [30, 40] };
+  const range = ranges[discipline];
+  if (range) return { value: (range[0] + range[1]) / 2, range: `${range[0]}–${range[1]} %`, source: "Referencia general SIMPLON por disciplina; confirma con el manual de tu modelo" };
+  return { value: rear ? 30 : 20, range: null, source: "Ejemplo inicial; sin referencia específica para tu suspensión" };
+}

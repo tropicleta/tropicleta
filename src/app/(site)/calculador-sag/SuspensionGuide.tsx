@@ -1,7 +1,8 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { SagCalculator } from "./SagCalculator";
+import { SagCalculator, SagSetup } from "./SagCalculator";
+import { cyclingDisciplines } from "@/data/cycling-disciplines";
 import styles from "./sag.module.css";
 
 const steps = ["Prepara", "Mide el SAG", "Ajusta el rebote"];
@@ -23,27 +24,40 @@ export function SuspensionGuide() {
   const [step, setStep] = useState(0);
   const [sensation, setSensation] = useState<number | null>(null);
   const [saved, setSaved] = useState(false);
+  const [bike, setBike] = useState("hardtail");
+  const [discipline, setDiscipline] = useState("unknown");
+  const [ready, setReady] = useState<boolean[]>([false, false, false]);
   const heading = useRef<HTMLHeadingElement>(null);
   const root = useRef<HTMLDivElement>(null);
-  function go(next: number) { setStep(next); requestAnimationFrame(() => { heading.current?.focus(); heading.current?.scrollIntoView({ block: "start", behavior: "smooth" }); }); }
+  function go(next: number) { setStep(next); requestAnimationFrame(() => { heading.current?.focus(); heading.current?.scrollIntoView({ block: "start", behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" }); }); }
   function download() {
-    const values = Array.from(root.current?.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>("input[id], textarea[id]") ?? []).filter(input => input.value.trim()).map(input => `${root.current?.querySelector(`label[for="${input.id}"]`)?.textContent?.trim() || input.id}: ${input.value}`);
-    const blob = new Blob([`Mi configuración de suspensión · ${new Date().toLocaleDateString("es-CL")}\n\n${values.join("\n")}\n\nRebote: clics desde cerrado suavemente, siguiendo el manual. Horquilla y amortiguador se ajustan por separado.\n`], { type: "text/plain;charset=utf-8" });
+    const values = Array.from(root.current?.querySelectorAll<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>("input[id], textarea[id], select[id]") ?? []).filter(input => input.value.trim() && input.type !== "checkbox" && !(bike === "hardtail" && input.id.startsWith("shock-"))).map(input => `${root.current?.querySelector(`label[for="${input.id}"]`)?.firstChild?.textContent?.trim() || input.id}: ${input.value}`);
+    const blob = new Blob([`Mi configuración de suspensión · ${new Date().toLocaleDateString("es-CL")}\nBicicleta: ${bike === "hardtail" ? "Hardtail" : "Doble suspensión"}\nDisciplina: ${cyclingDisciplines.find(item => item.id === discipline)?.label}\n\n${values.join("\n")}\n\nObjetivos orientativos; confirma con el manual del modelo. Rebote: clics desde cerrado suavemente, siguiendo el manual. Horquilla y amortiguador se ajustan por separado.\n`], { type: "text/plain;charset=utf-8" });
     const url = URL.createObjectURL(blob); const link = document.createElement("a"); link.href = url; link.download = "mi-suspension.txt"; link.click(); setTimeout(() => URL.revokeObjectURL(url), 1000); setSaved(true);
   }
   return <div ref={root} className={styles.journey}>
     <nav className={styles.progress} aria-label="Pasos de ajuste">{steps.map((label, index) => <button key={label} type="button" aria-current={step === index ? "step" : undefined} onClick={() => go(index)}><span>{index + 1}</span>{label}</button>)}</nav>
     <h2 ref={heading} tabIndex={-1} className={styles.journeyTitle}>{steps[step]}</h2>
     <div hidden={step !== 0}>
-      <p className={styles.lead}>Mejor agarre y control empiezan con una suspensión ajustada para ti.</p>
-      <div className={styles.quickCards}><article><b>Tu equipo habitual</b><p>Casco, zapatillas y mochila: mide con el peso que llevas al andar.</p></article><article><b>Regla y ayuda</b><p>Una persona que sostenga la bici facilita medir sin perder el equilibrio.</p></article><article><b>El manual de tu modelo</b><p>Busca el objetivo de SAG y el ajuste inicial de rebote. Anota cómo está ahora.</p></article></div>
+      <p className={styles.lead}>Elige tu bici y disciplina. Prepararemos un objetivo editable para el siguiente paso.</p>
+      <SagSetup bike={bike} discipline={discipline} setBike={setBike} setDiscipline={setDiscipline} />
+      <section className={styles.preflight} aria-labelledby="sag-ready"><h3 id="sag-ready">Antes de medir: suspensión abierta</h3><p>Abre el bloqueo de horquilla y amortiguador, incluido el mando remoto. Pon la compresión en Open / abierto según el manual; en modelos con ajustes separados, sigue sus indicaciones.</p><p><b>El rebote no es un bloqueo:</b> anota su posición y conserva el ajuste inicial recomendado. No necesitas poner todos los controles en cero.</p>
+        {[
+          "Abrí los bloqueos y preparé la compresión según el manual.",
+          "Llevo mi equipo habitual y tengo la bici estable, con apoyo o ayuda.",
+          "Tengo una regla y sé dónde medir el recorrido de horquilla o la carrera del amortiguador.",
+        ].map((label, index) => <label key={label} className={styles.preflightCheck}><input type="checkbox" checked={ready[index]} onChange={event => setReady(values => values.map((value, position) => position === index ? event.target.checked : value))} /><span>{label}</span></label>)}
+        <p role="status" className={styles.readyStatus}>{ready.filter(Boolean).length}/3 comprobaciones · {ready.every(Boolean) ? "Listo para medir." : "Revisa estos puntos antes de tomar la medición."}</p>
+      </section>
       <details className={styles.details}><summary>¿Qué voy a ajustar?</summary><p><b>SAG:</b> cuánto se hunde con tu peso. Deja margen para acompañar el terreno. <b>Rebote:</b> qué tan rápido vuelve tras comprimirse. Primero SAG, después rebote.</p><p>Para cambiar presión usa una bomba de suspensión y respeta los límites del manual. En resorte, revisa muelle y precarga; esta guía no elige el muelle por ti.</p></details>
       <button type="button" className="tp-btn" onClick={() => go(1)}>Empezar con el SAG →</button>
     </div>
     <div hidden={step !== 1}>
       <p className={styles.lead}>Mide cuánto se hunde con tu peso y compáralo con el objetivo de tu modelo.</p>
       <details className={styles.details}><summary>¿Cómo lo mido?</summary><Diagram /><ol className={styles.steps}><li>Abre el bloqueo y prepara la compresión según el manual.</li><li>Sube con tu equipo y adopta la posición indicada por el fabricante. Deja que se asiente.</li><li>Con ayuda, lleva el anillo de goma hasta el retén mientras sigues sobre la bici.</li><li>Baja sin rebotar. Con la suspensión extendida, mide del retén al anillo y repite para confirmar.</li></ol></details>
-      <SagCalculator />
+      <div className={styles.setupSummary}><span>{bike === "hardtail" ? "Hardtail · horquilla" : "Doble suspensión · horquilla y amortiguador"} · {cyclingDisciplines.find(item => item.id === discipline)?.label}</span><button type="button" onClick={() => go(0)}>Cambiar bicicleta o disciplina</button></div>
+      <p className={styles.measureReminder}>Mide con el bloqueo abierto y la compresión preparada según el manual. Puedes editar cada objetivo; el valor personalizado se conserva si cambias de paso o disciplina.</p>
+      <SagCalculator bike={bike} discipline={discipline} />
       <details className={styles.details}><summary>¿Cómo corrijo el SAG?</summary><p>En suspensión de aire, más hundimiento del objetivo suele requerir más presión; menos hundimiento, menos presión. Haz cambios pequeños según el manual, ecualiza las cámaras cuando corresponda y vuelve a medir. En resorte, consulta los límites de precarga y la dureza del muelle.</p></details>
       <button type="button" className="tp-btn" onClick={() => go(2)}>Ya medí mi SAG · Seguir con rebote →</button>
     </div>

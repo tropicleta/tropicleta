@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { calculateSag, parseSagInput } from "../src/lib/sag";
+import { calculateSag, parseSagInput, suggestSag } from "../src/lib/sag";
 
 assert.deepEqual(calculateSag(140, 20, 28), { targetMm: 28, measuredPercent: 20, differenceMm: 0 });
 assert.deepEqual(calculateSag(55, 30, 16.5), { targetMm: 16.5, measuredPercent: 30, differenceMm: 0 });
@@ -13,3 +13,9 @@ assert.equal(parseSagInput("16,5"), 16.5);
 assert.ok(Number.isNaN(parseSagInput(" ")));
 assert.ok(Number.isNaN(parseSagInput("abc")));
 console.log("SAG: conversiones y validación correctas.");
+assert.equal(suggestSag("xc", false, false).value, 22.5);
+assert.equal(suggestSag("trail", true, false).value, 27.5);
+assert.equal(suggestSag("enduro", false, false).value, 30);
+assert.equal(suggestSag("dh", false, true).value, 17.5);
+assert.equal(suggestSag("xc", true, true).value, 27.5);
+assert.equal(suggestSag("unknown", false, false).value, 20);

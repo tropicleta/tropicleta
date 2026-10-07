@@ -35,6 +35,16 @@
 .resultMetrics small { font-size:20px; }
 .resultMetrics span { font-size:13px; color:var(--tp-grey); }
 .stepTitle { font-size:20px; margin-bottom:8px; }
+.targetHint { padding:14px 16px; background:var(--tp-black-2); border-left:2px solid var(--tp-orange); border-radius:0 8px 8px 0; margin:16px 0; }
+.targetHint p { font-size:13px; margin:6px 0; }
+.targetHint button, .setupSummary button { background:transparent; border:0; color:var(--tp-orange); font:inherit; text-decoration:underline; cursor:pointer; padding:8px 0; }
+.preflight { padding:22px; border:1px solid var(--tp-border); border-radius:12px; margin:24px 0; background:var(--tp-card); }
+.preflight p { font-size:14px; color:var(--tp-grey); line-height:1.6; }
+.preflightCheck { display:flex; gap:12px; align-items:flex-start; padding:12px 0; border-top:1px solid var(--tp-border); font-size:14px; }
+.preflightCheck input { width:18px; height:18px; flex-shrink:0; accent-color:var(--tp-orange); }
+.readyStatus { margin:12px 0 0; }
+.setupSummary { display:flex; justify-content:space-between; flex-wrap:wrap; align-items:center; gap:12px; padding:14px 18px; background:var(--tp-card); border-radius:10px; font-size:14px; }
+.measureReminder { font-size:14px; line-height:1.6; color:var(--tp-grey); margin-top:16px; }
 .purpose { padding:14px 18px; margin:0 0 28px; border-left:2px solid var(--tp-orange); background:var(--tp-black-2); color:var(--tp-grey); font-size:14px; line-height:1.6; }
 .disciplineRow { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,2fr); align-items:center; gap:24px; margin-bottom:24px; }
 .disciplineRow .field { margin:0; }
