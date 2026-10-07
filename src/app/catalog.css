@@ -117,3 +117,19 @@
 .tp-selection-mode .tp-btn[aria-pressed="true"]:hover { background:#ffad32; }
 .tp-selection-mode .tp-btn:focus-visible { outline:3px solid #fff; outline-offset:3px; }
 @media(max-width:420px) { .tp-selection-mode { gap:8px; padding:10px; } .tp-selection-mode .tp-btn { padding:12px; } .tp-selection-mode .tp-btn strong { font-size:15px; } }
+
+/* Dos formas de comprar, visibles antes del catálogo. */
+.tp-shop-sections { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; margin-bottom:28px; }
+.tp-shop-section { display:flex; align-items:center; gap:16px; min-height:100px; padding:22px; border:2px solid #ffad3280; border-radius:var(--tp-radius); color:#fff; background:linear-gradient(135deg,#31261b,#191b1d); text-decoration:none; transition:background .2s,border-color .2s; }
+.tp-shop-section > svg { width:34px; height:34px; flex-shrink:0; color:var(--tp-orange); }
+.tp-shop-section > span:not(.tp-shop-section-arrow) { flex:1; min-width:0; }
+.tp-shop-section strong { display:block; font-size:21px; line-height:1.25; margin-bottom:6px; }
+.tp-shop-section small { display:block; font-size:13px; line-height:1.5; color:#ddd; }
+.tp-shop-section-arrow { font-size:26px; flex-shrink:0; }
+.tp-shop-section[aria-current="page"] { background:var(--tp-orange); border-color:var(--tp-orange); color:#111; box-shadow:0 6px 22px #f28a1725; }
+.tp-shop-section[aria-current="page"] > svg,.tp-shop-section[aria-current="page"] small { color:#171717; }
+.tp-shop-section:hover { border-color:#ffc46a; background:#393027; }
+.tp-shop-section[aria-current="page"]:hover { background:#ffad32; }
+.tp-shop-section:focus-visible { outline:3px solid #fff; outline-offset:4px; }
+@media(max-width:700px) { .tp-shop-sections { grid-template-columns:1fr; gap:12px; } .tp-shop-section { min-height:88px; padding:18px; gap:12px; } .tp-shop-section strong { font-size:19px; } }
+@media(prefers-reduced-motion:reduce) { .tp-shop-section { transition:none; } }
