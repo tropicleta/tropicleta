@@ -35,16 +35,16 @@
 .resultMetrics small { font-size:20px; }
 .resultMetrics span { font-size:13px; color:var(--tp-grey); }
 .stepTitle { font-size:20px; margin-bottom:8px; }
-.benefits { margin-bottom:48px; }
-.benefits > h2 { max-width:800px; font-size:clamp(28px,4vw,42px); line-height:1.1; }
-.benefits > p { max-width:850px; color:var(--tp-grey); line-height:1.7; }
-.benefitGrid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px; margin:24px 0; }
-.benefitGrid > div { padding:22px; border:1px solid var(--tp-border); border-radius:var(--tp-radius); background:var(--tp-black-2); }
-.benefitGrid h3 { font-size:17px; margin-bottom:10px; }
-.benefitGrid p { color:var(--tp-grey); font-size:14px; line-height:1.7; margin-bottom:0; }
-.benefitFoot { font-size:14px; }
+.benefits { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,2.4fr); gap:24px; margin-bottom:32px; padding-bottom:24px; border-bottom:1px solid var(--tp-border); }
+.benefitIntro h2 { font-size:22px; line-height:1.15; margin-bottom:8px; }
+.benefitIntro p { font-size:14px; color:var(--tp-grey); line-height:1.5; margin:0; }
+.benefitGrid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:20px; }
+.benefitGrid > div { padding-left:16px; border-left:2px solid var(--tp-orange); }
+.benefitGrid h3 { font-size:15px; margin-bottom:6px; }
+.benefitGrid p { color:var(--tp-grey); font-size:13px; line-height:1.5; margin-bottom:0; }
 .calculatorAnchor { scroll-margin-top:calc(var(--tp-header-h) + 24px); }
-@media(max-width:800px) { .benefitGrid { grid-template-columns:1fr; } }
+@media(max-width:800px) { .benefits { grid-template-columns:1fr; gap:16px; } }
+@media(max-width:520px) { .benefitGrid { grid-template-columns:1fr; gap:10px; } .benefitGrid > div { display:grid; grid-template-columns:120px minmax(0,1fr); gap:12px; padding-left:12px; } .benefitGrid h3 { margin:0; } }
 .note { margin-top:20px; max-width:800px; }
 @media(max-width:800px) { .supportGrid { grid-template-columns:1fr; } .guide { padding:20px; } }
 @media(max-width:420px) { .inputGrid { grid-template-columns:1fr; } }
