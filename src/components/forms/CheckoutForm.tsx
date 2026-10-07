@@ -8,6 +8,7 @@ import { Field } from "@/components/Field";
 import { SubmitButton } from "@/components/SubmitButton";
 import { deliveryCommunes, shopRules } from "@/data/shop";
 import { formatCLP } from "@/lib/format";
+import { NationalShippingQuote } from "@/components/cart/NationalShippingQuote";
 
 export function CheckoutForm({ mpAvailable, webpayAvailable, testPayments, notice }: { mpAvailable: boolean; webpayAvailable: boolean; testPayments: boolean; notice?: string }) {
   const { items, subtotal, ready, setQuantity } = useCart();
@@ -95,6 +96,7 @@ export function CheckoutForm({ mpAvailable, webpayAvailable, testPayments, notic
               </label>
             </div>
             {err("deliveryMethod")}
+            <p className="tp-hint">Para otras comunas de Chile, <a href="#envio-nacional">cotiza el envío nacional</a> antes de pagar. El retiro en taller requiere que tú o una persona autorizada retire el pedido.</p>
             {method === "despacho" && (
               <div className="tp-form-grid">
                 <Field
@@ -186,6 +188,7 @@ export function CheckoutForm({ mpAvailable, webpayAvailable, testPayments, notic
           </p>
         </aside>
       </form>
+      <NationalShippingQuote />
     </>
   );
 }

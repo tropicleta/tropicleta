@@ -15,7 +15,7 @@ export default function EnviosPage() {
       kicker="Tienda"
       title="Envíos y"
       highlight="devoluciones."
-      updated="septiembre 2026"
+      updated="octubre 2026"
       body={`## Retiro en el taller
 Sin costo. Te avisamos por WhatsApp cuando tu pedido esté listo para retirar en Tierra Amarilla, con coordinación previa.
 
@@ -23,6 +23,11 @@ Sin costo. Te avisamos por WhatsApp cuando tu pedido esté listo para retirar en
 Despachamos a Tierra Amarilla, Paipote y Copiapó dentro de 1 a 3 días hábiles desde la confirmación del pago.
 
 ${rates}
+
+## Envíos a otras comunas de Chile
+Solicita una cotización desde el carrito indicando región, comuna y si prefieres domicilio o sucursal. Revisamos la cobertura del transportista y la admisión de los productos antes de confirmar el envío. El costo depende del destino, peso y dimensiones del paquete.
+
+Antes de pagar, te confirmaremos disponibilidad de productos, transportista, costo total y plazo estimado. La consulta por WhatsApp no cobra ni reserva productos. No pagues seleccionando retiro en taller si necesitas un envío nacional: primero coordina la cotización con nosotros. Una vez despachado, te compartiremos el número de seguimiento.
 
 ## Cambios y devoluciones
 Tienes 10 días desde que recibes tu compra para solicitar un cambio o devolución, siempre que el producto esté sin uso, en su empaque original y con su boleta. Los productos de mantención abiertos (lubricantes, sellantes) no tienen cambio por razones de higiene y seguridad.

@@ -5,6 +5,7 @@ import { useCart } from "./CartProvider";
 import { QtyControl } from "./QtyControl";
 import { ProductMedia } from "@/components/shop/ProductMedia";
 import { formatCLP } from "@/lib/format";
+import { NationalShippingQuote } from "./NationalShippingQuote";
 
 export function CartView() {
   const { items, subtotal, setQuantity, remove, ready } = useCart();
@@ -22,6 +23,7 @@ export function CartView() {
   }
 
   return (
+    <>
     <div className="tp-two-col">
       <div className="tp-panel">
         {items.map((i) => (
@@ -50,7 +52,7 @@ export function CartView() {
           <strong>{formatCLP(subtotal)}</strong>
         </div>
         <p className="tp-hint" style={{ margin: 0 }}>
-          El despacho se calcula en el checkout. Retiro en taller sin costo.
+          Retiro gratis o despacho local en el checkout. Para otras comunas, cotiza el envío antes de pagar.
         </p>
         <Link className="tp-btn tp-btn-primary tp-btn-block" href="/checkout/">
           Ir a pagar
@@ -58,7 +60,10 @@ export function CartView() {
         <Link className="tp-btn tp-btn-ghost tp-btn-block" href="/tienda/">
           Seguir comprando
         </Link>
+        <a className="tp-btn tp-btn-secondary tp-btn-block" href="#envio-nacional">Cotizar envío nacional</a>
       </aside>
     </div>
+    <NationalShippingQuote />
+    </>
   );
 }

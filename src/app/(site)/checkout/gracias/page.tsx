@@ -41,7 +41,7 @@ export default async function GraciasCompraPage({ searchParams }: Props) {
                 ¡Gracias por <span>tu compra!</span>
               </h1>
               <p className="tp-hero-copy">
-                Recibimos tu pago. Te enviamos el comprobante a {order.customerEmail}.{" "}
+                Recibimos tu pago. Puedes revisar el detalle de tu compra en esta página y consultar tu orden con el código {order.code}.{" "}
                 {order.deliveryMethod === "retiro"
                   ? "Te avisaremos por WhatsApp cuando tu pedido esté listo para retirar en el taller."
                   : "Te contactaremos por WhatsApp para coordinar el despacho."}
@@ -62,7 +62,7 @@ export default async function GraciasCompraPage({ searchParams }: Props) {
                 El pago no se <span>completó.</span>
               </h1>
               <p className="tp-hero-copy">
-                {order.status === "anulada" ? "Cancelaste el pago o expiró el tiempo." : "El pago fue rechazado."} No se
+                {order.status === "anulada" ? "Cancelaste el pago o expiró el tiempo." : "El pago fue rechazado."} No
                 tenemos un pago confirmado para esta orden. Tus productos siguen en el carrito. Si ves un cargo en tu cuenta, contáctanos antes de volver a pagar.
               </p>
             </>
