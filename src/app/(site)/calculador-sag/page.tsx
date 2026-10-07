@@ -15,7 +15,21 @@ export default function SagPage() {
   return <>
     <PageHero kicker="Ajusta tu bicicleta" title="Calculador de" highlight="SAG." intro="El SAG es cuánto se hunde la suspensión con tu peso y equipo en posición de conducción. Convierte tu objetivo en milímetros y compáralo con tu medición." />
     <section className="tp-section"><div className="tp-shell">
+      <section className={styles.benefits} aria-labelledby="sag-benefits">
+        <span className="tp-kicker">Antes de salir a pedalear</span>
+        <h2 id="sag-benefits" className="tp-display">Dale a tu suspensión un buen punto de partida</h2>
+        <p>Un SAG adecuado ayuda a que la suspensión trabaje desde la posición prevista para tu peso y equipo. Medirlo es el primer paso para ajustar tu bicicleta con una referencia concreta.</p>
+        <div className={styles.benefitGrid}>
+          <div><h3>Contacto con el terreno</h3><p>Deja margen para que la suspensión se extienda cuando el terreno baja, ayudando a la rueda a seguir sus irregularidades.</p></div>
+          <div><h3>Recorrido bien aprovechado</h3><p>Un punto de partida adecuado equilibra el margen para comprimirse y extenderse. Luego puedes afinar la respuesta según tu manual y terreno.</p></div>
+          <div><h3>Ajustes que puedes repetir</h3><p>Compara tu medición con el objetivo y vuelve a comprobarla si cambias mochila o equipo. Así sabes qué cambió antes de seguir ajustando.</p></div>
+        </div>
+        <p className={styles.benefitFoot}>El SAG es el primer paso: presión o muelle, rebote y compresión también influyen en cómo se siente tu bicicleta.</p>
+        <a className="tp-btn tp-btn-primary" href="#sag-calculator">Calcular mi SAG</a>
+      </section>
+      <div id="sag-calculator" className={styles.calculatorAnchor}>
       <SagCalculator />
+      </div>
       <div className={styles.supportGrid}><section className={styles.guide} aria-labelledby="sag-measure">
         <span className="tp-kicker">Paso a paso</span><h2 id="sag-measure" className="tp-display">Cómo medir el hundimiento</h2>
         <ol className={styles.steps}>
