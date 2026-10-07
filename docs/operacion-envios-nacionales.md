@@ -2,6 +2,8 @@
 
 Preparación: 6 de octubre de 2026.
 
+**Estado actual:** propuesta aplazada por el propietario. Se retiró la cotización manual de la web y se mantiene solo reparto local con tarifa fija: Tierra Amarilla $3.000, Paipote $5.000 y Copiapó $10.000. Al ampliar el catálogo, preparar un cotizador automático nacional antes del pago. El flujo siguiente es una referencia histórica y no está habilitado.
+
 ## Flujo inicial
 
 El carrito y el checkout permiten solicitar una cotización por WhatsApp con productos, cantidades, subtotal referencial, región, comuna y preferencia domicilio/sucursal. El cliente revisa y envía el mensaje. No se crea una orden, se cobra ni se reserva stock con esta consulta.

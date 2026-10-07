@@ -5,7 +5,6 @@ import { useCart } from "./CartProvider";
 import { QtyControl } from "./QtyControl";
 import { ProductMedia } from "@/components/shop/ProductMedia";
 import { formatCLP } from "@/lib/format";
-import { NationalShippingQuote } from "./NationalShippingQuote";
 
 export function CartView() {
   const { items, subtotal, setQuantity, remove, ready } = useCart();
@@ -52,7 +51,7 @@ export function CartView() {
           <strong>{formatCLP(subtotal)}</strong>
         </div>
         <p className="tp-hint" style={{ margin: 0 }}>
-          Retiro gratis o despacho local en el checkout. Para otras comunas, cotiza el envío antes de pagar.
+          Retiro gratis. Reparto: Tierra Amarilla $3.000, Paipote $5.000 y Copiapó $10.000. Elige tu zona al finalizar la compra.
         </p>
         <Link className="tp-btn tp-btn-primary tp-btn-block" href="/checkout/">
           Ir a pagar
@@ -60,10 +59,8 @@ export function CartView() {
         <Link className="tp-btn tp-btn-ghost tp-btn-block" href="/tienda/">
           Seguir comprando
         </Link>
-        <a className="tp-btn tp-btn-secondary tp-btn-block" href="#envio-nacional">Cotizar envío nacional</a>
       </aside>
     </div>
-    <NationalShippingQuote />
     </>
   );
 }

@@ -1,5 +1,5 @@
 /**
- * Reglas de la tienda. POR CONFIRMAR con Tropicleta: costo de despacho y comunas.
+ * Tarifas fijas de reparto local confirmadas por Tropicleta.
  * Se recalculan siempre en el servidor (nunca se confía en el total del cliente).
  */
 export const deliveryCommunes = ["Tierra Amarilla", "Paipote", "Copiapó"] as const;
@@ -8,11 +8,11 @@ export type DeliveryCommune = (typeof deliveryCommunes)[number];
 export const shopRules = {
   pickupLabel: "Retiro en el taller (Tierra Amarilla, con coordinación previa)",
   deliveryLabel: "Despacho a domicilio",
-  /** Costo de despacho en CLP por comuna. Ajustar con la tarifa real. */
+  /** Tabla compartida por la interfaz y el cálculo del servidor. */
   shippingByCommune: {
-    "Tierra Amarilla": Number(process.env.NEXT_PUBLIC_SHIPPING_TIERRA_AMARILLA ?? 2000),
-    Paipote: Number(process.env.NEXT_PUBLIC_SHIPPING_PAIPOTE ?? 3000),
-    Copiapó: Number(process.env.NEXT_PUBLIC_SHIPPING_COPIAPO ?? 4000),
+    "Tierra Amarilla": 3000,
+    Paipote: 5000,
+    Copiapó: 10000,
   } satisfies Record<DeliveryCommune, number>,
   maxQtyPerItem: 10,
 };

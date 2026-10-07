@@ -8,7 +8,6 @@ import { Field } from "@/components/Field";
 import { SubmitButton } from "@/components/SubmitButton";
 import { deliveryCommunes, shopRules } from "@/data/shop";
 import { formatCLP } from "@/lib/format";
-import { NationalShippingQuote } from "@/components/cart/NationalShippingQuote";
 
 export function CheckoutForm({ mpAvailable, testPayments, notice }: { mpAvailable: boolean; testPayments: boolean; notice?: string }) {
   const { items, subtotal, ready, setQuantity } = useCart();
@@ -30,6 +29,7 @@ export function CheckoutForm({ mpAvailable, testPayments, notice }: { mpAvailabl
   }, [state.stockIssues, setQuantity]);
 
   const shipping = method === "despacho" ? (shopRules.shippingByCommune[commune as keyof typeof shopRules.shippingByCommune] ?? 0) : 0;
+  const deliverySelected = method === "retiro" || deliveryCommunes.includes(commune as typeof deliveryCommunes[number]);
   const err = (k: string) =>
     state.errors?.[k] && (
       <span className="tp-error" role="alert">
@@ -87,7 +87,7 @@ export function CheckoutForm({ mpAvailable, testPayments, notice }: { mpAvailabl
               </label>
             </div>
             {err("deliveryMethod")}
-            <p className="tp-hint">Para otras comunas de Chile, <a href="#envio-nacional">cotiza el envío nacional</a> antes de pagar. El retiro en taller requiere que tú o una persona autorizada retire el pedido.</p>
+            <p className="tp-hint">Por ahora repartimos solo en Tierra Amarilla, Paipote y Copiapó, con tarifa fija por pedido. El retiro en taller es gratis.</p>
             {method === "despacho" && (
               <div className="tp-form-grid">
                 <Field
@@ -152,19 +152,19 @@ export function CheckoutForm({ mpAvailable, testPayments, notice }: { mpAvailabl
           </div>
           <div className="tp-summary-row">
             <span>Despacho</span>
-            <span>{method === "retiro" ? "Gratis" : commune ? formatCLP(shipping) : "—"}</span>
+            <span>{method === "retiro" ? "Gratis" : deliverySelected ? formatCLP(shipping) : "Elige tu zona"}</span>
           </div>
           <div className="tp-summary-total">
             <span>Total</span>
-            <strong>{formatCLP(subtotal + shipping)}</strong>
+            <strong>{deliverySelected ? formatCLP(subtotal + shipping) : "Por confirmar"}</strong>
           </div>
           {state.redirect ? (
             <button type="button" className="tp-btn tp-btn-primary tp-btn-block" disabled>
               Redirigiendo al pago…
             </button>
           ) : (
-            <SubmitButton disabled={!mpAvailable} className="tp-btn tp-btn-primary tp-btn-block" pendingText="Conectando con el pago…">
-              Pagar {formatCLP(subtotal + shipping)}
+            <SubmitButton disabled={!mpAvailable || !deliverySelected} className="tp-btn tp-btn-primary tp-btn-block" pendingText="Conectando con el pago…">
+              {deliverySelected ? `Pagar ${formatCLP(subtotal + shipping)}` : "Elige tu zona de despacho"}
             </SubmitButton>
           )}
           <p className="tp-hint" style={{ margin: 0 }}>
@@ -172,7 +172,6 @@ export function CheckoutForm({ mpAvailable, testPayments, notice }: { mpAvailabl
           </p>
         </aside>
       </form>
-      <NationalShippingQuote />
     </>
   );
 }
