@@ -1,7 +1,7 @@
 import Link from "next/link";
 
-export function ShopSections({ current, showcase = false, recommendationPreview }: { current?: "tienda" | "recomendados"; showcase?: boolean; recommendationPreview?: { image: string; name: string } }) {
-  return <nav className={`tp-shop-sections tp-shop-showcase${showcase ? "" : " tp-shop-catalog-nav"}`} aria-label="Dónde comprar">
+export function ShopSections({ current, showcase = true, recommendationPreview }: { current?: "tienda" | "recomendados"; showcase?: boolean; recommendationPreview?: { image: string; name: string } }) {
+  return <nav className={`tp-shop-sections tp-shop-showcase${current ? " tp-shop-catalog-cards" : ""}`} aria-label="Dónde comprar">
     <Link className="tp-shop-section tp-shop-direct" href="/tienda/" aria-current={current === "tienda" ? "page" : undefined}>
       {showcase ? <span className="tp-shop-brand-visual"><img src="/brand/wordmark-stacked.webp" alt="Tropicleta" width="110" height="46" /><img className="tp-shop-product-preview" src="/productos/racelub-clean-80ml-frente.png" alt="Lubricante disponible en el taller" width="90" height="100" loading="lazy" /></span> : <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true"><path d="M5 7h14l1 14H4L5 7Z"/><path d="M8 8V6a4 4 0 0 1 8 0v2"/></svg>}
       <span>{showcase && <span className="tp-shop-eyebrow">Tienda Tropicleta</span>}<strong>{showcase ? "Repuestos y cuidados del taller" : "Tienda Tropicleta"}</strong><small>{showcase ? "Productos disponibles en nuestro taller para cuidar tu bici." : "Compra aquí · Añade productos a tu carrito"}</small>{showcase && <span className="tp-shop-cta">Comprar en Tropicleta <span aria-hidden="true">→</span></span>}</span>
