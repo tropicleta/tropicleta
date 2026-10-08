@@ -42,3 +42,8 @@ assert.equal(suggestSag("unknown", false, findSagReference("FOX", "Podium · 202
 assert.equal(suggestSag("unknown", false, findSagReference("Manitou", "Mattoc Pro Gen 3 · guía 2023", false, "air")).value, 22.5);
 assert.equal(suggestSag("unknown", false, findSagReference("Marzocchi", "Super Z · guía Rev. B / 2024", false, "air")).value, 17.5);
 assert.equal(suggestSag("unknown", false, findSagReference("RockShox", "SID Ultimate 2P · D1 / DebonAir+", false, "air")).verified, false);
+assert.equal(suggestSag("unknown", false, findSagReference("Manitou", "R8 Pro · guía 2024", false, "air")).value, 17.5);
+assert.equal(suggestSag("unknown", false, findSagReference("Manitou", "Dorado Comp 37 · MY22", false, "coil")).value, 25);
+assert.equal(findSagReference("Manitou", "Dorado Comp 37 · MY22", false, "air"), undefined);
+assert.equal(suggestSag("unknown", false, findSagReference("FOX", "38 FLOAT · 2027", false, "air")).value, 17.5);
+assert.equal(findSagReference("RockShox", "ZEB Ultimate · B1 / LinearXL", false, "air")?.range, null);

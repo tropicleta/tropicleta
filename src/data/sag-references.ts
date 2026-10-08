@@ -9,10 +9,39 @@ const foxFork = "Abre la compresión y mide con tu equipo habitual, siguiendo la
 const foxShock = "Confirma la carrera y la recomendación del cuadro. Prepara las cámaras de aire según el manual.";
 const ohlins38 = "https://ohlins.com/storage/4D81EA83A21214EDFB4A57331844F3692B56F2CCA1ED9BD1BE95A5CDFE6D1B1E/9bd7e6402a3e42ff93f357c6b15e645b/pdf/media/0377e17f271d4af39560e027d515d36d/Owners%20manual%20RXF38%20m.2.pdf";
 const ohlins36 = "https://www.ohlins.com/storage/5AE83FB930CA36F45700C32CCF7A91A96A7798B3D1C60B1AB10761D262BBE26B/24e7fcb03154439ea9ae0b6150bcede7/pdf/media/751e4a2b1cc24d338664758d74947fe0/Owner%27s%20manual%20RXF36m.3.pdf";
+const rockSetup = "Busca el número de serie en TrailHead para la presión inicial y el procedimiento de tu versión. Esta entrada no asigna un porcentaje universal; el valor del calculador es solo un ejemplo editable.";
 function entries(brand: string, labels: string[], rear: boolean, spring: "air" | "coil", range: readonly [number, number] | null, url: string, note: string): SagReference[] {
   return labels.map(label => ({ brand, label, rear, spring, range, url, note }));
 }
 export const sagReferences: SagReference[] = [
+  ...entries("SR Suntour", ["ZERON36 EQ · guía 2K25", "ZERON36X EQ · guía 2K25"], false, "air", [15,30], "https://www.srsuntour.com/fileadmin/user_upload/Zeron_Setup_Guide/SRS-2407-ZERON36-X-Setup-Guide_Final.pdf", "Rango porcentual impreso en esta guía específica. Confirma recorrido y versión; para 120 mm la tabla en milímetros difiere del porcentaje impreso, por lo que conviene confirmar ese dato con el fabricante."),
+  ...entries("FOX", ["32 / Step-Cast / Taper-Cast · 2027", "34 FLOAT / Rhythm · 2027"], false, "air", [15,20], `${fox}3162/fork--2027-32mm--or-34mm-(including-32-step-cast-and-32-taper-cast)`, foxFork),
+  ...entries("FOX", ["34SL · 2027"], false, "air", [15,20], `${fox}3163/fork--2027-34sl`, foxFork),
+  ...entries("FOX", ["36 FLOAT / E-Bike+ · 2027"], false, "air", [15,20], `${fox}3164/fork--2027-36mm`, foxFork),
+  ...entries("FOX", ["36SL · 2027"], false, "air", [15,20], `${fox}3165/fork--2027-36sl`, foxFork),
+  ...entries("FOX", ["38 FLOAT · 2027"], false, "air", [15,20], `${fox}3166/fork--2027-38mm`, foxFork),
+  ...entries("FOX", ["40 FLOAT · 2027"], false, "air", [15,20], `${fox}3167/fork--2027-40mm`, foxFork),
+  ...entries("FOX", ["AWL / AWL Sport · 2027", "AWL HD / AWL HD Sport · 2027"], false, "air", [15,20], `${fox}3168/fork--2027-awl-or-awl-sport-and-awl-hd-or-awl-hd-sport`, "Usa la tabla de tu versión AWL o AWL HD; sus límites y presiones son distintos."),
+  ...entries("FOX", ["Podium · 2027"], false, "air", [15,20], `${fox}3169/fork--2027-podium-`, "Horquilla invertida: sigue la ubicación del anillo y retén del manual, no la dirección de una horquilla convencional."),
+  ...entries("FOX", ["32 / Step-Cast / Taper-Cast · 2024", "34 / Step-Cast / Rhythm · 2024"], false, "air", [15,20], `${fox}2931/fork--2024-32mm-or-32mm-tc-or-34mm-or-34mm-awl`, foxFork),
+  ...entries("FOX", ["40 FLOAT · 2024"], false, "air", [15,20], `${fox}2929/fork--2024-40mm`, foxFork),
+  ...entries("FOX", ["32 / Step-Cast / Taper-Cast · 2023", "34 / Step-Cast / Rhythm · 2023"], false, "air", [15,20], `${fox}2829/fork--2023-32mm-or-32mm-tc-or-34mm-or-34mm-awl`, foxFork),
+  ...entries("FOX", ["36 · 2023", "38 · 2023"], false, "air", [15,20], `${fox}2830/fork--2023-36mm-or-38mm`, foxFork),
+  ...entries("FOX", ["40 FLOAT · 2023"], false, "air", [15,20], `${fox}2831/fork--2023-40mm`, foxFork),
+  ...entries("Manitou", ["R8 Pro · guía 2024"], false, "air", [15,20], "https://hayesbicycle.zendesk.com/hc/en-us/article_attachments/24504253740951", "Referencia específica R8 Pro: no uses el rango de Mattoc o Mezzer. Sigue el método y la preparación de IVA de la guía."),
+  ...entries("Manitou", ["Dorado Pro 37 · MY22"], false, "air", [20,30], "https://hayesbicycle.zendesk.com/hc/en-us/article_attachments/4404709083799", "Horquilla invertida. Mide de pie según la guía, con 70 % del peso en pedales y 30 % en manillar. Presuriza IRT antes de la cámara principal."),
+  ...entries("Manitou", ["Dorado Expert 37 · MY22"], false, "air", [20,30], "https://hayesbicycle.zendesk.com/hc/en-us/article_attachments/4404701744407", "Horquilla invertida. Usa su guía Expert; mide de pie con la distribución de peso indicada. No copies la preparación de IRT de Pro."),
+  ...entries("Manitou", ["Dorado Comp 37 · MY22"], false, "coil", [20,30], "https://hayesbicycle.zendesk.com/hc/en-us/article_attachments/4404709071767", "Versión de muelle. Mide de pie según su guía y elige el muelle adecuado; la precarga no cambia su dureza."),
+  ...entries("RockShox", ["ZEB Ultimate · B1 / LinearXL", "ZEB Ultimate Flight Attendant · B1 / LinearXL", "ZEB Select+ · B1 / LinearXL", "ZEB Select · B1 / LinearXL"], false, "air", null, "https://www.sram.com/globalassets/document-hierarchy/service-manuals/rockshox/front-suspension/2027-front-suspension-specifications.pdf", `Generación MY27 con LinearXL. No copies el equilibrado de DebonAir+ anterior. ${rockSetup}`),
+  ...entries("RockShox", ["Lyrik Ultimate · E1 / LinearXL", "Lyrik Ultimate Flight Attendant · E1 / LinearXL", "Lyrik Select+ · E1 / LinearXL", "Lyrik Select · E1 / LinearXL"], false, "air", null, "https://www.sram.com/globalassets/document-hierarchy/service-manuals/rockshox/front-suspension/2027-front-suspension-specifications.pdf", `Generación MY27 con LinearXL. Sigue su secuencia de llenado y ajuste, distinta de generaciones anteriores. ${rockSetup}`),
+  ...entries("RockShox", ["BoXXer Ultimate · D1 / DebonAir+"], false, "air", null, "https://www.sram.com/en/rockshox/models/fs-bxr-ult-d1", `Doble pletina con DebonAir+. Confirma la instalación de las pletinas y la guía de esta generación. ${rockSetup}`),
+  ...entries("RockShox", ["BoXXer Ultimate · D2 / LinearXL"], false, "air", null, "https://www.sram.com/en/service/models/fs-bxr-ult-d2", `La cámara de aire puede variar según la unidad D2: identifica LinearXL o DebonAir+ por número de serie. ${rockSetup}`),
+  ...entries("RockShox", ["Pike Ultimate · C1 / DebonAir+"], false, "air", null, "https://www.sram.com/en/service/models/fs-pike-ult-c1", `Versión C1 con DebonAir+ y Charger 3. ${rockSetup}`),
+  ...entries("RockShox", ["Pike Ultimate · B4"], false, "air", null, "https://www.sram.com/en/service/models/fs-pike-ult-b4", `Versión anterior a C1; no copies automáticamente el método DebonAir+. ${rockSetup}`),
+  ...entries("RockShox", ["Lyrik Ultimate · D2"], false, "air", null, "https://www.sram.com/en/rockshox/models/fs-lyrk-ult-d2", rockSetup),
+  ...entries("RockShox", ["Lyrik Ultimate · C2"], false, "air", null, "https://www.sram.com/en/service/models/fs-lyrk-ult-c2", `Esta referencia incluye configuraciones DebonAir o Dual Position Air: identifica tu unidad. ${rockSetup}`),
+  ...entries("RockShox", ["ZEB Ultimate · A3 / DebonAir+"], false, "air", null, "https://trailhead.rockshox.com/en/product/FS-ZEB-ULT-A3/tuning/setup", `Referencia de ajuste específica A3 de TrailHead. ${rockSetup}`),
+  ...entries("RockShox", ["Domain R · B1 / DebonAir"], false, "air", null, "https://www.sram.com/en/service/models/fs-domn-r-b1", `Versión DebonAir, no DebonAir+. ${rockSetup}`),
   ...entries("FOX", ["36 FLOAT / E-Bike+ · 2026"], false, "air", [15,20], `${fox}3089/fork--2026-36mm`, "Confirma FLOAT o FLOAT E-Bike+: el rango de SAG coincide, pero usa la columna de presión de tu versión."),
   ...entries("FOX", ["32 / Step-Cast / Taper-Cast · 2026", "34 FLOAT / Rhythm · 2026"], false, "air", [15,20], `${fox}3104/fork--2026-32mm--or-34mm-(including-32-step-cast-and-32-taper-cast)`, foxFork),
   ...entries("FOX", ["40 FLOAT · 2026"], false, "air", [15,20], `${fox}3102/fork--2026-40mm`, "Horquilla de doble pletina. Usa su recorrido real y abre la compresión de baja velocidad según el manual."),

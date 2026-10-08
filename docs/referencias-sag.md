@@ -1,6 +1,8 @@
 # Referencias oficiales de SAG
 
-Revisadas el 8 de octubre de 2026. La lista utilizada por el selector y la tabla está en `src/data/sag-references.ts`: 67 entradas, con fabricante, componente, resorte, versión o revisión de guía, rango y enlace oficial.
+Revisadas el 8 de octubre de 2026. La lista utilizada por el selector y la tabla está en `src/data/sag-references.ts`: 107 entradas, con fabricante, componente, resorte, versión o revisión de guía, rango y enlace oficial. Son referencias de modelo/versión, no 107 familias distintas.
+
+Tercera ampliación: manuales FOX MY27 y cobertura 2023/2024 que faltaba; RockShox ZEB B1 y Lyrik E1 LinearXL (Ultimate, Flight Attendant, Select+ y Select), BoXXer D1/D2, Pike Ultimate B4/C1, Lyrik Ultimate C2/D2, ZEB Ultimate A3 y Domain R B1; Manitou R8 Pro y Dorado Pro/Expert/Comp 37 MY22; SR Suntour ZERON36/36X EQ 2K25. Los RockShox sin objetivo numérico confirmado se añaden como referencias de identificación y ajuste mediante TrailHead, no como objetivos universales. ZERON imprime 15–30 %, pero tiene una discrepancia en milímetros para 120 mm, explicada en la nota de la entrada.
 
 Segunda ampliación de horquillas: FOX 32/34/36/40 (2026), Marzocchi Super Z Rev. B y Bomber 58 Rev. A, Manitou Mattoc Pro/Expert/Comp Gen 3. Se añaden también referencias de identificación y ajuste, sin porcentaje automático, para RockShox SID Ultimate 2P D1, SID Ultimate Flight Attendant D2, SID SL Ultimate 2P E1, Reba Gold/RL B1 (2026+) y Recon Gold RL A3 aire. DebonAir+ sigue su método de presión; Reba y Recon enlazan documentación sin inventar un objetivo universal.
 
