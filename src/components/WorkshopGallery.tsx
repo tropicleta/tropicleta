@@ -1,5 +1,4 @@
 import Image from "next/image";
-import Link from "next/link";
 import { workshopComments } from "@/data/workshop-comments";
 import styles from "./home/WorkshopFocus.module.css";
 const stories = [
@@ -16,13 +15,11 @@ export function WorkshopGallery() {
       <div className="tp-workshop-caption"><span className="tp-instagram-post-link">Ver publicación en Instagram ↗</span><h3>{story.title}</h3><p>{story.text}</p></div>
     </a>)}</div>
     <div className={styles.comments}>
-      <h3 className="tp-display">Lo que comentan quienes pedalean.</h3>
-      <p className={styles.intro}>Comentarios públicos en nuestras publicaciones de Instagram. Puedes abrir cada fuente para leer el contexto completo.</p>
-      <div className={styles.cards}>{workshopComments.map(comment => <figure className={styles.comment} key={comment.username}>
-        <blockquote>“{comment.quote}”</blockquote>
-        <figcaption><strong>@{comment.username}</strong><span>{comment.context}</span><a href={comment.url} target="_blank" rel="noopener noreferrer">{comment.excerpt ? "Leer comentario completo ↗" : "Ver comentario original ↗"}</a></figcaption>
-      </figure>)}</div>
-      <div className="tp-actions" style={{marginTop:24}}><Link className="tp-btn tp-btn-primary" href="/servicios/">Consultar servicios para mi bici →</Link></div>
+      <h3 className={styles.commentsTitle}><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5" /><circle cx="12" cy="12" r="4" /><circle cx="17.5" cy="6.5" r=".8" fill="currentColor" stroke="none" /></svg>En los comentarios de Instagram</h3>
+      <div className={styles.commentList}>{workshopComments.map(comment => <div className={styles.comment} key={comment.username}>
+        <p><a className={styles.username} href={comment.url} target="_blank" rel="noopener noreferrer">@{comment.username}</a>{" "}{comment.quote}</p>
+        <div className={styles.commentSource}><span>{comment.context}</span><a href={comment.url} target="_blank" rel="noopener noreferrer">{comment.excerpt ? "Leer completo ↗" : "Ver en Instagram ↗"}</a></div>
+      </div>)}</div>
     </div>
   </div></section>;
 }

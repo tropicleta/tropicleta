@@ -15,12 +15,14 @@
 .steps span { color:var(--tp-grey); font-size:14px }
 .tools { grid-template-columns:repeat(2,minmax(0,1fr)) }
 .footnote { color:var(--tp-grey); font-size:13px; margin:18px 0 0 }
-.comments { padding-top:32px; margin-top:32px; border-top:1px solid var(--tp-border) }
-.comments > h3 { font-size:clamp(26px,3.5vw,36px); margin-bottom:12px }
-.comment { margin:0; padding:24px; background:var(--tp-card); border:1px solid var(--tp-border); border-radius:12px; display:grid; grid-template-rows:1fr auto; min-width:0; text-align:left }
-.comment blockquote { margin:0 0 20px; font-size:clamp(20px,2.5vw,26px); line-height:1.5; color:var(--tp-white) }
-.comment figcaption { display:grid; gap:8px; font-size:14px }
-.comment figcaption span { color:var(--tp-grey); line-height:1.5; min-height:3em }
-.comment a { color:var(--tp-orange); font-size:13px; font-weight:700 }
+.comments { padding-top:20px; margin-top:24px; border-top:1px solid var(--tp-border) }
+.commentsTitle { display:flex; align-items:center; gap:10px; font-family:var(--font-body); font-size:16px; line-height:1.5; margin:0 0 12px }
+.commentsTitle svg { flex-shrink:0 }
+.commentList { display:grid; gap:12px }
+.comment { min-width:0; text-align:left }
+.comment p { margin:0; font-size:14px; line-height:1.6; color:var(--tp-white); overflow-wrap:anywhere }
+.comment .username { color:var(--tp-white); font-weight:750; margin-right:5px; text-decoration:none }
+.comment .username:hover { text-decoration:underline }
+.commentSource { display:flex; flex-wrap:wrap; gap:3px 12px; margin-top:2px; font-size:12px; line-height:1.5; color:var(--tp-grey) }
+.commentSource a { color:var(--tp-grey); text-decoration:underline; text-underline-offset:3px; white-space:nowrap }
 @media(max-width:800px) { .cards { grid-template-columns:1fr } .race { grid-template-columns:1fr; padding:22px } .section { padding:36px 0 } }
-@media(max-width:800px) { .comment figcaption span { min-height:0 } }
