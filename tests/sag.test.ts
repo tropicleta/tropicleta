@@ -39,3 +39,6 @@ assert.equal(suggestSag("unknown", false, findSagReference("Öhlins", "RXF38 m.2
 assert.equal(findSagReference("Öhlins", "RXF38 m.2 Air · manual m.2", false, "coil"), undefined);
 assert.equal(suggestSag("unknown", true, findSagReference("DVO", "Topaz Prime · guía 2.1 / 2024", true, "air")).value, 25);
 assert.equal(suggestSag("unknown", false, findSagReference("FOX", "Podium · 2026", false, "air")).value, 17.5);
+assert.equal(suggestSag("unknown", false, findSagReference("Manitou", "Mattoc Pro Gen 3 · guía 2023", false, "air")).value, 22.5);
+assert.equal(suggestSag("unknown", false, findSagReference("Marzocchi", "Super Z · guía Rev. B / 2024", false, "air")).value, 17.5);
+assert.equal(suggestSag("unknown", false, findSagReference("RockShox", "SID Ultimate 2P · D1 / DebonAir+", false, "air")).verified, false);

@@ -1,6 +1,8 @@
 # Referencias oficiales de SAG
 
-Revisadas el 8 de octubre de 2026. La lista utilizada por el selector y la tabla está en `src/data/sag-references.ts`: 53 entradas, con fabricante, componente, resorte, versión o revisión de guía, rango y enlace oficial.
+Revisadas el 8 de octubre de 2026. La lista utilizada por el selector y la tabla está en `src/data/sag-references.ts`: 67 entradas, con fabricante, componente, resorte, versión o revisión de guía, rango y enlace oficial.
+
+Segunda ampliación de horquillas: FOX 32/34/36/40 (2026), Marzocchi Super Z Rev. B y Bomber 58 Rev. A, Manitou Mattoc Pro/Expert/Comp Gen 3. Se añaden también referencias de identificación y ajuste, sin porcentaje automático, para RockShox SID Ultimate 2P D1, SID Ultimate Flight Attendant D2, SID SL Ultimate 2P E1, Reba Gold/RL B1 (2026+) y Recon Gold RL A3 aire. DebonAir+ sigue su método de presión; Reba y Recon enlazan documentación sin inventar un objetivo universal.
 
 Ampliación moderna: FOX 34SL/36SL, 38, Podium, FLOAT SL/X/X2 y DHX/DHX2 (2026); Öhlins RXF36 m.3 y RXF38 m.2, aire y muelle separados; Manitou Mezzer Pro/LT Pro/Expert Gen 2 y Mara Pro PB Gen 2; DVO Topaz Prime/Pro guía 2.1. También se incorporaron las familias de horquilla de la guía Fork Set-Up de DVO y Mezzer Pro de primera generación, con alcance explícito.
 
