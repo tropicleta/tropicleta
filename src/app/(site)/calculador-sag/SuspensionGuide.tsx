@@ -57,7 +57,7 @@ export function SuspensionGuide() {
     <div hidden={step !== 1}>
       <p className={styles.lead}>Vas a medir una distancia pequeña con la regla. Esa medida nos dice cuánto se hundió la suspensión al subirte.</p>
       <div className={styles.measureLesson}><h3>Haz la medición en cuatro movimientos</h3><ol className={styles.lessonSteps}>
-        <li><b>Sube con tu equipo</b><span>Con la bici sostenida, adopta la posición que indique el manual. Quédate quieto hasta que la suspensión deje de bajar.</span></li>
+        <li><b>Sube listo para pedalear</b><span>Ponte el casco, las zapatillas y la mochila que usarás, si llevas una. Lleva también el agua en tu caramayola o mochila y tus accesorios habituales: la idea es tener el mismo peso que en tu salida o carrera. Con la bici sostenida, adopta la posición del manual y quédate quieto hasta que la suspensión deje de bajar.</span></li>
         <li><b>Acerca el anillo de goma</b><span>Sin bajarte, pide que deslicen el anillo hasta la goma por donde entra el tubo. Esa goma se llama retén.</span></li>
         <li><b>Baja despacio</b><span>No saltes ni rebotes. Al quitar tu peso, la suspensión se estira y el anillo queda marcando cuánto se hundió.</span></li>
         <li><b>Mide el espacio</b><span>Con la regla, mide del retén al anillo, en milímetros. Escribe ese número en «Lo que medí». Repite para comprobarlo.</span></li>
