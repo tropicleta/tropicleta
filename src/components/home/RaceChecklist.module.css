@@ -1,0 +1,19 @@
+.layout { display:grid; grid-template-columns:minmax(0,1.4fr) minmax(0,1fr); gap:28px; align-items:start }
+.layout h2 { font-size:26px; line-height:1.2 }
+.intro { color:var(--tp-grey); line-height:1.7 }
+.list { display:grid; gap:14px }
+.item { background:var(--tp-card); border:1px solid var(--tp-border); border-radius:12px; padding:20px }
+.item[data-help=true] { border-color:var(--tp-orange) }
+.item p { color:var(--tp-grey); font-size:14px; line-height:1.6; margin:10px 0 }
+.item select, .date input { padding:12px; width:100%; border:1px solid var(--tp-border); border-radius:8px; color:var(--tp-white); background:var(--tp-black-2); font:inherit; min-width:0 }
+.item a { display:block; color:var(--tp-orange); padding-top:14px; font-size:14px; font-weight:700 }
+.summary { position:sticky; top:calc(var(--tp-header-h) + 20px); padding:24px; background:var(--tp-card); border:1px solid var(--tp-border); border-radius:12px }
+.summary p { color:var(--tp-grey); line-height:1.7 }
+.summary .small { font-size:13px }
+.summary .date { display:grid; gap:8px }
+.date span { font-size:12px; color:var(--tp-grey) }
+.summary > a { width:100% }
+.summary button { border:0; background:none; color:var(--tp-grey); text-decoration:underline; padding:8px 0; font:inherit; cursor:pointer }
+.sources { color:var(--tp-grey); font-size:12px; line-height:1.7; margin-top:20px }
+.sources a { color:var(--tp-orange); text-decoration:underline }
+@media(max-width:800px) { .layout { grid-template-columns:1fr } .summary { position:static; padding:20px } }

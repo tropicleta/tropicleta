@@ -17,7 +17,7 @@ import type { FormState } from "@/lib/forms";
 import { quoteSavings } from "@/lib/quote-presentation";
 type Catalog = PackageCatalog;
 
-export function BookingForm({ catalog, vehicles, preselected, initialVehicleSlug, minDate }: { catalog: Catalog; vehicles:QuoteVehicle[]; preselected?: string; initialVehicleSlug?:string; minDate: string }) {
+export function BookingForm({ catalog, vehicles, preselected, initialVehicleSlug, minDate, initialNotes }: { catalog: Catalog; vehicles:QuoteVehicle[]; preselected?: string; initialVehicleSlug?:string; minDate: string; initialNotes?: string }) {
   const [state, action] = useActionState<FormState, FormData>(createBooking, {});
   const [step,setStep]=useState(1);
   const stepHeading=useRef<HTMLHeadingElement>(null);
@@ -148,7 +148,7 @@ export function BookingForm({ catalog, vehicles, preselected, initialVehicleSlug
           <Field name="phone" label="Celular (WhatsApp)" type="tel" inputMode="tel" autoComplete="tel" placeholder="9 1234 5678" state={state} required />
           <Field name="email" label="Email" type="email" autoComplete="email" state={state} optional hint="Para enviarte el comprobante" />
         </div>
-        <Field name="notes" label="Comentarios" as="textarea" rows={3} state={state} optional placeholder="Cuéntanos qué le pasa a tu bici" />
+        <Field name="notes" label="Comentarios" as="textarea" rows={initialNotes ? 6 : 3} state={state} optional defaultValue={initialNotes} placeholder="Cuéntanos qué le pasa a tu bici" hint={initialNotes ? "Completa la bicicleta, síntomas y fecha deseada de entrega. El taller debe confirmar disponibilidad; la fecha de carrera no reserva una entrega." : undefined} />
       </fieldset>
 
       <input type="text" name="website" tabIndex={-1} autoComplete="off" hidden aria-hidden="true" />

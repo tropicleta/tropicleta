@@ -22,13 +22,35 @@ try {
   page.on("request", (request) => { if (request.url().startsWith("http") && !request.url().startsWith(origin)) externalRequests.push(request.url()); });
   await page.setViewport({ width: 1440, height: 1000 });
   await page.goto(`${origin}/biometria/`, { waitUntil: "networkidle0" });
+  await page.screenshot({ path: join(tmpdir(), "tropicleta-bikefit-prepara.png"), fullPage: true });
+  await page.evaluate(() => { document.querySelectorAll("details").forEach(node => node.open = true); });
   await page.select("#fit-discipline", "dh");
-  assert.ok(await page.evaluate(() => document.body.textContent.includes("No interpretes ese rango como un objetivo de downhill")));
-  assert.equal(await page.$eval("button.tp-btn-primary", (button) => button.disabled), true);
+  assert.deepEqual(await page.$$eval("#fit-posture option", nodes => nodes.map(node => node.value)), ["standing"]);
+  const downhillExample = await page.$eval('img[alt^="Postura ilustrativa"]', node => node.src);
+  await page.select("#fit-discipline", "urban");
+  assert.notEqual(await page.$eval('img[alt^="Postura ilustrativa"]', node => node.src), downhillExample);
+  await page.select("#fit-discipline", "road");
+  assert.equal(await page.$eval("#fit-camera-start", (button) => button.disabled), true);
   // The example demonstrates the workflow without consent, a camera or inference.
   await page.evaluate(() => [...document.querySelectorAll("button")].find((button) => button.textContent === "Ver ejemplo de resultados").click());
   await page.waitForFunction(() => document.querySelector('[role="status"]').textContent.includes("Ejemplo ilustrativo"));
   assert.equal(await page.$$eval("dd", (items) => items.every((item) => item.textContent.includes("°"))), true);
+  const roadAngles = await page.$$eval("dd", items => items.map(item => item.textContent));
+  await page.evaluate(() => [...document.querySelectorAll("button")].find(button => button.textContent === "Cambiar módulo (borra la toma)").click());
+  await page.select("#fit-discipline", "urban");
+  await page.evaluate(() => [...document.querySelectorAll("button")].find(button => button.textContent === "Ver ejemplo de resultados").click());
+  await page.waitForFunction(() => document.querySelector('[role="status"]').textContent.includes("Ejemplo ilustrativo"));
+  assert.notDeepEqual(await page.$$eval("dd", items => items.map(item => item.textContent)), roadAngles);
+  await page.evaluate(() => [...document.querySelectorAll("button")].find(button => button.textContent === "Cambiar módulo (borra la toma)").click());
+  await page.select("#fit-discipline", "enduro");
+  await page.evaluate(() => [...document.querySelectorAll("button")].find(button => button.textContent === "Ver ejemplo de resultados").click());
+  await page.waitForFunction(() => document.querySelector('[role="status"]').textContent.includes("Ejemplo ilustrativo"));
+  assert.equal(await page.$eval("dd", node => node.previousElementSibling.textContent), "Ángulo interno de codo");
+  assert.equal(await page.$$eval('input[type="checkbox"]', items => items[2].disabled), true);
+  await page.evaluate(() => [...document.querySelectorAll("button")].find(button => button.textContent === "Cambiar módulo (borra la toma)").click());
+  await page.select("#fit-posture", "seated");
+  await page.evaluate(() => [...document.querySelectorAll("button")].find(button => button.textContent === "Ver ejemplo de resultados").click());
+  await page.waitForFunction(() => document.querySelector('[role="status"]').textContent.includes("Ejemplo ilustrativo"));
   assert.equal(await page.$eval("video", (video) => video.srcObject), null);
   assert.equal(await page.$eval('input[type="checkbox"]', (input) => input.checked), false);
   await page.evaluate(() => [...document.querySelectorAll("button")].find((button) => button.textContent === "Apagar y borrar").click());
@@ -51,7 +73,8 @@ try {
   if (fixture) {
     await (await page.$('input[type="file"]')).uploadFile(fixture);
     await page.waitForFunction(() => document.querySelector('[role="status"]').textContent.includes("Análisis local activo"), { timeout: 90000 });
-    await page.select("select", "left");
+    await page.evaluate(() => [...document.querySelectorAll("button")].find(button => button.textContent === "Continuar con esta foto →").click());
+    await page.select("#fit-side", "left");
     // Explicitly select the framing checkbox (second checkbox in DOM).
     const checks = await page.$$('input[type="checkbox"]');
     if (!(await checks[1].evaluate((input) => input.checked))) await checks[1].click();
@@ -63,19 +86,20 @@ try {
     await checks[1].click();
     assert.deepEqual(await page.$$eval("dd", (items) => items.map((item) => item.textContent)), ["—", "—", "—", "—"]);
     assert.equal(await checks[2].evaluate((input) => input.checked), false);
+    await page.evaluate(() => [...document.querySelectorAll("button")].find(button => button.textContent === "Elegir otra foto o repetir la toma").click());
   }
   await page.evaluate(() => [...document.querySelectorAll("button")].find((b) => b.textContent === "Apagar y borrar").click());
-  await page.click("button.tp-btn-primary");
+  await page.click("#fit-camera-start");
   await page.waitForFunction(() => document.querySelector('[role="status"]').textContent.includes("No detectamos una persona"), { timeout: 90000 });
   assert.equal(await page.$eval("video", (video) => video.srcObject.getVideoTracks()[0].readyState), "live");
   await page.evaluate(() => [...document.querySelectorAll("button")].find((b) => b.textContent === "Apagar y borrar").click());
   assert.equal(await page.$eval("video", (video) => video.srcObject), null);
   // Explicit permission denial and unsupported browser, independent of model inference.
   await page.evaluate(() => { navigator.mediaDevices.getUserMedia = async () => { throw new DOMException("Denied", "NotAllowedError"); }; });
-  await page.click("button.tp-btn-primary");
+  await page.click("#fit-camera-start");
   await page.waitForFunction(() => document.querySelector('[role="status"]').textContent.includes("Permiso de cámara denegado"));
   await page.evaluate(() => { Object.defineProperty(navigator, "mediaDevices", { value: undefined, configurable: true }); });
-  await page.click("button.tp-btn-primary");
+  await page.click("#fit-camera-start");
   await page.waitForFunction(() => document.querySelector('[role="status"]').textContent.includes("requiere HTTPS"));
   assert.deepEqual(errors, []);
   assert.deepEqual(assetErrors, []);

@@ -9,6 +9,7 @@ import { ProductCard } from "@/components/shop/ProductCard";
 import { site } from "@/data/site";
 import { WorkshopGallery } from "@/components/WorkshopGallery";
 import { AnimatedEmblem } from "@/components/AnimatedEmblem";
+import { TechnicalServices, RacePreparation, HomeTools } from "@/components/home/WorkshopFocus";
 
 export const metadata: Metadata = {
  title: { absolute: "Taller de bicicletas en Tierra Amarilla y Copiapó | Tropicleta" },
@@ -35,21 +36,22 @@ export default async function HomePage() {
               </div></div>
 
               <h1 id="tp-main-title" className="tp-display">
-                Taller de bicicletas <span>hecho para rodar.</span>
+                Tu próxima ruta <span>empieza en el taller.</span>
               </h1>
 
               <p className="tp-hero-copy">
-                Servicio técnico de bicicletas con atención coordinada en Tierra Amarilla, cerca de Paipote y
-                Copiapó. Mantenciones, ajustes y servicios especializados.
+                Mantención, frenos, transmisión, suspensión y ruedas en Tierra Amarilla.
+                Para tu próxima salida o carrera, elige los trabajos y coordina cuándo necesitas la bici.
+                Retiro y entrega en Copiapó y Paipote según disponibilidad.
               </p>
 
               <div className="tp-actions">
 
-                <Link className="tp-btn tp-btn-secondary" href="/servicios/">
-                  Cotizar servicios
+                <Link className="tp-btn tp-btn-primary" href="/servicios/">
+                  Ver servicios y cotizar
                 </Link>
-                <Link className="tp-btn tp-btn-secondary" href="/tienda/">
-                  Tienda
+                <Link className="tp-btn tp-btn-secondary" href="/prepara-tu-carrera/">
+                  Tengo una carrera
                 </Link>
               </div>
             </div>
@@ -58,6 +60,11 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+
+      <TechnicalServices />
+      <RacePreparation />
+      <WorkshopGallery />
+      <HomeTools />
 
       <section className="tp-section tp-mobile-summary">
         <div className="tp-shell tp-mobile-summary-grid">
@@ -119,7 +126,6 @@ export default async function HomePage() {
       </section>}
 
       {/* ================= CONVERSIÓN LOCAL ================= */}
-      <WorkshopGallery />
       <section className="tp-section">
         <div className="tp-shell">
           <div className="tp-local-box">

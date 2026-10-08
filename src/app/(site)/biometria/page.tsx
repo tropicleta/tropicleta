@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 
 export default function BiometriaPage() {
   return <>
-    <PageHero kicker="Biometría · beta" title="Conoce tu" highlight="posición." intro="Una mirada orientativa a tu postura sobre la bici, desde tu cámara. Tus imágenes se procesan en tu dispositivo." />
+    <PageHero kicker="Biometría · beta" title="Conoce tu" highlight="posición." intro="Tres pasos para entender tu postura: prepara una toma, captura y aprende a leer tu posición." />
     <section className="tp-section"><div className="tp-shell"><BikeFit /></div></section>
   </>;
 }

@@ -1,0 +1,25 @@
+.section { padding:56px 0 }
+.section h2 { font-size:clamp(30px,4.5vw,48px); line-height:1.05; margin-bottom:16px }
+.intro { color:var(--tp-grey); max-width:720px; line-height:1.7; margin-bottom:24px }
+.cards { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px }
+.card { padding:24px; border:1px solid var(--tp-border); border-radius:var(--tp-radius); background:var(--tp-card); display:flex; flex-direction:column; gap:12px }
+.card h3 { margin:0; font-size:21px }
+.card p { margin:0; color:var(--tp-grey); line-height:1.65 }
+.card a { color:var(--tp-orange); margin-top:auto; padding-top:10px; font-weight:700 }
+.number { color:var(--tp-orange); font-size:13px; font-weight:800; letter-spacing:1px }
+.race { display:grid; grid-template-columns:minmax(0,1.3fr) minmax(0,1fr); gap:28px; padding:32px; border:1px solid #745022; border-radius:var(--tp-radius); background:linear-gradient(120deg,#292016,var(--tp-card)) }
+.race p { color:var(--tp-grey); line-height:1.7 }
+.steps { padding-left:24px; margin:0; display:grid; gap:20px; align-content:center }
+.steps li { padding-left:5px }
+.steps strong { display:block; margin-bottom:4px }
+.steps span { color:var(--tp-grey); font-size:14px }
+.tools { grid-template-columns:repeat(2,minmax(0,1fr)) }
+.footnote { color:var(--tp-grey); font-size:13px; margin:18px 0 0 }
+.comments { padding-top:32px; margin-top:32px; border-top:1px solid var(--tp-border) }
+.comments > h3 { font-size:clamp(26px,3.5vw,36px); margin-bottom:12px }
+.comment { margin:0; padding:24px; background:var(--tp-card); border:1px solid var(--tp-border); border-radius:12px }
+.comment blockquote { margin:0 0 20px; font-size:clamp(20px,2.5vw,26px); line-height:1.5; color:var(--tp-white) }
+.comment figcaption { display:grid; gap:8px; font-size:14px }
+.comment figcaption span { color:var(--tp-grey); line-height:1.5 }
+.comment a { color:var(--tp-orange); font-size:13px; font-weight:700 }
+@media(max-width:800px) { .cards { grid-template-columns:1fr } .race { grid-template-columns:1fr; padding:22px } .section { padding:36px 0 } }

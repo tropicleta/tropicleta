@@ -1,6 +1,7 @@
 import { siteUrl } from "@/lib/site-url";
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import { PageHero } from "@/components/PageHero";
 
 export const metadata: Metadata = { alternates: { canonical: siteUrl("/nosotros/") },
@@ -8,10 +9,9 @@ export const metadata: Metadata = { alternates: { canonical: siteUrl("/nosotros/
   description: "Tropicleta es un taller de bicicletas y scooters eléctricos en Tierra Amarilla, Región de Atacama.",
 };
 
-// Contenido DUMMY: reemplazar con la historia real de Tropicleta.
 const values = [
   { n: "01", t: "Diagnóstico honesto", d: "Revisamos gratis y te explicamos qué necesita tu bici y qué puede esperar. Sin sorpresas en la cuenta." },
-  { n: "02", t: "Trabajo bien hecho", d: "Torque correcto, repuestos compatibles y prueba de rodado antes de entregar. Por eso damos 2 semanas de garantía." },
+  { n: "02", t: "Alcance claro", d: "El catálogo detalla los trabajos e inclusiones. Consulta la compatibilidad de tus componentes y coordina los repuestos y la fecha de entrega con el taller." },
   { n: "03", t: "Cerca tuyo", d: "Coordinamos por WhatsApp y retiramos en Tierra Amarilla, Paipote y Copiapó para que no pierdas tiempo." },
 ];
 
@@ -22,16 +22,16 @@ export default function NosotrosPage() {
         kicker="Nosotros"
         title="Un taller hecho"
         highlight="para rodar."
-        intro="Tropicleta nació en Tierra Amarilla con una idea simple: que pedalear en Atacama sea más fácil, con un taller cercano, ordenado y que responde."
+        intro="Taller de bicicletas y scooters en Tierra Amarilla. Atención coordinada, servicios con inclusiones detalladas y apoyo móvil en eventos ciclistas de Atacama."
       />
 
       <section className="tp-section">
         <div className="tp-shell tp-two-col">
           <div className="tp-prose">
-            <h2>Nuestra historia</h2>
+            <h2>El taller detrás de tu próxima salida</h2>
             <p>
-              Empezamos arreglando las bicis de amigos y vecinos en un garaje. El polvo, las espinas y los cerros del
-              norte exigen más a cada componente, y nos dimos cuenta de que hacía falta un taller que entendiera eso.
+              Atendemos en Carlos Condell 105, Tierra Amarilla. Puedes solicitar retiro y entrega en Tierra Amarilla,
+              Paipote y Copiapó, con coordinación previa y según disponibilidad.
             </p>
             <p>
               Hoy atendemos con coordinación previa para dedicarle el tiempo que cada bici necesita: desde un ajuste de
@@ -40,15 +40,16 @@ export default function NosotrosPage() {
             <h2>Taller móvil</h2>
             <p>
               También llevamos el taller a cicletadas, carreras y eventos ciclistas de la Región de Atacama, para que
-              nadie se quede abajo por un pinchazo o un cambio desregulado.
+              los organizadores puedan coordinar apoyo mecánico en terreno.
             </p>
           </div>
           <aside className="tp-local-box">
-            <span className="tp-kicker">En números</span>
+            <Image src="/taller/equipo-tropicleta.jpeg" alt="Equipo Tropicleta junto a su taller móvil en Atacama" width={960} height={720} sizes="(max-width: 800px) 100vw, 480px" style={{width:"100%",height:"auto",borderRadius:12,marginBottom:20}} />
+            <span className="tp-kicker">Atención local</span>
             <div className="tp-stats" style={{ gridTemplateColumns: "1fr 1fr", marginBottom: 0 }}>
               <div className="tp-stat">
-                <strong>8</strong>
-                <span>Categorías de servicio</span>
+                <strong>Taller</strong>
+                <span>En Tierra Amarilla</span>
               </div>
               <div className="tp-stat">
                 <strong>2</strong>
@@ -84,6 +85,7 @@ export default function NosotrosPage() {
             <Link className="tp-btn tp-btn-primary" href="/agendar/">
               Solicitar hora
             </Link>
+            <Link className="tp-btn tp-btn-secondary" href="https://www.instagram.com/tropicleta/" target="_blank" rel="noopener noreferrer">Ver trabajos publicados ↗</Link>
 
           </div>
         </div>
