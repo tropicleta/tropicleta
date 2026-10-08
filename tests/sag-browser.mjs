@@ -11,7 +11,7 @@ try {
   await page.setViewport({ width: 1440, height: 1000 });
   await page.goto(`${process.env.SAG_TEST_ORIGIN || "http://localhost:3012"}/calculador-sag/`, { waitUntil: "networkidle0" });
   assert.equal(await page.$$eval('input[type="radio"]', nodes => nodes.length), 2);
-  assert.ok(await page.evaluate(() => document.body.textContent.includes("Antes de medir: suspensión abierta")));
+  assert.ok(await page.evaluate(() => document.body.textContent.includes("Antes de medir: abre el bloqueo")));
   await page.select("#sag-discipline", "xc");
   assert.equal(await page.$eval("#fork-target", node => node.value), "22.5");
   await page.select("#sag-discipline", "enduro");
@@ -35,7 +35,7 @@ try {
   assert.ok(await page.$eval("#shock-result", node => node.textContent.includes("30") && node.textContent.includes("coincide")));
   await page.evaluate(() => { document.querySelectorAll("nav button").forEach(button => { if (button.textContent.includes("Ajusta el rebote")) button.click(); }); });
   await page.evaluate(() => { [...document.querySelectorAll("button")].find(button => button.textContent === "Vuelve con un golpe").click(); });
-  assert.ok(await page.evaluate(() => document.body.textContent.includes("Prueba un clic hacia más lento")));
+  assert.ok(await page.evaluate(() => document.body.textContent.includes("un clic hacia más lento según el manual")));
   await page.evaluate(() => { document.querySelectorAll("nav button").forEach(button => { if (button.textContent.includes("Mide el SAG")) button.click(); }); });
   assert.equal(await page.$eval("#fork-length", node => node.value), "140");
   await page.evaluate(() => { document.querySelectorAll("nav button").forEach(button => { if (button.textContent.includes("Prepara")) button.click(); }); });
@@ -48,6 +48,9 @@ try {
     assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
     await page.screenshot({ path: join(tmpdir(), `tropicleta-sag-${width}.png`), fullPage: true });
   }
+  await page.select("#fork-spring", "coil");
+  assert.equal(await page.$("#fork-model"), null);
+  assert.ok(await page.$eval("#fork-result", node => node.textContent.includes("La precarga no cambia la dureza del muelle")));
   assert.deepEqual(errors, []);
   console.log("SAG: selección, cálculo, decimales y distribución móvil/escritorio OK.");
 } finally { await browser.close(); }

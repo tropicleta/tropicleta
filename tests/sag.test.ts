@@ -19,3 +19,5 @@ assert.equal(suggestSag("enduro", false, false).value, 30);
 assert.equal(suggestSag("dh", false, true).value, 17.5);
 assert.equal(suggestSag("xc", true, true).value, 27.5);
 assert.equal(suggestSag("unknown", false, false).value, 20);
+assert.equal(suggestSag("xc", false, false).verified, false);
+assert.equal(suggestSag("xc", false, true).verified, true);

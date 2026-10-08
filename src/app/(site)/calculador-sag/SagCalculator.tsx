@@ -13,7 +13,8 @@ function Suspension({ rear = false, discipline }: { rear?: boolean; discipline: 
   const [measured, setMeasured] = useState("");
   const [brand, setBrand] = useState("unknown");
   const [model, setModel] = useState("unknown");
-  const knownModel = brand === "FOX" && model !== "unknown";
+  const [spring, setSpring] = useState("unknown");
+  const knownModel = brand === "FOX" && model !== "unknown" && spring !== "coil";
   const suggestion = suggestSag(discipline, rear, knownModel);
   const target = manualTarget ?? String(suggestion.value);
   const result = calculateSag(parseSagInput(length), parseSagInput(target), measured.trim() === "" ? undefined : parseSagInput(measured));
@@ -26,6 +27,9 @@ function Suspension({ rear = false, discipline }: { rear?: boolean; discipline: 
   return <section className={styles.card} aria-labelledby={`${id}-title`}>
     <span className="tp-kicker">{rear ? "Suspensión trasera" : "Suspensión delantera"}</span>
     <h2 id={`${id}-title`} className="tp-display">{rear ? "Amortiguador" : "Horquilla"}</h2>
+    <label className={styles.field} htmlFor={`${id}-spring`}>Tipo de resorte
+      <select id={`${id}-spring`} value={spring} onChange={event => { setSpring(event.target.value); setModel("unknown"); setTarget(null); }}><option value="unknown">No lo sé todavía</option><option value="air">Aire</option><option value="coil">Muelle / resorte helicoidal</option></select>
+    </label>
     <details className={styles.details}><summary>Ayuda para encontrar mi modelo y objetivo</summary>
     <div className={styles.inputGrid}>
       <label className={styles.field} htmlFor={`${id}-brand`}>Marca de {rear ? "amortiguador" : "horquilla"}
@@ -34,7 +38,7 @@ function Suspension({ rear = false, discipline }: { rear?: boolean; discipline: 
           {["FOX", "RockShox", "SR Suntour", "Öhlins", "Otra"].map(name => <option key={name}>{name}</option>)}
         </select>
       </label>
-      {brand === "FOX" && <label className={styles.field} htmlFor={`${id}-model`}>Modelo y año de referencia
+      {brand === "FOX" && spring !== "coil" && <label className={styles.field} htmlFor={`${id}-model`}>Modelo y año de referencia (aire)
         <select id={`${id}-model`} value={model} onChange={event => { setModel(event.target.value); setTarget(null); }}>
           <option value="unknown">Otro modelo / no lo sé</option>
           {(rear ? ["FLOAT DPS · 2018", "FLOAT DPX2 · 2018"] : ["36 · 2024", "38 · 2024"]).map(name => <option key={name}>{name}</option>)}
@@ -46,8 +50,8 @@ function Suspension({ rear = false, discipline }: { rear?: boolean; discipline: 
     </div>
     </details>
     <div className={styles.targetHint} id={`${id}-suggestion`}>
-      <b>{manualTarget === null ? "Objetivo sugerido" : "Objetivo personalizado"}: {Number.isFinite(parseSagInput(target)) ? `${fmt(parseSagInput(target))} %` : "ingresa un porcentaje válido"}</b>
-      <p>{suggestion.range ? `Rango de referencia: ${suggestion.range}. Sugerencia: punto medio (${fmt(suggestion.value)} %).` : "Puedes editar el ejemplo inicial si conoces el objetivo de tu manual."} {suggestion.source}.</p>
+      <b>{manualTarget !== null ? "Objetivo personalizado" : suggestion.verified ? "Propuesta dentro del rango del modelo" : "Escenario orientativo"}: {Number.isFinite(parseSagInput(target)) ? `${fmt(parseSagInput(target))} %` : "ingresa un porcentaje válido"}</b>
+      <p>{suggestion.range ? `Rango de referencia: ${suggestion.range}. Punto medio: ${fmt(suggestion.value)} %.` : "Puedes editar el ejemplo inicial con el objetivo de tu manual."} {suggestion.source}.</p>
       {manualTarget !== null && <button type="button" onClick={() => setTarget(null)}>Usar sugerencia de {fmt(suggestion.value)} %</button>}
     </div>
     <p id={`${id}-help`}>{rear ? "Usa la carrera indicada en la ficha técnica: en 210 × 55 mm, ingresa 55. No uses 210 ni el recorrido de la rueda trasera; el vástago visible tampoco siempre equivale a la carrera útil." : "Busca el recorrido útil en la ficha técnica de tu horquilla. La longitud visible de las barras puede ser diferente."}</p>
@@ -61,6 +65,8 @@ function Suspension({ rear = false, discipline }: { rear?: boolean; discipline: 
         <div><span>Tu medición</span><strong>{result.measuredPercent === undefined ? "—" : fmt(result.measuredPercent)} <small>%</small></strong><span>{measured.trim() === "" ? "Medición opcional" : `${measured} mm de hundimiento`}</span></div></div>
         {result.measuredPercent !== undefined ? <>
           <p>{Math.abs(result.differenceMm!) < 0.05 ? "Tu medición coincide con el objetivo." : `${fmt(Math.abs(result.differenceMm!))} mm ${result.differenceMm! > 0 ? "por encima" : "por debajo"} del objetivo. ${result.differenceMm! > 0 ? "Hay más hundimiento del elegido." : "Hay menos hundimiento del elegido."}`}</p>
+          {result.measuredPercent >= 50 && <p><b>Revisa la medición:</b> este hundimiento es muy alto frente a las referencias de esta guía. Comprueba recorrido, carrera y posición antes de cambiar ajustes.</p>}
+          <p className={styles.resultFoot}>Coincidir con el valor elegido no confirma una configuración correcta. {spring === "air" ? "Para corregir, valida primero el objetivo y usa la presión y el procedimiento del manual." : spring === "coil" ? "La precarga no cambia la dureza del muelle. Si no logras el SAG dentro de su límite de precarga, puede hacer falta otro muelle." : "Identifica si es aire o muelle antes de intentar corregir el hundimiento."}</p>
         </> : <p>Agrega tu medición para comparar con el objetivo.</p>}
       </>}
     </div>
@@ -82,7 +88,7 @@ export function SagSetup({ bike, discipline, setBike, setDiscipline }: SetupProp
       <label className={styles.field} htmlFor="sag-discipline">¿Qué disciplina practicas?
         <select id="sag-discipline" value={discipline} onChange={event => setDiscipline(event.target.value)}>{cyclingDisciplines.map(item => <option value={item.id} key={item.id}>{item.label}</option>)}</select>
       </label>
-      <div className={styles.disciplineInfo} aria-live="polite">{selectedDiscipline.sag ? <><b>{selectedDiscipline.label}: {selectedDiscipline.sag}</b><p>En el siguiente paso proponemos el punto medio como aproximación editable. Referencia general de <a href="https://www.simplon.com/en/About-us/Magazine/How-to-adjust-your-MTB-s-suspension_bba_10490" target="_blank" rel="noopener noreferrer">SIMPLON</a>; un modelo identificado usa su propio manual. Si cambias la disciplina, un objetivo que hayas editado se conserva.</p></> : <><b>Elige el objetivo de tu suspensión</b><p>Sin una referencia específica, se muestran ejemplos editables. Puedes seguir aunque no conozcas la disciplina o marca.</p></>}</div>
+      <div className={styles.disciplineInfo} aria-live="polite">{selectedDiscipline.sag ? <><b>{selectedDiscipline.label}: {selectedDiscipline.sag}</b><p>Proponemos el punto medio para explorar el cálculo. Es una referencia general de <a href="https://www.simplon.com/en/About-us/Magazine/How-to-adjust-your-MTB-s-suspension_bba_10490" target="_blank" rel="noopener noreferrer">SIMPLON</a>, sin un rango separado para horquilla y amortiguador. Un modelo identificado usa su manual. Confirma el objetivo antes de cambiar la suspensión; tus valores editados se conservan.</p></> : <><b>Elige el objetivo de tu suspensión</b><p>Sin una referencia específica, se muestran ejemplos editables. Puedes aprender a medir aunque no conozcas la disciplina o marca.</p></>}</div>
     </div>
   </div>;
 }

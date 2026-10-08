@@ -19,6 +19,7 @@
 .result { background: var(--tp-black-2); border-radius: var(--tp-radius); padding: 24px; margin-top: 28px; }
 .result strong { display: block; color: var(--tp-orange); font-size: 36px; }
 .result p:last-child { margin-bottom: 0; }
+.resultFoot { font-size:13px; border-top:1px solid var(--tp-border); padding-top:12px; }
 .supportGrid { display:grid; grid-template-columns:minmax(0,1.2fr) minmax(0,1fr); gap:32px; margin-top:48px; align-items:start; }
 .guide { min-width:0; padding:28px; border:1px solid var(--tp-border); border-radius:var(--tp-radius); }
 .guide h2 { font-size:28px; line-height:1.15; }

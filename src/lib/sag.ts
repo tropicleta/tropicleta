@@ -12,9 +12,9 @@ export function parseSagInput(value: string): number {
 
 /** General SIMPLON discipline ranges are provisional; a model's manual wins. */
 export function suggestSag(discipline: string, rear: boolean, foxModel: boolean) {
-  if (foxModel) return { value: rear ? 27.5 : 17.5, range: rear ? "25–30 %" : "15–20 %", source: "Manual FOX del modelo seleccionado" };
+  if (foxModel) return { value: rear ? 27.5 : 17.5, range: rear ? "25–30 %" : "15–20 %", source: "Rango del manual FOX; su punto medio es una propuesta de esta calculadora, no un ajuste óptimo garantizado", verified: true };
   const ranges: Record<string, [number, number]> = { xc: [20, 25], trail: [25, 30], enduro: [25, 35], dh: [30, 40] };
   const range = ranges[discipline];
-  if (range) return { value: (range[0] + range[1]) / 2, range: `${range[0]}–${range[1]} %`, source: "Referencia general SIMPLON por disciplina; confirma con el manual de tu modelo" };
-  return { value: rear ? 30 : 20, range: null, source: "Ejemplo inicial; sin referencia específica para tu suspensión" };
+  if (range) return { value: (range[0] + range[1]) / 2, range: `${range[0]}–${range[1]} %`, source: "Escenario educativo basado en SIMPLON; el rango general no distingue horquilla y amortiguador. Confirma el objetivo de este componente antes de ajustar", verified: false };
+  return { value: rear ? 30 : 20, range: null, source: "Ejemplo inicial; sin referencia específica para tu suspensión", verified: false };
 }
