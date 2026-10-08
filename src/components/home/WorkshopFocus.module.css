@@ -25,4 +25,10 @@
 .comment .username:hover { text-decoration:underline }
 .commentSource { display:flex; flex-wrap:wrap; gap:3px 12px; margin-top:2px; font-size:12px; line-height:1.5; color:var(--tp-grey) }
 .commentSource a { color:var(--tp-grey); text-decoration:underline; text-underline-offset:3px; white-space:nowrap }
+.postLink { display:block; color:inherit; text-decoration:none }
+.postComment { border-top:1px solid var(--tp-border); margin:0 18px; padding:12px 0 16px; text-align:left }
+.postComment p { margin:0; font-size:13px; line-height:1.6; color:var(--tp-white); overflow-wrap:anywhere }
+.postComment .username { color:var(--tp-white); font-weight:750; text-decoration:none; margin-right:4px }
+.postComment .username:hover { text-decoration:underline }
+.originalComment { display:inline-block; color:var(--tp-grey); font-size:11px; line-height:1.5; margin-top:6px; text-decoration:underline; text-underline-offset:3px }
 @media(max-width:800px) { .cards { grid-template-columns:1fr } .race { grid-template-columns:1fr; padding:22px } .section { padding:36px 0 } }
