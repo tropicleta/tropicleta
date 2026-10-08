@@ -7,6 +7,8 @@ import { ShopSections } from "@/components/shop/ShopSections";
 import { site } from "@/data/site";
 import { WorkshopGallery } from "@/components/WorkshopGallery";
 import { AnimatedEmblem } from "@/components/AnimatedEmblem";
+import { and, desc, eq, isNotNull } from "drizzle-orm";
+import { db, schema } from "@/db";
 
 export const metadata: Metadata = {
  title: { absolute: "Taller de bicicletas en Tierra Amarilla y Copiapó | Tropicleta" },
@@ -16,7 +18,8 @@ export const metadata: Metadata = {
 
 export const dynamic = "force-dynamic";
 
-export default function HomePage() {
+export default async function HomePage() {
+  const [recommended] = await db.select({ image: schema.recommendations.imageUrl, name: schema.recommendations.name }).from(schema.recommendations).where(and(eq(schema.recommendations.active, true), isNotNull(schema.recommendations.imageUrl))).orderBy(desc(schema.recommendations.createdAt)).limit(1);
   return (
     <div className="tp-home">
       {/* ================= HERO ================= */}
@@ -65,27 +68,10 @@ export default function HomePage() {
 
       <section className="tp-section tp-home-marketplace" aria-label="Tienda y recomendados de Tropicleta">
         <div className="tp-shell">
-          <ShopSections showcase />
+          <ShopSections showcase recommendationPreview={recommended?.image ? { image: recommended.image, name: recommended.name } : undefined} />
         </div>
       </section>
 
-      {/* ================= CONVERSIÓN LOCAL ================= */}
-      <section className="tp-section">
-        <div className="tp-shell">
-          <div className="tp-local-box">
-            <h2 className="tp-display tp-section-title">Encuéntranos en Tierra Amarilla</h2>
-            <p className="tp-section-intro">
-              Carlos Condell 105 · Atención con coordinación previa.
-            </p>
-            <div className="tp-actions">
-
-              <Link className="tp-btn tp-btn-secondary" href="/contacto/">
-                Ver ubicación y contacto
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
     </div>
   );
 }

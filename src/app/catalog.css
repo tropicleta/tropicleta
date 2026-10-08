@@ -168,3 +168,19 @@
 .tp-shop-market-badge { display: inline-flex; align-items: center; gap: 10px; margin-top: 12px; padding: 6px 10px; border-radius: 8px; background: #ffe600; color: #25244b; font-size: 12px; font-weight: 700; }
 .tp-shop-market-badge img { display: block; width: 72px; height: 30px; object-fit: contain; }
 @media(max-width:420px) { .tp-shop-showcase .tp-shop-section { padding: 18px 14px; } .tp-shop-showcase .tp-shop-section > .tp-shop-brand-visual { flex-basis: 70px; } .tp-shop-showcase .tp-shop-section strong { font-size: 20px; } }
+
+/* Tarjetas de portada: tipografía abierta y contenido encuadrado. */
+.tp-shop-showcase .tp-shop-section { display: grid; grid-template-columns: 92px minmax(0,1fr); align-items: center; gap: 20px; padding: 24px; }
+.tp-shop-showcase .tp-shop-section > span:not(.tp-shop-brand-visual):not(.tp-shop-section-arrow) { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; align-self: stretch; }
+.tp-shop-showcase .tp-shop-section > .tp-shop-brand-visual { width: 92px; gap: 16px; }
+.tp-shop-showcase .tp-shop-section > svg { justify-self: center; }
+.tp-shop-showcase .tp-shop-section strong { font-family: var(--font-body); font-size: 21px; font-weight: 750; line-height: 1.4; letter-spacing: .25px; word-spacing: .5px; margin: 0; text-align: left; }
+.tp-shop-showcase .tp-shop-section small { line-height: 1.65; max-width: none; }
+.tp-shop-showcase .tp-shop-eyebrow { line-height: 1.5; letter-spacing: .8px; }
+.tp-shop-showcase .tp-shop-market-badge { margin: 0; flex-shrink: 0; }
+.tp-shop-showcase .tp-shop-cta { display: flex; margin-top: auto; padding-top: 6px; line-height: 1.5; }
+@media(max-width:700px) { .tp-shop-showcase .tp-shop-section { grid-template-columns: 72px minmax(0,1fr); gap: 16px; padding: 20px 16px; } .tp-shop-showcase .tp-shop-section > .tp-shop-brand-visual { width: 72px; } .tp-shop-showcase .tp-shop-section strong { font-size: 19px; } }
+
+.tp-shop-showcase .tp-shop-brand-visual > img:first-child { height: 40px; width: 92px; object-fit: contain; }
+.tp-shop-market-logo { display: grid; place-items: center; height: 40px; width: 92px; max-width: 100%; padding: 4px 8px; border-radius: 8px; background: #ffe600; }
+.tp-shop-market-logo img { display: block; width: 100%; height: 100%; object-fit: contain; }
