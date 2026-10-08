@@ -17,9 +17,10 @@
 .footnote { color:var(--tp-grey); font-size:13px; margin:18px 0 0 }
 .comments { padding-top:32px; margin-top:32px; border-top:1px solid var(--tp-border) }
 .comments > h3 { font-size:clamp(26px,3.5vw,36px); margin-bottom:12px }
-.comment { margin:0; padding:24px; background:var(--tp-card); border:1px solid var(--tp-border); border-radius:12px }
+.comment { margin:0; padding:24px; background:var(--tp-card); border:1px solid var(--tp-border); border-radius:12px; display:grid; grid-template-rows:1fr auto; min-width:0; text-align:left }
 .comment blockquote { margin:0 0 20px; font-size:clamp(20px,2.5vw,26px); line-height:1.5; color:var(--tp-white) }
 .comment figcaption { display:grid; gap:8px; font-size:14px }
-.comment figcaption span { color:var(--tp-grey); line-height:1.5 }
+.comment figcaption span { color:var(--tp-grey); line-height:1.5; min-height:3em }
 .comment a { color:var(--tp-orange); font-size:13px; font-weight:700 }
 @media(max-width:800px) { .cards { grid-template-columns:1fr } .race { grid-template-columns:1fr; padding:22px } .section { padding:36px 0 } }
+@media(max-width:800px) { .comment figcaption span { min-height:0 } }
