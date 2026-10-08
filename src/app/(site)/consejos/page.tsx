@@ -3,6 +3,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { PageHero } from "@/components/PageHero";
 import { posts } from "@/data/posts";
+import { GuideImage } from "@/components/guides/GuideImage";
+import styles from "@/components/guides/GuideImage.module.css";
 
 export const metadata: Metadata = { alternates: { canonical: siteUrl("/consejos/") },
   title: "Consejos",
@@ -17,20 +19,28 @@ export default function ConsejosPage() {
       <PageHero kicker="Consejos" title="Desde el" highlight="taller." intro="Guías cortas para cuidar tu bici entre visitas al taller." />
       <section className="tp-section">
         <div className="tp-shell tp-post-grid">
-          <Link href="/biometria/" className="tp-post-card">
+          <Link href="/biometria/" className={`tp-post-card ${styles.card}`}>
+            <GuideImage guide="sillin" />
+            <div className={styles.body}>
             <span className="tp-meta">Herramienta orientativa · Altura de sillín</span>
             <h2 className="tp-display">Revisa la altura de tu sillín</h2>
             <p>Usa una foto si estás solo o pide ayuda para mirar la cámara. Revisa la rodilla y aprende qué ajustar, sin subir imágenes.</p>
             <span className="tp-service-link">Revisar mi sillín →</span>
+            </div>
           </Link>
-          <Link href="/calculador-sag/" className="tp-post-card">
+          <Link href="/calculador-sag/" className={`tp-post-card ${styles.card}`}>
+            <GuideImage guide="suspension" />
+            <div className={styles.body}>
             <span className="tp-meta">Herramienta interactiva · Suspensión</span>
             <h2 className="tp-display">Ajusta tu suspensión</h2>
             <p>Prepara tu bici, mide el SAG y afina el rebote. Una guía práctica, paso a paso.</p>
             <span className="tp-service-link">Ajustar mi suspensión →</span>
+            </div>
           </Link>
           {posts.map((p) => (
-            <Link key={p.slug} href={`/consejos/${p.slug}/`} className="tp-post-card">
+            <Link key={p.slug} href={`/consejos/${p.slug}/`} className={`tp-post-card ${styles.card}`}>
+              <GuideImage guide={p.slug} />
+              <div className={styles.body}>
               <span className="tp-meta">
                 {fmt(p.date)} · {p.readingMinutes} min
               </span>
@@ -39,6 +49,7 @@ export default function ConsejosPage() {
               <span className="tp-service-link" style={{ marginTop: 6 }}>
                 Leer →
               </span>
+              </div>
             </Link>
           ))}
         </div>

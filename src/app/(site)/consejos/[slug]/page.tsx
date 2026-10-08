@@ -4,6 +4,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Prose } from "@/components/Prose";
 import { getPost, posts } from "@/data/posts";
+import { GuideImage } from "@/components/guides/GuideImage";
+import { ChainGuide } from "@/components/guides/ChainGuide";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -48,6 +50,8 @@ export default async function PostPage({ params }: Props) {
       </section>
       <section className="tp-section">
         <div className="tp-shell">
+          <div style={{ maxWidth: 850, marginBottom: 28, borderRadius: 12, overflow: "hidden" }}><GuideImage guide={post.slug} /></div>
+          {post.slug === "cuidar-la-cadena" && <ChainGuide />}
           <Prose text={post.body} />
           <div className="tp-local-box" style={{ marginTop: 40, maxWidth: 720 }}>
             <span className="tp-kicker">¿Prefieres que lo hagamos nosotros?</span>

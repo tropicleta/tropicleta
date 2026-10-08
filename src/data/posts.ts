@@ -38,20 +38,55 @@ La mayoría de las llantas modernas son compatibles. Tráela al taller y te deci
   },
   {
     slug: "cuidar-la-cadena",
-    title: "Cómo cuidar la cadena para que dure el doble",
-    excerpt: "Limpieza, lubricante correcto y cuándo cambiarla antes de que se coma el cassette.",
+    title: "Cuida tu cadena y aprende a usar los cambios",
+    excerpt: "Arranca suave, evita la cadena cruzada y elige cambios que acompañen tu pedaleo. Menos esfuerzo brusco para ti y tu transmisión.",
     date: "2026-08-05",
-    readingMinutes: 3,
-    body: `La cadena es la pieza que más trabaja y la que más se descuida. Cuidarla bien alarga la vida de todo el sistema de transmisión.
+    readingMinutes: 5,
+    body: `Tu cadena une los platos de delante con los piñones de atrás. Ese conjunto transmite tu esfuerzo a la rueda: cuidarlo también significa elegir bien los cambios. Esta guía se refiere a bicicletas con desviador.
 
-## Limpia antes de lubricar
-Aplicar lubricante sobre una cadena sucia forma una pasta que desgasta todo. Limpia con desengrasante, seca y recién ahí lubrica.
+## Primero, entiende qué hace cada cambio
+Un cambio liviano permite mover los pedales con menos esfuerzo: sirve para arrancar o subir. Uno pesado exige más fuerza y permite avanzar más por pedalada: sirve cuando ya llevas velocidad y el terreno lo permite.
 
-## Usa lubricante seco en el norte
-Los lubricantes de cera o secos acumulan menos polvo. Aplica una gota por eslabón y retira el exceso con un paño.
+Atrás, un piñón más grande hace el pedaleo más liviano. Si tienes varios platos delante, uno más pequeño también lo hace más liviano. Prueba los cambios en terreno tranquilo para conocer tu bici.
 
-## Mide el desgaste
-Con un medidor de cadena sabes cuándo cambiarla. Si esperas demasiado, también tendrás que cambiar cassette y platos.`,
+## Antes de detenerte, prepara la próxima partida
+Mientras reduces la velocidad y todavía puedes pedalear suavemente, pasa a un cambio más liviano. Cuando vuelvas a partir, acelera de a poco y aumenta el desarrollo a medida que lo necesites.
+
+Si una frenada de emergencia no te deja tiempo, frenar y mantener el control tiene prioridad. Después prepara una partida suave.
+
+## ¿Te quedaste detenido en un cambio pesado?
+Evita arrancar con un pisotón. En un lugar seguro, toma algo de movimiento con un impulso suave y pedalea con poca presión mientras buscas un cambio liviano. Si estás en una subida o no puedes partir con control, bájate y prepara la marcha antes de continuar.
+
+En una transmisión con desviador, mover la manilla con la bici quieta no basta para que la cadena cambie de piñón: debe avanzar. No intentes completar el cambio haciendo mucha fuerza de golpe.
+
+## Cambia con los pedales en movimiento y menos fuerza
+Anticipa una subida y elige un cambio liviano antes de que pedalear se vuelva muy duro. Al cambiar, sigue girando los pedales pero afloja momentáneamente la presión. Retoma el esfuerzo cuando el cambio haya entrado.
+
+Así reduces los golpes y cambios bruscos en la transmisión. Buen uso y mantención ayudan a cuidar cadena, platos y piñones; no garantizan que nunca aparezca un salto.
+
+## Qué es la cadena cruzada
+En bicicletas con dos o tres platos, algunas combinaciones dejan la cadena muy diagonal: plato grande con piñón grande, o plato pequeño con piñón pequeño. Evita mantener esas combinaciones extremas; pueden aumentar el roce, el ruido y el esfuerzo sobre la cadena.
+
+Usa los platos y piñones según el terreno y busca una línea de cadena menos diagonal. Aprovechar el rango significa elegir una marcha cómoda para cada situación, no obligarte a pasar por todas en cada salida.
+
+## Si tienes un solo plato, es diferente
+En una bici monoplato, usar siempre ese plato es normal: el sistema está diseñado para trabajar con su cassette compatible. Aprovecha los piñones traseros según la pendiente y tu ritmo. No le apliques la regla de cruces entre dos platos.
+
+## Limpieza, lubricación y desgaste
+Limpia la suciedad antes de lubricar. Usa un producto adecuado a tus condiciones y sigue sus instrucciones; en rutas polvorientas evita dejar la cadena cubierta de lubricante sobrante. Una cadena encerada requiere su propio proceso de preparación.
+
+Revisa el desgaste con un medidor adecuado a tu cadena y consulta el criterio del fabricante. Cambiarla a tiempo ayuda a evitar desgaste acelerado de otros componentes.
+
+## Si aparece el “tak tak” o la cadena salta
+Afloja el esfuerzo y revisa la transmisión. Puede haber desgaste de cadena o cassette, un cambio mal ajustado u otro problema; el ruido no demuestra por sí solo que doblaste un diente.
+
+Si se repite, conviene un diagnóstico antes de seguir exigiendo la bici. No intentes solucionarlo pedaleando más fuerte.
+
+## Qué recordar en tu próxima salida
+- Antes de parar, deja una marcha liviana si puedes hacerlo con control.
+- Arranca progresivamente y cambia con menos presión en los pedales.
+- Evita cruces extremos si tienes varios platos.
+- Mantén la cadena limpia y revisa su desgaste.`,
   },
   {
     slug: "revision-antes-de-salir",

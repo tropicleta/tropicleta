@@ -69,6 +69,12 @@
 .captureChoices strong { font-size:18px; margin-bottom:8px }
 .captureChoices span { font-size:14px; line-height:1.6; color:var(--tp-grey) }
 .saddleResult .angleComparison strong { font-size:34px }
+.saddleBenefits { padding:20px; border:1px solid var(--tp-border); border-radius:12px; background:var(--tp-card); margin-bottom:24px }
+.saddleBenefits > p { color:var(--tp-grey); max-width:800px }
+.saddleBenefits > div { display:grid; grid-template-columns:repeat(3,1fr); gap:18px; margin:20px 0 }
+.saddleBenefits article { border-left:3px solid var(--tp-orange); padding-left:14px }
+.saddleBenefits article p { font-size:14px; color:var(--tp-grey); margin:7px 0 0 }
+@media(max-width:700px) { .saddleBenefits > div { grid-template-columns:1fr } }
 @media(max-width:600px) { .captureChoices { grid-template-columns:1fr } }
 .metric .referenceNote, .metric dd > small { display:block; font-size:12px; font-weight:400; line-height:1.5; margin:6px 0; color:var(--tp-grey) }
 .metric .adjustmentHint { font-size:13px; font-weight:400; line-height:1.5; margin:10px 0 0 }

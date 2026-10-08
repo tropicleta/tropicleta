@@ -311,6 +311,12 @@ export function BikeFit() {
     <p className={styles.stepIntro}>{step === 0 ? "Elige tu situación. Te guiaremos para comparar la flexión de rodilla con una referencia estática." : step === 1 ? captureChoice === "photo" ? "Deja el celular apoyado, usa el temporizador y toma la foto. Después vuelve aquí y elígela desde tu galería." : "Tu acompañante sostiene el celular de lado y lee las indicaciones mientras tú permaneces sentado y quieto." : "Verás tu medición, la referencia y qué conviene revisar antes de cambiar el sillín."}</p>
 
     <div hidden={step !== 0}>
+      <section className={styles.saddleBenefits} aria-labelledby="saddle-benefits-title">
+        <h3 id="saddle-benefits-title">¿Por qué revisar la altura?</h3>
+        <p>La altura influye en cuánto se dobla la rodilla y cómo alcanzas el pedal. Buscamos una posición que se adapte a tu cuerpo y te resulte cómoda.</p>
+        <div><article><strong>Pedalear más cómodo</strong><p>Revisa si te sientes muy encogido o necesitas estirarte para llegar al pedal.</p></article><article><strong>Un movimiento más natural</strong><p>Busca pedalear sin tener que forzar el tobillo ni balancearte para alcanzar cada vuelta.</p></article><article><strong>Ajustar con una referencia</strong><p>Compara antes y después con la misma toma, en lugar de cambiar la altura sin saber qué pasó.</p></article></div>
+        <p className={styles.small}>Revisa la altura junto a cómo pedaleas y cómo te sientes: esta toma es una primera referencia para hacerlo con más criterio.</p>
+      </section>
       <div className={styles.captureChoices} aria-label="Elige según tu situación">
         <button type="button" aria-pressed={captureChoice === "photo"} onClick={() => chooseCapture("photo")}><strong>Estoy solo · usar una foto</strong><span>Apoya el celular, usa el temporizador y revisa la imagen después. Opción recomendada para hacerlo en casa.</span></button>
         <button type="button" aria-pressed={captureChoice === "camera"} onClick={() => chooseCapture("camera")}><strong>Estoy con alguien · en vivo</strong><span>Pide que mire el celular y te lea la indicación. Tú mantienes la postura sin girarte hacia la pantalla.</span></button>
@@ -347,7 +353,7 @@ export function BikeFit() {
           {demo && <span className={styles.liveBadge}>Ejemplo · datos simulados</span>}
         </div>
         <p className={styles.status} role="status" aria-live="polite">{message}</p>
-        {hasPreview && <div className={styles.colorGuide} aria-label="Significado del color de la pierna"><span style={{ color: "#79dfb5" }}>● Dentro de referencia</span><span style={{ color: "#ffd166" }}>● Cerca</span><span style={{ color: "#ff8282" }}>● Más alejada</span><span style={{ color: "#82bddd" }}>● Falta confirmar</span></div>}
+        {hasPreview && <div className={styles.colorGuide} aria-label="Significado del color de la pierna"><span style={{ color: "#79dfb5" }}>● Altura adecuada en la estimación</span><span style={{ color: "#ffd166" }}>● Cerca: revisa la altura</span><span style={{ color: "#ff8282" }}>● Alto o bajo: revisa la toma</span><span style={{ color: "#82bddd" }}>● Falta confirmar</span></div>}
         <p className={styles.small}>Cambiar de pestaña apaga la cámara y borra la sesión. Las fotos y los fotogramas permanecen sólo en memoria durante esta revisión.</p>
       </section>
 
@@ -363,7 +369,7 @@ export function BikeFit() {
           {valid && assessment.valid && <div className={styles.saddleResult}>
             <div className={styles.angleComparison}><div><span>{demo ? "Rodilla del ejemplo" : "Tu flexión de rodilla"}</span><strong style={{ color: feedback.color }}>{Math.round(assessment.knee)}°</strong></div><div><span>Referencia estática</span><strong>25–35°</strong></div></div>
             <p className={styles.small}>0° significa pierna recta. La referencia se compara sólo sentado, quieto y con el pedal abajo.</p>
-            <div className={styles.reference} data-fit={feedback.state}><strong style={{ color: feedback.color }}>{feedback.title}</strong><p>{demo ? "Este ejemplo está dentro de la referencia. Ahora prueba con tu foto o con ayuda en cámara." : showComparison ? feedback.action : nextStep}</p></div>
+            <div className={styles.reference} data-fit={feedback.state}><strong style={{ color: feedback.color }}>{feedback.title}</strong><p>{demo ? "En este ejemplo la altura se ve adecuada. Ahora prueba con tu foto o con ayuda en cámara." : showComparison ? feedback.action : nextStep}</p><p className={styles.small}>Es una estimación de la rodilla en esta toma, no una confirmación de altura perfecta.</p></div>
             {showComparison && <><div className={styles.range} aria-label={`Rodilla ${Math.round(assessment.knee)} grados; referencia de 25 a 35 grados`}><span className={styles.rangeBand} /><i style={{ left: `${Math.max(0, Math.min(90, assessment.knee)) / 90 * 100}%` }} /></div><div className={styles.rangeLabels}><span>0°</span><span>25–35°</span><span>90°</span></div></>}
           </div>}
           <details className={styles.details}><summary>Cómo probar un ajuste y volver a medir</summary><ol className={styles.guide}><li>Repite primero la toma con el mismo pedal, calzado y apoyo del pie.</li><li>Si se confirma la diferencia, apaga la cámara, bájate de la bici y anota la altura actual.</li><li>Prueba un cambio pequeño en una sola dirección. Respeta la inserción mínima y el apriete del fabricante.</li><li>Repite la misma toma y comprueba también cómo te sientes al pedalear.</li></ol><p>No se calculan milímetros. El color verde describe esta referencia de rodilla y no garantiza por sí solo un ajuste adecuado.</p></details>

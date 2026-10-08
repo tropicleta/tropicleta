@@ -1,0 +1,24 @@
+.guide { max-width:850px; padding:24px; margin:0 0 36px; background:var(--tp-card); border:1px solid var(--tp-border); border-radius:12px }
+.guide p { color:var(--tp-grey); line-height:1.65 }
+.choices { border:0; padding:0; margin:20px 0; display:flex; flex-wrap:wrap; gap:12px }
+.choices legend { font-weight:700; margin-bottom:12px }
+.choices label { display:flex; gap:10px; padding:12px 16px; border:1px solid var(--tp-border); border-radius:10px; cursor:pointer }
+.choices input { accent-color:var(--tp-orange) }
+.diagrams { display:grid; grid-template-columns:1fr 1fr; gap:16px }
+.diagrams figure { margin:0; padding:16px; background:#111a1e; border-radius:10px }
+.diagrams svg { width:100%; height:230px; display:block }
+.diagrams strong, .diagrams span { display:block }
+.diagrams span { color:var(--tp-grey); font-size:13px; margin-top:8px }
+.diagrams figure:first-child strong { color:#78d6be }
+.diagrams figure:last-child strong { color:#ff9393 }
+.small { font-size:13px }
+.single { padding:20px; background:#162b26; border:1px solid #316e60; border-radius:10px; margin-bottom:24px }
+.single strong { color:#92dec7 }
+.situations { display:flex; flex-wrap:wrap; gap:10px }
+.situations button { padding:12px; border:1px solid var(--tp-border); border-radius:10px; background:var(--tp-black-2); color:var(--tp-white); font:inherit; cursor:pointer }
+.situations button[aria-pressed=true] { border-color:var(--tp-orange); color:var(--tp-orange) }
+.advice { padding:20px; margin:16px 0; background:var(--tp-black-2); border-radius:10px }
+.advice ol { padding-left:23px; line-height:1.7 }
+.sources summary { cursor:pointer; font-weight:700 }
+.sources a { display:block; margin-top:10px; color:var(--tp-orange); text-decoration:underline; font-size:13px }
+@media(max-width:600px) { .guide { padding:18px } .diagrams { grid-template-columns:1fr } .situations { flex-direction:column } .situations button { text-align:left } }
