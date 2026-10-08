@@ -66,7 +66,7 @@ export function SuspensionGuide() {
       <p className={styles.measureReminder}>¿Tienes la medida? Completa los campos de abajo. El bloqueo debe estar abierto y las demás perillas preparadas según el manual.</p>
       <SagCalculator bike={bike} discipline={discipline} />
       <details className={styles.details}><summary>¿Cómo corrijo el SAG?</summary><p><b>Primero valida el objetivo en el manual de la bicicleta y del componente.</b> El escenario por disciplina sirve para explorar el cálculo; no justifica por sí solo cambiar presión o precarga.</p><p><b>Aire:</b> con un objetivo confirmado, más hundimiento suele requerir más presión; menos hundimiento, menos presión. Usa una bomba de suspensión, respeta límites y temperatura de referencia y realiza la ecualización indicada. Desconecta la bomba antes de medir; al reconectarla, la manguera se llena y puede bajar la lectura sin que exista una fuga.</p><p><b>Muelle:</b> la precarga cambia la carga inicial, no la dureza del muelle. No compenses un muelle inadecuado apretando sin límite; puede hacer falta otro muelle. El límite depende del modelo: no uses un número universal de vueltas.</p><p>Si el resultado cambia mucho entre intentos, revisa posición, fricción y estado de la suspensión antes de seguir ajustando.</p></details>
-      <button type="button" className="tp-btn" onClick={() => go(2)}>Ya medí mi SAG · Seguir con rebote →</button>
+      <button type="button" className="tp-btn" onClick={() => go(2)}>Seguir con el rebote →</button>
     </div>
     <div hidden={step !== 2}>
       <p className={styles.lead}>El rebote es la velocidad con que la suspensión vuelve a estirarse. Queremos que vuelva a tiempo para el siguiente bache, sin darte un golpe.</p>

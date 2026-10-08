@@ -46,6 +46,17 @@ try {
   for (const width of [1440, 390]) {
     await page.setViewport({ width, height: 900 });
     assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
+    if (width === 1440) {
+      const rows = await page.evaluate(() => {
+        const box = selector => { const rect = document.querySelector(selector).getBoundingClientRect(); return { top: rect.top, bottom: rect.bottom }; };
+        const cards = ["fork", "shock"].map(id => { const rect = document.querySelector(`#${id}-title`).closest("section").getBoundingClientRect(); return { top: rect.top, bottom: rect.bottom }; });
+        return { cards, results: [box("#fork-result"), box("#shock-result")], inputs: [box("#fork-length"), box("#shock-length")] };
+      });
+      for (const pair of Object.values(rows)) {
+        assert.ok(Math.abs(pair[0].top - pair[1].top) < 2, "Column tops align");
+        assert.ok(Math.abs(pair[0].bottom - pair[1].bottom) < 2, "Column bottoms align");
+      }
+    }
     await page.screenshot({ path: join(tmpdir(), `tropicleta-sag-${width}.png`), fullPage: true });
   }
   await page.select("#fork-spring", "coil");
