@@ -3,7 +3,9 @@
 import { useState } from "react";
 import { ProductMedia } from "./ProductMedia";
 
-export function ProductGallery({ name, images }: { name: string; images: string[] }) {
+export function ProductGallery({ name, images: storedImages }: { name: string; images: string[] }) {
+  // Replace the legacy tread photo with a versioned URL to refresh optimized images.
+  const images = storedImages.map(src => src === "/productos/kenda-booster-huella-detalle.jpg" ? "/productos/kenda-booster-huella-pedaleapro.webp" : src);
   const [selected, setSelected] = useState(0);
   return <div className="tp-product-gallery">
     <ProductMedia name={name} image={images[selected]} sizes="(max-width: 979px) 100vw, 560px" preload zoom />
