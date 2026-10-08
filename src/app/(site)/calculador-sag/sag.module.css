@@ -14,6 +14,11 @@
 .field select { width:100%; min-width:0; min-height:48px; padding:12px; font:inherit; color:var(--tp-white); background:var(--tp-black); border:1px solid var(--tp-grey-dark); border-radius:8px; }
 .modelHelp { padding:18px; background:var(--tp-black-2); border-left:3px solid var(--tp-orange); border-radius:0 8px 8px 0; margin:12px 0 24px; }
 .modelHelp p { font-size:14px; margin:8px 0 0; }
+.serialHelp { display:grid; grid-template-columns:86px minmax(0,1fr); gap:16px; align-items:center; margin:16px 0; padding:14px; border:1px solid var(--tp-border); border-radius:10px; }
+.serialHelp img { display:block; width:86px; height:auto; }
+.serialHelp figcaption { font-size:13px; line-height:1.5; min-width:0; }
+.serialHelp p { font-size:13px; margin:8px 0; }
+.serialHelp small { color:var(--tp-grey); font-size:11px; }
 .presets { display:flex; gap:10px; margin:12px 0; }
 .presets button { padding:10px 18px; background:var(--tp-card); border:1px solid var(--tp-border); border-radius:8px; font:inherit; color:var(--tp-white); cursor:pointer; }
 .presets button[aria-pressed="true"] { border-color:var(--tp-orange); color:var(--tp-orange); }

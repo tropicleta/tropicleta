@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { calculateSag, parseSagInput, suggestSag } from "@/lib/sag";
 import styles from "./sag.module.css";
 import { findSagReference, sagReferences } from "@/data/sag-references";
@@ -50,6 +51,10 @@ function Suspension({ rear = false }: { rear?: boolean }) {
     <div className={styles.modelHelp}>
       {reference ? <><b>Referencia para {brand} {model}</b><p>{reference.range ? `Referencia oficial: ${suggestion.range}. ${reference.range[0] === reference.range[1] ? "Es un punto de partida." : "Puedes elegir dentro del rango:"}` : "Este manual usa otro método de ajuste."}</p>{reference.range && <div className={styles.presets}>{[...new Set(reference.range)].map(percent => <button type="button" key={percent} aria-pressed={target === String(percent)} onClick={() => setTarget(String(percent))}>{percent} %</button>)}</div>}<p>{reference.note}</p><a className={styles.source} href={reference.url} target="_blank" rel="noopener noreferrer">Ver referencia oficial ↗</a>{reference.range === null && <p><a className={styles.source} href="https://trailhead.rockshox.com/" target="_blank" rel="noopener noreferrer">Buscar mi suspensión en TrailHead ↗</a></p>}<p>Comprueba modelo, versión y recomendación del cuadro. Ingresa el recorrido o carrera de tu unidad abajo.</p></> : <><b>{brand === "unknown" ? "¿No sabes cuál tienes?" : `Tu suspensión: ${brand}`}</b><p>{brand === "unknown" ? "Busca la marca y el modelo en las etiquetas de la suspensión. La marca de la bicicleta puede ser distinta." : "La marca por sí sola no define el ajuste. Busca el modelo, año y objetivo de SAG en su manual."} Puedes calcular con el ejemplo inicial, pero no es una recomendación para tu modelo.</p></>}
     </div>
+    {reference?.range === null && <figure className={styles.serialHelp}>
+      <Image src="/suspension/rockshox-numero-serie.svg" width={129} height={301} alt="Ilustración oficial de TrailHead con la ubicación del número de serie resaltada en la corona de una horquilla RockShox." />
+      <figcaption><b>¿Dónde está el número de serie?</b><p>Busca detrás de la corona: la pieza que une las dos barras, justo debajo del cuadro. Suele estar grabado allí. Copia todas sus letras y números en TrailHead.</p><p>La ubicación puede variar según el modelo. <a className={styles.source} href="https://support.rockshox.com/hc/en-us/articles/19288477684891-Where-is-the-serial-number-located-on-my-SRAM-product" target="_blank" rel="noopener noreferrer">Ver guía oficial de ubicaciones ↗</a></p><small>Ilustración: RockShox TrailHead.</small></figcaption>
+    </figure>}
     </details>
     <div className={styles.targetHint} id={`${id}-suggestion`}>
       <b>{manualTarget !== null ? "Objetivo personalizado" : suggestion.verified ? "Punto de partida del manual" : reference ? "Ejemplo para comparar, no objetivo del manual" : "Escenario orientativo"}: {Number.isFinite(parseSagInput(target)) ? `${fmt(parseSagInput(target))} %` : "ingresa un porcentaje válido"}</b>
