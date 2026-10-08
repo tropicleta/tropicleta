@@ -25,8 +25,7 @@
 .suspensionSlot[hidden] { display:none; }
 @media(min-width:800px) {
   .grid { row-gap:0; }
-  .grid > .card, .suspensionSlot > .card { display:grid; grid-template-rows:subgrid; grid-row:span 8; row-gap:0; min-width:0; }
-  .grid .inputGrid .fieldLabel { min-height:3em; }
+  .grid > .card, .suspensionSlot > .card { display:grid; grid-template-rows:subgrid; grid-row:span 7; row-gap:0; min-width:0; }
 }
 .resultFoot { font-size:13px; border-top:1px solid var(--tp-border); padding-top:12px; }
 .supportGrid { display:grid; grid-template-columns:minmax(0,1.2fr) minmax(0,1fr); gap:32px; margin-top:48px; align-items:start; }
@@ -41,6 +40,12 @@
 .details[open] summary { margin-bottom:18px; }
 .inputGrid { display:grid; grid-template-columns:1fr 1fr; gap:0 20px; }
 .inputGrid .field:last-child { grid-column:1 / -1; }
+.measureFields { display:grid; grid-template-columns:minmax(0,1fr); gap:16px; margin-top:16px; }
+.measureFields .field { margin:0; padding:16px; border:1px solid var(--tp-border); border-radius:10px; min-width:0; align-content:start; }
+.measureFields .fieldLabel { font-size:15px; line-height:1.5; }
+.measureFields .fieldHelp { display:block; }
+.measureFields input { min-width:0; }
+@media(min-width:800px) { .measureFields .fieldHelp { min-height:4.5em; } }
 .resultMetrics { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
 .resultMetrics small { font-size:20px; }
 .resultMetrics span { font-size:13px; color:var(--tp-grey); }

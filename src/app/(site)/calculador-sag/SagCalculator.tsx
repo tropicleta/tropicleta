@@ -55,12 +55,10 @@ function Suspension({ rear = false, discipline }: { rear?: boolean; discipline: 
       <details className={styles.details}><summary>¿De dónde sale este porcentaje?</summary><p>{suggestion.source}.</p></details>
       {manualTarget !== null && <button type="button" onClick={() => setTarget(null)}>Usar sugerencia de {fmt(suggestion.value)} %</button>}
     </div>
-    <p id={`${id}-help`}>{rear ? "Carrera = cuánto puede acortarse el amortiguador. Si su ficha dice 210 × 55 mm, escribe 55. No es el recorrido de la rueda trasera." : "Recorrido = cuánto puede hundirse la horquilla en total. Búscalo en su ficha técnica; no midas solo el tubo que ves."}</p>
-    <div className={styles.inputGrid}>{fields.map(field => <label className={styles.field} key={field.key} htmlFor={`${id}-${field.key}`}>
+    <div className={styles.measureFields}>{fields.map(field => <label className={styles.field} key={field.key} htmlFor={`${id}-${field.key}`}>
       <span className={styles.fieldLabel}>{field.label}</span>
-      <input id={`${id}-${field.key}`} type="text" inputMode="decimal" value={field.value} placeholder={field.placeholder} aria-describedby={`${id}-help ${id}-result`} onChange={event => field.set(event.target.value)} />
-      {field.key === "target" && <small className={styles.fieldHelp}>Es la parte que quieres que se hunda con tu peso. Ejemplo: 20 % de 100 mm son 20 mm. Puedes editarlo.</small>}
-      {field.key === "measured" && <small className={styles.fieldHelp}>Escribe los milímetros que leíste con la regla. Puedes dejarlo vacío para ver solo el objetivo.</small>}
+      <input id={`${id}-${field.key}`} type="text" inputMode="decimal" value={field.value} placeholder={field.placeholder} aria-describedby={`${id}-${field.key}-help`} onChange={event => field.set(event.target.value)} />
+      <small id={`${id}-${field.key}-help`} className={styles.fieldHelp}>{field.key === "length" ? rear ? "Busca la carrera en la ficha técnica: si dice 210 × 55 mm, escribe 55. No uses el recorrido de la rueda." : "Busca el recorrido en la ficha técnica. Es lo que puede hundirse en total; no midas solo el tubo visible." : field.key === "target" ? "Cuánto quieres que se hunda con tu peso. Por ejemplo: 20 % de 100 mm = 20 mm. Puedes editarlo." : "Distancia que mediste entre el retén y el anillo, después de bajarte. Es opcional: déjalo vacío para ver solo el objetivo."}</small>
     </label>)}</div>
     <div id={`${id}-result`} className={styles.result} aria-live="polite" aria-atomic="true">
       {result.error ? <p>{length === "" ? `Empieza por el dato 1: ${rear ? "la carrera del amortiguador" : "el recorrido de la horquilla"}. Lo encuentras en su ficha técnica.` : result.error}</p> : <>
