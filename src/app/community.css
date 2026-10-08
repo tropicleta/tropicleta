@@ -322,3 +322,18 @@
 .tp-home-shopping .tp-shop-section small { font-size:12px; }
 @media(max-width:979px) { .tp-home-shopping .tp-shop-sections { grid-template-columns:1fr; } }
 @media(max-width:700px) { .tp-mobile-summary-grid { grid-template-columns:1fr; } }
+
+/* Un solo bloque para taller móvil y las dos formas de comprar. */
+.tp-home-hub-grid { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:28px; align-items:center; }
+.tp-home-hub .tp-mobile-summary-grid { grid-template-columns:150px minmax(0,1fr); gap:20px; }
+.tp-home-hub .tp-mobile-summary-photo { width:150px; order:-1; }
+.tp-home-hub .tp-section-title { font-size:clamp(26px,3vw,36px); line-height:1.15; margin-bottom:12px; }
+.tp-home-hub .tp-section-intro { font-size:14px; line-height:1.6; margin-bottom:16px; }
+.tp-home-hub-shops { min-width:0; }
+.tp-home-hub-shops .tp-shop-sections { grid-template-columns:1fr; gap:12px; }
+.tp-home-hub-shops .tp-shop-section { padding:18px; gap:16px; }
+.tp-home-hub-shops .tp-shop-section > span:not(.tp-shop-brand-visual):not(.tp-shop-section-arrow) { gap:8px; }
+.tp-home-hub-shops .tp-shop-section strong { font-size:19px; }
+.tp-home-hub-shops .tp-shop-product-preview { height:70px; }
+@media(max-width:1000px) { .tp-home-hub-grid { grid-template-columns:1fr; gap:24px; } .tp-home-hub .tp-mobile-summary-grid { grid-template-columns:160px minmax(0,1fr); } .tp-home-hub-shops .tp-shop-sections { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+@media(max-width:700px) { .tp-home-hub .tp-mobile-summary-grid { grid-template-columns:100px minmax(0,1fr); gap:16px; } .tp-home-hub .tp-mobile-summary-photo { width:100px; } .tp-home-hub .tp-section-title { font-size:26px; } .tp-home-hub .tp-btn { white-space:normal; text-align:center; font-size:12px; padding:12px; } .tp-home-hub-shops .tp-shop-sections { grid-template-columns:1fr; } }

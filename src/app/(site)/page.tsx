@@ -57,18 +57,17 @@ export default async function HomePage() {
 
       <WorkshopGallery />
 
-      <section className="tp-section tp-mobile-summary">
-        <div className="tp-shell tp-mobile-summary-grid">
+      <section className="tp-section tp-mobile-summary tp-home-hub" aria-label="Taller móvil, tienda y recomendados">
+        <div className="tp-shell tp-home-hub-grid">
+        <div className="tp-mobile-summary-grid">
           <div className="tp-home-discover">
             <div><span className="tp-kicker">Taller móvil</span><h2 className="tp-display tp-section-title">Nos vemos en tu próxima ruta.</h2><p className="tp-section-intro">Asistencia mecánica para carreras, cicletadas y eventos en Atacama. Coordinamos el apoyo para tu próxima salida.</p><Link className="tp-btn tp-btn-secondary" href="/eventos/">Conocer el taller móvil →</Link></div>
           </div>
           <Link href="/eventos/" className="tp-mobile-summary-photo"><Image src="/taller/taller-movil-presentacion.jpeg" alt="Taller móvil Tropicleta: asistencia mecánica en terreno para eventos ciclistas" width={720} height={1056} sizes="(max-width: 700px) 80vw, 300px" /></Link>
         </div>
-      </section>
-
-      <section className="tp-section tp-home-marketplace" aria-label="Tienda y recomendados de Tropicleta">
-        <div className="tp-shell">
+        <div className="tp-home-hub-shops">
           <ShopSections showcase recommendationPreview={recommended?.image ? { image: recommended.image, name: recommended.name } : undefined} />
+        </div>
         </div>
       </section>
 
