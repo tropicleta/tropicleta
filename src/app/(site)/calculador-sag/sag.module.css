@@ -1,5 +1,5 @@
 .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap: 24px; }
-.card { padding: clamp(20px, 4vw, 32px); border: 1px solid var(--tp-border); border-radius: var(--tp-radius); background: var(--tp-card); }
+.card { padding: clamp(18px, 3vw, 24px); border: 1px solid var(--tp-border); border-radius: var(--tp-radius); background: var(--tp-card); }
 .card h2 { font-size: 32px; }
 .card p, .note { color: var(--tp-grey); line-height: 1.7; }
 .types { display: flex; flex-wrap: wrap; gap: 12px; padding: 0; border: 0; margin: 0 0 24px; }
@@ -8,11 +8,11 @@
 .choice:has(input:checked) { border-color: var(--tp-orange); }
 .choice input { accent-color: var(--tp-orange); width: 20px; height: 20px; }
 .choice small { display: block; color: var(--tp-grey); margin-top: 4px; }
-.field { display: grid; gap: 8px; margin: 20px 0; font-weight: 600; }
+.field { display: grid; gap: 6px; margin: 12px 0; font-weight: 600; }
 .fieldHelp { font-weight:400; color:var(--tp-grey); font-size:13px; line-height:1.5; }
 .field input { width: 100%; min-height: 48px; border: 1px solid var(--tp-grey-dark); border-radius: 8px; background: var(--tp-black); color: var(--tp-white); padding: 12px; font: inherit; }
 .field select { width:100%; min-width:0; min-height:48px; padding:12px; font:inherit; color:var(--tp-white); background:var(--tp-black); border:1px solid var(--tp-grey-dark); border-radius:8px; }
-.modelHelp { padding:18px; background:var(--tp-black-2); border-left:3px solid var(--tp-orange); border-radius:0 8px 8px 0; margin:12px 0 24px; }
+.modelHelp { padding:12px 14px; background:var(--tp-black-2); border-left:3px solid var(--tp-orange); border-radius:0 8px 8px 0; margin:8px 0 12px; }
 .modelHelp p { font-size:14px; margin:8px 0 0; }
 .serialHelp { display:grid; grid-template-columns:86px minmax(0,1fr); gap:16px; align-items:center; margin:16px 0; padding:14px; border:1px solid var(--tp-border); border-radius:10px; }
 .serialHelp img { display:block; width:86px; height:auto; }
@@ -22,7 +22,8 @@
 .presets { display:flex; gap:10px; margin:12px 0; }
 .presets button { padding:10px 18px; background:var(--tp-card); border:1px solid var(--tp-border); border-radius:8px; font:inherit; color:var(--tp-white); cursor:pointer; }
 .presets button[aria-pressed="true"] { border-color:var(--tp-orange); color:var(--tp-orange); }
-.result { background: var(--tp-black-2); border-radius: var(--tp-radius); padding: 24px; margin-top: 28px; }
+.result { background: var(--tp-black-2); border-radius: var(--tp-radius); padding: 18px; margin-top: 16px; }
+.result > p:first-child { margin-top:0; }
 .result strong { display: block; color: var(--tp-orange); font-size: 36px; }
 .result p:last-child { margin-bottom: 0; }
 .resultIntro { font-size:13px; margin-bottom:16px; }
@@ -40,22 +41,23 @@
 .steps { padding-left:24px; }
 .steps li { padding-left:8px; margin-bottom:12px; }
 .steps li::marker { color:var(--tp-orange); font-weight:800; }
-.details { border-top:1px solid var(--tp-border); padding:18px 0; }
+.details { border-top:1px solid var(--tp-border); padding:12px 0; }
 .details summary { cursor:pointer; font-weight:700; }
-.details[open] summary { margin-bottom:18px; }
+.details[open] summary { margin-bottom:10px; }
 .inputGrid { display:grid; grid-template-columns:1fr 1fr; gap:0 20px; }
 .inputGrid .field:last-child { grid-column:1 / -1; }
-.measureFields { display:grid; grid-template-columns:minmax(0,1fr); gap:16px; margin-top:16px; }
-.measureFields .field { margin:0; padding:16px; border:1px solid var(--tp-border); border-radius:10px; min-width:0; align-content:start; }
+.measureFields { display:grid; grid-template-columns:minmax(0,1fr); gap:10px; margin-top:10px; }
+.measureFields .field { margin:0; padding:12px; border:1px solid var(--tp-border); border-radius:10px; min-width:0; align-content:start; }
 .measureFields .fieldLabel { font-size:15px; line-height:1.5; }
 .measureFields .fieldHelp { display:block; }
 .measureFields input { min-width:0; }
-@media(min-width:800px) { .measureFields .fieldHelp { min-height:4.5em; } }
+@media(min-width:800px) { .measureFields .fieldHelp { min-height:3em; } }
 .resultMetrics { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
 .resultMetrics small { font-size:20px; }
 .resultMetrics span { font-size:13px; color:var(--tp-grey); }
 .stepTitle { font-size:20px; margin-bottom:8px; }
-.targetHint { padding:14px 16px; background:var(--tp-black-2); border-left:2px solid var(--tp-orange); border-radius:0 8px 8px 0; margin:16px 0; }
+.targetHint { padding:10px 14px; background:var(--tp-black-2); border-left:2px solid var(--tp-orange); border-radius:0 8px 8px 0; margin:8px 0; }
+.journey .targetHint details { margin:8px 0 0; padding:8px 0 0; }
 .targetHint p { font-size:13px; margin:6px 0; }
 .targetHint button, .setupSummary button { background:transparent; border:0; color:var(--tp-orange); font:inherit; text-decoration:underline; cursor:pointer; padding:8px 0; }
 .preflight { padding:22px; border:1px solid var(--tp-border); border-radius:12px; margin:24px 0; background:var(--tp-card); }
@@ -116,7 +118,7 @@
 .quickCards { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px; margin:24px 0; }
 .quickCards article { border:1px solid var(--tp-border); border-radius:12px; padding:20px; background:var(--tp-card); }
 .quickCards p, .journey details p { color:var(--tp-grey); line-height:1.6; }
-.journey details { margin:20px 0; }
+.journey details { margin:12px 0; }
 .diagram { display:block; width:100%; max-width:360px; margin:20px auto; color:var(--tp-white); }
 .sensations { display:flex; flex-wrap:wrap; gap:10px; }
 .sensations button { flex:1 1 180px; min-height:52px; padding:14px; font:inherit; color:var(--tp-white); background:var(--tp-card); border:1px solid var(--tp-border); border-radius:10px; cursor:pointer; }
