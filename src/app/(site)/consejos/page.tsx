@@ -18,10 +18,10 @@ export default function ConsejosPage() {
       <section className="tp-section">
         <div className="tp-shell tp-post-grid">
           <Link href="/biometria/" className="tp-post-card">
-            <span className="tp-meta">Herramienta orientativa · Postura</span>
-            <h2 className="tp-display">Observa tu posición</h2>
-            <p>Elige el módulo de tu disciplina y observa tus ángulos con cámara o foto, sin subir imágenes.</p>
-            <span className="tp-service-link">Explorar bike fitting →</span>
+            <span className="tp-meta">Herramienta orientativa · Altura de sillín</span>
+            <h2 className="tp-display">Revisa la altura de tu sillín</h2>
+            <p>Usa una foto si estás solo o pide ayuda para mirar la cámara. Revisa la rodilla y aprende qué ajustar, sin subir imágenes.</p>
+            <span className="tp-service-link">Revisar mi sillín →</span>
           </Link>
           <Link href="/calculador-sag/" className="tp-post-card">
             <span className="tp-meta">Herramienta interactiva · Suspensión</span>

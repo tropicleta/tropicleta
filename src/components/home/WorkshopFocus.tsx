@@ -27,7 +27,7 @@ export function HomeTools() {
   return <section id="herramientas" className={styles.section} aria-labelledby="home-tools-title"><div className="tp-shell"><span className="tp-kicker">Aprende con tu bici</span><h2 id="home-tools-title" className="tp-display">Entiende tus ajustes.</h2><p className={styles.intro}>Guías gratuitas para medir en casa y llegar al taller con preguntas más claras.</p>
     <div className={`${styles.cards} ${styles.tools}`}>
       <article className={styles.card}><span className={styles.number}>Suspensión · SAG y rebote</span><h3>Mide y comprende tu suspensión</h3><p>Prepara la medición, calcula el hundimiento y sigue una prueba de rebote. Usa el manual de tu modelo como referencia.</p><Link href="/calculador-sag/">Ajustar mi suspensión →</Link></article>
-      <article className={styles.card}><span className={styles.number}>Postura · Bike fitting orientativo</span><h3>Observa cómo te colocas</h3><p>Elige el módulo de tu disciplina y usa cámara o foto para observar tus ángulos. Una estimación orientativa, procesada en tu dispositivo sin subir imágenes.</p><Link href="/biometria/">Observar mi postura →</Link></article>
+      <article className={styles.card}><span className={styles.number}>Altura de sillín · Guía orientativa</span><h3>Revisa la altura de tu sillín</h3><p>Una foto si estás solo o cámara con ayuda. Compara la flexión de rodilla con una referencia estática y aprende qué revisar antes de ajustar.</p><Link href="/biometria/">Revisar mi sillín →</Link></article>
     </div>
   </div></section>;
 }

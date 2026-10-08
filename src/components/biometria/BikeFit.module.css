@@ -58,6 +58,21 @@
 .metric { padding:14px; border:1px solid var(--tp-border); border-radius:8px }
 .metric dt { color:var(--tp-grey); font-size:13px }
 .metric dd { margin:4px 0 0; font-size:28px; font-weight:800; color:var(--tp-orange) }
+.angleComparison { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:12px 0 }
+.angleComparison > div + div { padding-left:12px; border-left:1px solid var(--tp-border) }
+.angleComparison span { display:block; font-size:11px; line-height:1.4; color:var(--tp-grey); font-weight:400 }
+.angleComparison strong { display:block; font-size:24px; color:var(--tp-white) }
+.captureChoices { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:24px }
+.captureChoices button { padding:20px; text-align:left; border:1px solid var(--tp-border); border-radius:12px; background:var(--tp-card); color:var(--tp-white); font:inherit; cursor:pointer }
+.captureChoices button[aria-pressed=true] { border-color:var(--tp-orange); background:#302316 }
+.captureChoices strong, .captureChoices span { display:block }
+.captureChoices strong { font-size:18px; margin-bottom:8px }
+.captureChoices span { font-size:14px; line-height:1.6; color:var(--tp-grey) }
+.saddleResult .angleComparison strong { font-size:34px }
+@media(max-width:600px) { .captureChoices { grid-template-columns:1fr } }
+.metric .referenceNote, .metric dd > small { display:block; font-size:12px; font-weight:400; line-height:1.5; margin:6px 0; color:var(--tp-grey) }
+.metric .adjustmentHint { font-size:13px; font-weight:400; line-height:1.5; margin:10px 0 0 }
+@media(max-width:420px) { .metrics { grid-template-columns:1fr } }
 .small { font-size:13px }
 .details { margin-top:24px; line-height:1.7 }
 .details summary { cursor:pointer; font-weight:700 }

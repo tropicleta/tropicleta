@@ -4,6 +4,27 @@ export const sidePoints = {
   left: [11, 13, 15, 23, 25, 27, 29, 31],
   right: [12, 14, 16, 24, 26, 28, 30, 32],
 } as const;
+export const saddlePoints = { left: [23, 25, 27], right: [24, 26, 28] } as const;
+
+/** The saddle check needs head/framing and the measured leg, not arm angles. */
+export function assessSaddlePose(points: PosePoint[], side: BikeSide, width: number, height: number) {
+  const ids = [0, ...saddlePoints[side]];
+  const selected = ids.map(id => points[id]);
+  if (selected.some(point => !point || !Number.isFinite(point.x) || !Number.isFinite(point.y)))
+    return { valid: false as const, message: "No detectamos la pierna completa. Incluye cabeza, cadera, rodilla y pie en la toma." };
+  if (selected.some(point => point.x < .025 || point.x > .975 || point.y < .025 || point.y > .975))
+    return { valid: false as const, message: "La toma está cortada o muy cerca del borde. Aleja el celular." };
+  if (selected.some(point => !Number.isFinite(point.visibility) || Math.min(point.visibility ?? 0, point.presence ?? 1) < .75))
+    return { valid: false as const, message: "La cabeza o la pierna cercana no se ven bien. Mejora la luz o comprueba el lado elegido." };
+  if (Math.max(...selected.map(point => point.y)) - Math.min(...selected.map(point => point.y)) < .3)
+    return { valid: false as const, message: "El ciclista ocupa poco del encuadre. Acerca el celular sin cortar el cuerpo ni la bici." };
+  const [hip, knee, ankle] = saddlePoints[side].map(id => points[id]);
+  if ([[hip, knee], [knee, ankle]].some(([a, b]) => Math.hypot((a.x - b.x) * width, (a.y - b.y) * height) < 12))
+    return { valid: false as const, message: "No distinguimos los segmentos de la pierna. Revisa el perfil." };
+  const angle = jointAngle(hip, knee, ankle, width, height);
+  return angle === null ? { valid: false as const, message: "No podemos medir la rodilla con esta toma." }
+    : { valid: true as const, knee: 180 - angle, message: "Pierna visible. Comprueba que las líneas sigan tus articulaciones." };
+}
 
 /** Planar angles must use pixels: normalized x/y have different scales. */
 export function jointAngle(a: PosePoint, b: PosePoint, c: PosePoint, width: number, height: number): number | null {

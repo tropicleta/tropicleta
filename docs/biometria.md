@@ -1,8 +1,24 @@
-# Biometría y bike fitting orientativo — primera versión
+# Revisa la altura de tu sillín
+
+Enfoque actual confirmado por el usuario el 8 de octubre de 2026: una sola revisión de altura de sillín mediante flexión de rodilla. La ruta `/biometria/` se conserva y se actualizan portada, guías y pie de página.
+
+- Inicio por situación: «Estoy solo · usar una foto» (celular apoyado y temporizador) o «Estoy con alguien · en vivo» (el acompañante observa y confirma mientras el ciclista permanece quieto).
+- Foto como opción inicial; cámara en vivo con ayuda. Bici estable, vista lateral a altura de cadera, cuerpo/bici completos, sentado y pedal cercano abajo. El ejemplo simulado conserva la elección de captura.
+- Sólo rodilla y pierna visibles en resultados y superposición. Sin selector de disciplina, postura de descenso ni tarjetas de codo, cadera o tronco.
+- La validación actual usa cabeza y cadera–rodilla–tobillo del lado elegido; un brazo oculto no bloquea la revisión del sillín. La elección automática de lado prioriza la pierna y permite corrección manual. Prueba específica en `tests/saddle-fit.test.ts`.
+- Medición junto a referencia estática 25–35°; comparación únicamente con puntos válidos y perfil/pedal confirmados. Cámara añade tres lecturas consistentes. La captura detenida recupera puntos sin suavizado y exige confirmar de nuevo el pedal.
+- Orientación para repetir la toma, revisar posible altura excesiva/insuficiente, anotar configuración, apagar cámara y bajarse antes de probar un cambio pequeño. No se prescriben milímetros, altura exacta, retroceso ni ajustes de manillar.
+- El color verde describe la referencia estática; no certifica ajuste completo. Se mantienen consentimiento, procesamiento local, confianza, liberación de recursos y límites de precisión documentados abajo.
+
+## Historial técnico del prototipo anterior
+
+Las secciones siguientes describen la evolución previa del bike fitting. Los recorridos por disciplina y las tarjetas de otros ángulos ya no forman parte de la interfaz actual.
 
 Ruta: `/biometria/`. Acceso en el pie de página → Ayuda y más información; incluida en sitemap. Componentes y estilos propios para evitar interferencias con el calculador de SAG.
 
 ## Semáforo y guía visual (8 de octubre de 2026)
+
+Tarjetas de resultados con «Tu medida» y referencia numérica contigua. Rodilla sentada: 25–35° y condiciones estáticas visibles. Los demás ángulos muestran los grados calculados del dibujo de la disciplina como ejemplo visual, sin convertirlos en objetivos personales. Cada tarjeta explica qué revisar con el apoyo y postura del módulo; no se inventan intervalos ideales de tronco, codo o cadera ni se prescribe retroceso del sillín desde un ángulo aislado.
 
 - Los segmentos cadera–rodilla y rodilla–tobillo se colorean cuando hay detección válida y las confirmaciones de perfil y postura estática sentada con pedal abajo están activas. Verde: 25–35°. Amarillo: hasta 5° fuera del rango. Rojo: más de 5° fuera. La banda amarilla es una decisión de interfaz para representar distancia; no es una tolerancia biomecánica validada ni demuestra mejoría.
 - Sin comparación habilitada, y en todas las posturas de pie, las líneas son azules. Los brazos y el tronco no reciben un juicio de ajuste derivado del parecido con el muñeco.

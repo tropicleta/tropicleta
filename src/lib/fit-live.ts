@@ -1,4 +1,4 @@
-import { assessPose, type BikeSide, type PosePoint } from "./bike-fit";
+import { assessSaddlePose, type BikeSide, type PosePoint } from "./bike-fit";
 
 /** Independent implementation inspired by the reference project's temporal
  * filtering. Current confidence is never averaged or carried across gaps. */
@@ -11,7 +11,7 @@ export class LiveFitFilter {
   update(raw: PosePoint[], side: BikeSide, width: number, height: number) {
     const key = `${side}/${width}/${height}`;
     if (key !== this.key) { this.reset(); this.key = key; }
-    const measured = assessPose(raw, side, width, height);
+    const measured = assessSaddlePose(raw, side, width, height);
     if (!measured.valid) { this.reset(); return { points: raw, stable: false }; }
     const points = raw.map((point, index) => {
       const previous = this.previous[index];

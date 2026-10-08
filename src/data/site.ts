@@ -39,7 +39,7 @@ export const footerLinks = {
     { href: "/servicios/", label: "Servicios y cotización" },
     { href: "/eventos/", label: "Taller móvil para eventos" },
     { href: "/consejos/", label: "Consejos" },
-    { href: "/biometria/", label: "Biometría y bike fitting" },
+    { href: "/biometria/", label: "Revisar altura de sillín" },
     { href: "/calculador-sag/", label: "Calculador de SAG" },
     { href: "/nosotros/", label: "Nosotros" },
   ],
