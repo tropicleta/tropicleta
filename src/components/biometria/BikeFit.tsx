@@ -356,8 +356,10 @@ export function BikeFit() {
         <div ref={stage} className={styles.stage}>
           {!hasPreview && !cameraReady && <div className={styles.placeholder}><span className={styles.cameraSymbol} aria-hidden="true">◎</span><span>{mode === "loading" ? "Preparando tu análisis…" : "Aquí aparecerá tu cámara o fotografía"}</span><small>Usa la guía de arriba para preparar el encuadre</small></div>}
           <video ref={video} muted playsInline aria-label="Vista de cámara mientras se prepara el análisis" style={{ display: cameraReady && !hasPreview ? "block" : "none" }} />
-          <canvas ref={preview} width={dimensions.width} height={dimensions.height} aria-label={demo ? "Ejemplo ilustrativo con ángulos simulados" : "Vista local del ciclista"} style={{ display: hasPreview ? "block" : "none" }} />
-          <canvas ref={overlay} width={dimensions.width} height={dimensions.height} className={styles.overlay} aria-hidden="true" />
+          {/* Canvas sizing is imperative alongside drawing. Changing width/height
+              through React after drawing would erase the captured image. */}
+          <canvas ref={preview} width={960} height={540} aria-label={demo ? "Ejemplo ilustrativo con ángulos simulados" : "Vista local del ciclista"} style={{ display: hasPreview ? "block" : "none" }} />
+          <canvas ref={overlay} width={960} height={540} className={styles.overlay} aria-hidden="true" />
           {mode === "loading" && <span className={styles.liveBadge}><i className={styles.spinner} />Preparando análisis local</span>}
           {mode === "camera" && <span className={styles.liveBadge}><i className={styles.pulse} />En vivo · {readings} lecturas</span>}
           {demo && <span className={styles.liveBadge}>Ejemplo · datos simulados</span>}
