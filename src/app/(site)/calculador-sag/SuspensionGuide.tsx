@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import Image from "next/image";
 import { SagCalculator, SagSetup } from "./SagCalculator";
 import { cyclingDisciplines } from "@/data/cycling-disciplines";
 import styles from "./sag.module.css";
@@ -57,11 +58,14 @@ export function SuspensionGuide() {
     <div hidden={step !== 1}>
       <p className={styles.lead}>Vas a medir una distancia pequeña con la regla. Esa medida nos dice cuánto se hundió la suspensión al subirte.</p>
       <div className={styles.measureLesson}><h3>Haz la medición en cuatro movimientos</h3><ol className={styles.lessonSteps}>
-        <li><b>Sube listo para pedalear</b><span>Ponte el casco, las zapatillas y la mochila que usarás, si llevas una. Lleva también el agua en tu caramayola o mochila y tus accesorios habituales: la idea es tener el mismo peso que en tu salida o carrera. Con la bici sostenida, adopta la posición del manual y quédate quieto hasta que la suspensión deje de bajar.</span></li>
-        <li><b>Acerca el anillo de goma</b><span>Sin bajarte, pide que deslicen el anillo hasta la goma por donde entra el tubo. Esa goma se llama retén.</span></li>
+        <li><b>Sube listo para pedalear</b><span>Lleva casco, zapatillas, agua y mochila si la usas: el mismo peso que en tu salida o carrera. Con la bici sostenida, ponte como indica el manual y quédate quieto.</span></li>
+        <li><b>Acerca el anillo medidor de SAG</b><span>Es el pequeño aro de goma que rodea la barra, como el rojo de la foto. Sin bajarte, pide que lo deslicen hasta la goma por donde entra la barra: el retén.</span></li>
         <li><b>Baja despacio</b><span>No saltes ni rebotes. Al quitar tu peso, la suspensión se estira y el anillo queda marcando cuánto se hundió.</span></li>
         <li><b>Mide el espacio</b><span>Con la regla, mide del retén al anillo, en milímetros. Escribe ese número en «Lo que medí». Repite para comprobarlo.</span></li>
-      </ol><details className={styles.details}><summary>Ver el dibujo y casos especiales</summary><Diagram /><p>El dibujo muestra la distancia que debes medir con la suspensión ya estirada. Si no encuentras el anillo o no puedes acceder al tubo, consulta el método de tu modelo.</p><p>En algunos amortiguadores de muelle se mide la distancia entre sus dos anclajes, primero sin peso y después con el ciclista. La diferencia es el hundimiento. Para el porcentaje se usa la carrera del amortiguador, no el recorrido de la rueda.</p><p>Si cambiaste la presión de aire, sigue el procedimiento del manual para equilibrar sus cámaras antes de medir otra vez.</p></details></div>
+      </ol><figure className={styles.measurePhoto}>
+        <Image src="/suspension/medicion-sag-horquilla.png" width={923} height={636} sizes="(max-width: 600px) 280px, 300px" alt="Horquilla con un anillo rojo en la barra y una regla entre el retén y el anillo para medir el SAG." />
+        <figcaption><b>Este es el anillo medidor de SAG</b><p>En la foto es rojo; el tuyo puede ser de otro color. Después de bajarte sin rebotar, mide la distancia entre el retén y el anillo con la suspensión estirada. Esa distancia es tu SAG en milímetros.</p><small>La foto sirve para ubicar el anillo y la regla. Desconecta la bomba antes de subirte a medir.</small></figcaption>
+      </figure><details className={styles.details}><summary>Ver el dibujo y casos especiales</summary><Diagram /><p>El dibujo muestra la distancia que debes medir con la suspensión ya estirada. Si no encuentras el anillo o no puedes acceder al tubo, consulta el método de tu modelo.</p><p>En algunos amortiguadores de muelle se mide la distancia entre sus dos anclajes, primero sin peso y después con el ciclista. La diferencia es el hundimiento. Para el porcentaje se usa la carrera del amortiguador, no el recorrido de la rueda.</p><p>Si cambiaste la presión de aire, sigue el procedimiento del manual para equilibrar sus cámaras antes de medir otra vez.</p></details></div>
       <div className={styles.setupSummary}><span>{bike === "hardtail" ? "Hardtail · horquilla" : "Doble suspensión · horquilla y amortiguador"} · {cyclingDisciplines.find(item => item.id === discipline)?.label}</span><button type="button" onClick={() => go(0)}>Cambiar bicicleta o disciplina</button></div>
       <p className={styles.measureReminder}>¿Tienes la medida? Completa los campos de abajo. El bloqueo debe estar abierto y las demás perillas preparadas según el manual.</p>
       <SagCalculator bike={bike} discipline={discipline} />
