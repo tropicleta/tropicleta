@@ -7,6 +7,7 @@ import { cyclingDisciplines } from "@/data/cycling-disciplines";
 import { fitExample } from "@/lib/fit-example";
 import { bikeFitModule, type FitPosture } from "@/lib/bike-fit-modules";
 import { kneeFeedback } from "@/lib/fit-feedback";
+import { LiveFitFilter } from "@/lib/fit-live";
 
 type Mode = "idle" | "loading" | "camera" | "photo" | "frozen" | "demo";
 const initialMessage = "Acepta el procesamiento local y elige cámara o fotografía.";
@@ -33,12 +34,17 @@ export function BikeFit() {
   const [framing, setFraming] = useState(false);
   const [bottom, setBottom] = useState(false);
   const [side, setSide] = useState<BikeSide>("left");
+  const liveSide = useRef<BikeSide>("left");
+  liveSide.current = side;
   const [mode, setMode] = useState<Mode>("idle");
   const [message, setMessage] = useState(initialMessage);
   const [points, setPoints] = useState<PosePoint[]>([]);
   const [hasPreview, setHasPreview] = useState(false);
   const [cameraReady, setCameraReady] = useState(false);
   const [readings, setReadings] = useState(0);
+  const [liveStable, setLiveStable] = useState(false);
+  const liveFilter = useRef(new LiveFitFilter());
+  const rawPoints = useRef<PosePoint[]>([]);
   const chooseSide = useRef(true);
   const [dimensions, setDimensions] = useState({ width: 960, height: 540 });
   const video = useRef<HTMLVideoElement>(null);
@@ -64,6 +70,7 @@ export function BikeFit() {
     if (timer.current) clearTimeout(timer.current);
   }
   function dispose() {
+    liveFilter.current.reset(); setLiveStable(false);
     session.current++;
     cancelInit.current?.();
     cancelInit.current = null;
@@ -78,6 +85,7 @@ export function BikeFit() {
   function reset() {
     setStep(1);
     dispose();
+    rawPoints.current = [];
     activeMode.current = "idle";
     setMode("idle"); setPoints([]); setBottom(false); setFraming(false);
     setHasPreview(false); setCameraReady(false); setReadings(0);
@@ -87,6 +95,7 @@ export function BikeFit() {
   }
   function fail(text: string) {
     dispose(); activeMode.current = "idle";
+    rawPoints.current = [];
     setMode("idle"); setPoints([]); setBottom(false); setMessage(text);
     setHasPreview(false); setCameraReady(false);
     for (const canvas of [preview.current, overlay.current]) canvas?.getContext("2d")?.clearRect(0, 0, canvas.width, canvas.height);
@@ -105,7 +114,7 @@ export function BikeFit() {
   const demo = mode === "demo";
   const valid = (demo || consent && framing) && assessment.valid;
   const staticCapture = mode === "photo" || mode === "frozen" || mode === "camera";
-  const showComparison = posture === "seated" && staticCapture && bottom && valid && assessment.valid;
+  const showComparison = posture === "seated" && staticCapture && bottom && valid && assessment.valid && (mode !== "camera" || liveStable);
   const feedback = kneeFeedback((showComparison || demo && posture === "seated") && assessment.valid ? assessment.knee : null);
   useEffect(() => {
     const canvas = overlay.current;
@@ -181,6 +190,7 @@ export function BikeFit() {
           inFlight.current = false;
           if (activeMode.current === "photo") { setMode("photo"); busy.current = false; }
           const frame = pendingFrame.current;
+          let visibleSide = liveSide.current;
           if (frame && preview.current && overlay.current) {
             preview.current.width = overlay.current.width = frame.width;
             preview.current.height = overlay.current.height = frame.height;
@@ -189,12 +199,18 @@ export function BikeFit() {
             setHasPreview(true);
             if (chooseSide.current && data.points.length) {
               const confidence = (candidate: BikeSide) => Math.min(...sidePoints[candidate].map((id) => data.points[id]?.visibility ?? 0));
-              setSide(confidence("right") > confidence("left") ? "right" : "left");
+              visibleSide = confidence("right") > confidence("left") ? "right" : "left";
+              liveSide.current = visibleSide;
+              setSide(visibleSide);
               chooseSide.current = false;
             }
           }
           setReadings((count) => count + 1);
-          setPoints(data.multiple ? [] : data.points);
+          rawPoints.current = data.multiple ? [] : data.points;
+          if (activeMode.current === "camera" && frame) {
+            const filtered = liveFilter.current.update(rawPoints.current, visibleSide, frame.width, frame.height);
+            setPoints(filtered.points); setLiveStable(filtered.stable);
+          } else { setPoints(rawPoints.current); setLiveStable(false); }
           setMessage(data.multiple ? "Hay más de una persona. Deja sólo al ciclista en el encuadre." : data.points.length ? "Análisis local activo." : "No detectamos una persona completa. Revisa luz, distancia y encuadre.");
           if (activeMode.current === "camera") scheduleFrame(token);
         }
@@ -205,6 +221,7 @@ export function BikeFit() {
   function begin() {
     setStep(1);
     dispose();
+    rawPoints.current = [];
     busy.current = true; activeMode.current = "loading";
     setMode("loading"); setPoints([]); setBottom(false); setFraming(false);
     setHasPreview(false); setCameraReady(false); setReadings(0); chooseSide.current = true;
@@ -267,7 +284,7 @@ export function BikeFit() {
   }
   function freeze() {
     // Keep the last analyzed canvas/landmarks together; never take a mismatched frame.
-    dispose(); activeMode.current = "frozen"; setMode("frozen"); setBottom(false);
+    dispose(); activeMode.current = "frozen"; setMode("frozen"); setBottom(false); setPoints(rawPoints.current);
     go(2);
     setMessage("Captura detenida. La cámara se apagó; revisa el encuadre antes de comparar.");
   }
@@ -371,8 +388,9 @@ export function BikeFit() {
           <label className={styles.check}><input type="checkbox" checked={framing} onChange={event => { setFraming(event.target.checked); setBottom(false); }} /><span>Estoy de perfil, completo en la imagen, y las líneas coinciden con mis articulaciones.</span></label>
           {posture === "seated" && <label className={styles.check}><input type="checkbox" checked={bottom} disabled={!valid} onChange={event => setBottom(event.target.checked)} /><span>Estoy sentado, sin pedalear, y mantengo el pedal visible en su punto más bajo. Desmarcaré esto antes de moverme.</span></label>}
           <p style={{ color: feedback.color }}>{posture === "standing" ? "De pie: las líneas azules permiten observar; no hay un rango ideal universal para colorear esta postura." : feedback.title}</p>
+          {bottom && valid && !liveStable && <p>Mantén la posición: esperamos tres lecturas consistentes antes de mostrar el color.</p>}
           {showComparison && assessment.valid && <><strong>{Math.round(assessment.knee)}° · referencia 25–35°</strong><p>{feedback.action}</p></>}
-          <p className={styles.small}>La cámara no detecta la posición del pedal. Para pedalear, desmarca la confirmación. Apaga la cámara y bájate de la bici antes de ajustar componentes.</p>
+          <p className={styles.small}>Líneas suavizadas para reducir el temblor. La cámara no detecta la posición del pedal. Para pedalear, desmarca la confirmación. Apaga la cámara y bájate de la bici antes de ajustar componentes.</p>
         </div>}
         <p className={styles.small}>Al cambiar de pestaña se apaga la cámara y se borra la sesión. No hay grabación, historial ni identificación de personas.</p>
       </div>

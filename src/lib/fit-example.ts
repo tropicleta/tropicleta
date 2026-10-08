@@ -42,9 +42,9 @@ export function fitExample(discipline: string, posture?: "seated" | "standing") 
   const handlebar = dropBar
     ? `<path d="M${wrist[0] - 22} ${wrist[1]}h22q32 0 23 23q-5 15 -25 10"/><path d="M${wrist[0]} ${wrist[1]}l6 -12l13 4"/>`
     : `<path d="M${wrist[0] - 20} ${wrist[1]}h40"/>`;
-  const rearAnkle = standing ? [345, 290] : [414, 200];
+  const rearAnkle = standing ? [345, 290] : [414, 290];
   const crankX = standing ? 415 : 434;
-  const crankY = standing ? 295 : 290;
+  const crankY = standing ? 295 : 335;
   const rearDistance = Math.hypot(rearAnkle[0] - hip[0], rearAnkle[1] - hip[1]);
   const rearOffset = Math.sqrt(96 * 96 - rearDistance * rearDistance / 4);
   const rearKnee = [(hip[0] + rearAnkle[0]) / 2 + (rearAnkle[1] - hip[1]) / rearDistance * rearOffset, (hip[1] + rearAnkle[1]) / 2 - (rearAnkle[0] - hip[0]) / rearDistance * rearOffset];
