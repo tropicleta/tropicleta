@@ -346,3 +346,16 @@
 .tp-instagram-gallery .tp-workshop-caption p { line-height:1.6; }
 .tp-instagram-gallery .tp-instagram-post-link { margin-bottom:10px; line-height:1.5; }
 @media(min-width:640px) { .tp-instagram-gallery .tp-workshop-caption h3 { min-height:2.8em; } .tp-instagram-gallery .tp-workshop-caption p { min-height:4.8em; } }
+
+/* Navegación principal corta y páginas complementarias bajo Más. */
+.tp-nav-more { position:relative; }
+.tp-nav-more summary { display:flex; align-items:center; justify-content:space-between; gap:8px; padding:10px 12px; cursor:pointer; list-style:none; font-size:14px; font-weight:700; color:var(--tp-grey); border-radius:8px; }
+.tp-nav-more summary::-webkit-details-marker { display:none; }
+.tp-nav-more summary:hover,.tp-nav-more summary[data-active],.tp-nav-more[open] summary { color:var(--tp-orange); }
+.tp-nav-more summary:focus-visible { outline:2px solid var(--tp-orange); outline-offset:3px; }
+.tp-nav-more-links { position:absolute; right:0; top:calc(100% + 8px); min-width:190px; display:grid; gap:4px; padding:8px; border:1px solid var(--tp-border); border-radius:12px; background:#11181c; box-shadow:0 12px 28px #0005; z-index:20; }
+.tp-nav-more:not([open]) > .tp-nav-more-links { display:none; }
+.tp-nav-more-links a { display:block; padding:12px; white-space:nowrap; }
+.tp-mobile-nav .tp-nav-more { width:100%; }
+.tp-mobile-nav .tp-nav-more summary { padding:14px 12px; }
+.tp-mobile-nav .tp-nav-more-links { position:static; box-shadow:none; margin:0 0 8px; min-width:0; }
