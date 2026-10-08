@@ -88,7 +88,7 @@
   left: 21.5%;
   top: 16%;
   width: 60.136%;
-  aspect-ratio: 720 / 784;
+  aspect-ratio: 1;
   transform: translateZ(40px);
   transform-origin: 50% 88%;
 }

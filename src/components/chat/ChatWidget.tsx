@@ -150,7 +150,7 @@ export function ChatWidget() {
             aria-expanded={false}
             aria-controls="tp-chat-panel"
           >
-            <Image className="tp-chat-mascot-icon" src="/brand/mascota-oficial.webp" alt="" width={320} height={348} unoptimized />
+            <Image className="tp-chat-mascot-icon" src="/brand/mascota-actualizada.webp" alt="" width={1024} height={1024} />
           </button>
           </div>
           <div className="tp-chat-launcher-row">

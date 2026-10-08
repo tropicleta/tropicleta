@@ -26,10 +26,10 @@ export function TropiMascot({ emotion, pulse = 0, size = 56, reaction = true }: 
 }) {
   const uid = useId().replace(/[^a-zA-Z0-9_-]/g, "");
   return (
-    <span className={`tp-tropi tp-tropi--${emotion}`} style={{ width: size, height: size * (784 / 720) }} aria-hidden="true">
+    <span className={`tp-tropi tp-tropi--${emotion}`} style={{ width: size, height: size }} aria-hidden="true">
       <span key={pulse} className="tp-tropi-body">
-        <Image src="/brand/mascota-oficial.webp" alt="" fill sizes={`${size}px`} />
-        <svg className="tp-tropi-eyes" viewBox="0 0 720 784">
+        <Image src="/brand/mascota-actualizada.webp" alt="" fill sizes={`${size}px`} />
+        <svg className="tp-tropi-eyes" viewBox="0 0 1024 1024">
           <defs>
             {EYES.map((e) => (
               <clipPath key={e.id} id={`tp-tropi-eye-${uid}-${e.id}`}>

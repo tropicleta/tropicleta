@@ -3,31 +3,31 @@
 import Image from "next/image";
 import { useEffect, useRef } from "react";
 
-// Ojos en coordenadas de /brand/anim/mascota.webp (720×784). `clip` = interior del ojo (sin el contorno negro).
+// Ojos en coordenadas de la mascota actualizada (1024×1024).
 // Al pestañear el párpado superior (`upper`, con pliegue `crease`) baja `h` y el inferior (`lower`) sube `h2`;
 // se juntan en `edge`, la línea de pestaña del ojo cerrado.
 export const EYES = [
   {
     id: "l",
-    clip: "M240 475C231 440 230 400 251 377C261 367 275 364 290 364L312 364C323 381 334 400 340 418C336 440 330 460 321 478Z",
-    upper: "M222 350H352V452Q284 474 222 452Z",
-    lower: "M222 452Q284 474 352 452V500H222Z",
-    edge: "M230 452Q284 474 344 452",
-    crease: "M248 418Q286 427 330 418",
+    clip: "M350 593C344 562 345 518 366 493L383 477C415 478 451 526 454 558L449 596Z",
+    upper: "M330 460H470V570Q400 590 330 570Z",
+    lower: "M330 570Q400 590 470 570V620H330Z",
+    edge: "M345 570Q400 590 458 570",
+    crease: "M363 536Q404 547 440 536",
     h: 104,
     h2: 40,
-    hit: { cx: 288, cy: 422, rx: 62, ry: 62 },
+    hit: { cx: 400, cy: 545, rx: 62, ry: 62 },
   },
   {
     id: "r",
-    clip: "M410 493C409 470 414 455 413 442L405 436C425 415 445 396 461 383L468 384C476 400 477 440 474 470L471 493Z",
-    upper: "M396 370H484V467Q440 486 396 468Z",
-    lower: "M396 468Q440 486 484 467V505H396Z",
-    edge: "M402 468Q440 486 480 467",
-    crease: "M416 440Q444 447 472 438",
+    clip: "M568 610L564 564C580 541 604 522 622 516C641 546 642 582 637 612Z",
+    upper: "M550 500H652V591Q600 611 550 591Z",
+    lower: "M550 591Q600 611 652 591V636H550Z",
+    edge: "M560 591Q603 611 645 591",
+    crease: "M577 562Q610 570 634 560",
     h: 100,
     h2: 30,
-    hit: { cx: 442, cy: 440, rx: 48, ry: 60 },
+    hit: { cx: 605, cy: 568, rx: 48, ry: 60 },
   },
 ] as const;
 
@@ -119,8 +119,8 @@ export function AnimatedEmblem() {
 
         <div className="tp-emblem-mascot">
           <div className="tp-emblem-mascot-idle">
-            <Image src="/brand/anim/mascota.webp" alt="" fill sizes="(max-width: 719px) 170px, (max-width: 979px) 220px, 270px" preload />
-            <svg className="tp-emblem-eyes" viewBox="0 0 720 784">
+            <Image src="/brand/mascota-actualizada.webp" alt="" fill sizes="(max-width: 719px) 170px, (max-width: 979px) 220px, 270px" preload />
+            <svg className="tp-emblem-eyes" viewBox="0 0 1024 1024">
               <defs>
                 {EYES.map((e) => (
                   <clipPath key={e.id} id={`tp-eye-${e.id}`}>

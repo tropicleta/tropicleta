@@ -13,7 +13,7 @@ export function WorkshopGallery() {
       const comment = workshopComments.find(item => item.url.includes(`/p/${story.post}/`));
       return <article key={story.post} className="tp-workshop-card tp-instagram-post">
       <a className={styles.postLink} href={"https://www.instagram.com/p/" + story.post + "/"} target="_blank" rel="noopener noreferrer">
-      <div className="tp-instagram-post-header"><Image src="/brand/mascota-oficial.webp" alt="" width={32} height={32} /><span><strong>tropicleta</strong><small>Tierra Amarilla · Atacama</small></span><span className="tp-instagram-open" aria-hidden="true">↗</span></div>
+      <div className="tp-instagram-post-header"><Image src="/brand/mascota-actualizada.webp" alt="" width={32} height={32} /><span><strong>tropicleta</strong><small>Tierra Amarilla · Atacama</small></span><span className="tp-instagram-open" aria-hidden="true">↗</span></div>
       <div className="tp-workshop-photo"><Image src={"/taller/" + story.image + ".jpg"} alt={story.title} fill sizes="(max-width: 639px) 100vw, (max-width: 979px) 50vw, 33vw" style={{objectPosition:story.position, objectFit:story.fit}} /></div>
       <div className="tp-workshop-caption"><span className="tp-instagram-post-link">Ver publicación en Instagram ↗</span><h3>{story.title}</h3><p>{story.text}</p></div>
       </a>

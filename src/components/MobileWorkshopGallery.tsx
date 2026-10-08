@@ -48,7 +48,7 @@ export function MobileWorkshopGallery() {
         >
       <div className="tp-carousel-dots" aria-label="Elegir evento">{videos.map((item, position) => <button type="button" key={item.id} onClick={() => setIndex(position)} aria-label={`Ver ${item.title}`} aria-current={position === index ? "true" : undefined}><span /></button>)}</div>
       <article className="tp-instagram-post tp-example-card">
-        <div className="tp-instagram-post-header"><Image src="/brand/mascota-oficial.webp" alt="" width={32} height={32} /><span><strong>tropicleta</strong><small>Taller móvil en acción</small></span><span className="tp-instagram-open" aria-hidden="true">↗</span></div>
+        <div className="tp-instagram-post-header"><Image src="/brand/mascota-actualizada.webp" alt="" width={32} height={32} /><span><strong>tropicleta</strong><small>Taller móvil en acción</small></span><span className="tp-instagram-open" aria-hidden="true">↗</span></div>
         <a className="tp-example-preview" href={url} target="_blank" rel="noopener noreferrer" aria-label={`Ver video: ${video.title}`}><Image src={thumbnail} alt={video.title} fill sizes="(max-width: 700px) 85vw, 340px" /><span className="tp-example-play" aria-hidden="true">▶</span></a>
         <div className="tp-workshop-caption"><h3>{video.title}</h3><p>{video.description}</p><a className="tp-mobile-video-link" href={url} target="_blank" rel="noopener noreferrer">Ver video en Instagram ↗</a></div>
       </article>
