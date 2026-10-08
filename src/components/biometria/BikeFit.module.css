@@ -19,6 +19,13 @@
 .verdict { display:block; margin-bottom:12px; font-weight:800; color:#f6b758 }
 .reference[data-fit=inside] { border-color:#316e60; background:#152a26 }
 .reference[data-fit=inside] .verdict { color:#92dec7 }
+.reference[data-fit=near] { border-color:#ffd166; background:#2b2619 }
+.reference[data-fit=far] { border-color:#ff8282; background:#301e22 }
+.colorGuide { padding:12px; border:1px solid var(--tp-border); border-radius:8px; font-size:13px; line-height:1.5 }
+.colorGuide > span { display:inline-block; margin:0 12px 6px 0; font-weight:700 }
+.colorGuide p { margin:4px 0 }
+.postureGuide { margin:20px 0; padding:14px; background:var(--tp-black-2); border-radius:10px }
+.postureGuide img { width:100%; height:auto; border-radius:8px }
 .range { height:10px; position:relative; background:#444a4e; border-radius:8px; margin:18px 4px 6px }
 .rangeBand { position:absolute; left:27.777%; width:11.111%; height:100%; background:#92dec7 }
 .range i { position:absolute; width:4px; height:22px; top:-6px; transform:translateX(-50%); border-radius:2px; background:#fff }

@@ -6,6 +6,7 @@ import styles from "./BikeFit.module.css";
 import { cyclingDisciplines } from "@/data/cycling-disciplines";
 import { fitExample } from "@/lib/fit-example";
 import { bikeFitModule, type FitPosture } from "@/lib/bike-fit-modules";
+import { kneeFeedback } from "@/lib/fit-feedback";
 
 type Mode = "idle" | "loading" | "camera" | "photo" | "frozen" | "demo";
 const initialMessage = "Acepta el procesamiento local y elige cámara o fotografía.";
@@ -103,6 +104,9 @@ export function BikeFit() {
   const assessment = useMemo(() => assessPose(points, side, dimensions.width, dimensions.height), [points, side, dimensions]);
   const demo = mode === "demo";
   const valid = (demo || consent && framing) && assessment.valid;
+  const staticCapture = mode === "photo" || mode === "frozen" || mode === "camera";
+  const showComparison = posture === "seated" && staticCapture && bottom && valid && assessment.valid;
+  const feedback = kneeFeedback((showComparison || demo && posture === "seated") && assessment.valid ? assessment.knee : null);
   useEffect(() => {
     const canvas = overlay.current;
     if (!canvas) return;
@@ -112,9 +116,10 @@ export function BikeFit() {
     if (!points.length) return;
     const [s, e, w, h, k, a, heel, toe] = sidePoints[side];
     const edges = [[s, e], [e, w], [s, h], [h, k], [k, a], [a, heel], [heel, toe]];
-    ctx.strokeStyle = "#f28a17"; ctx.fillStyle = "#f5f5f2"; ctx.lineWidth = 4;
+    ctx.fillStyle = "#f5f5f2"; ctx.lineWidth = 5;
     for (const [from, to] of edges) {
       if (!points[from] || !points[to] || (points[from].visibility ?? 0) < .75 || (points[to].visibility ?? 0) < .75) continue;
+      ctx.strokeStyle = from === h && to === k || from === k && to === a ? feedback.color : "#82bddd";
       ctx.beginPath(); ctx.moveTo(points[from].x * canvas.width, points[from].y * canvas.height);
       ctx.lineTo(points[to].x * canvas.width, points[to].y * canvas.height); ctx.stroke();
     }
@@ -130,7 +135,7 @@ export function BikeFit() {
       ctx.fillStyle = "#090a0b"; ctx.fillRect(x - 3, y - 20, 158, 27);
       ctx.fillStyle = "#f5f5f2"; ctx.fillText(label, x, y);
     }
-  }, [assessment, points, side, valid, dimensions]);
+  }, [assessment, points, side, valid, dimensions, feedback.color]);
 
   function armWatchdog() {
     if (watchdog.current) clearTimeout(watchdog.current);
@@ -266,8 +271,6 @@ export function BikeFit() {
     go(2);
     setMessage("Captura detenida. La cámara se apagó; revisa el encuadre antes de comparar.");
   }
-  const still = mode === "photo" || mode === "frozen";
-  const showComparison = posture === "seated" && still && bottom && valid && assessment.valid;
   async function showExample(selected = discipline, selectedPosture = posture) {
     reset();
     const token = session.current;
@@ -360,6 +363,15 @@ export function BikeFit() {
           {demo && <span className={styles.liveBadge}>Ejemplo · datos simulados</span>}
         </div>
         <div className={styles.status} role="status" aria-live="polite">{!demo && points.length ? !assessment.valid ? assessment.message : `${message} ${!framing ? "Cuerpo detectado: confirma la vista de perfil para ver los ángulos." : "Puntos visibles: revisa que las líneas sigan tus articulaciones."}` : message}</div>
+        {hasPreview && <div className={styles.colorGuide} aria-label="Significado de las líneas"><span style={{ color: "#79dfb5" }}>● Dentro</span><span style={{ color: "#ffd166" }}>● Cerca</span><span style={{ color: "#ff8282" }}>● Más alejada</span><span style={{ color: "#82bddd" }}>● Sin comparación</span><p>El color de la pierna compara la rodilla con 25–35°, sólo sentado, quieto y con pedal abajo. Azul muestra articulaciones sin evaluar si están bien o mal. Amarillo significa proximidad, no una mejora comprobada.</p></div>}
+        {step === 1 && mode === "camera" && <div className={styles.reference}>
+          <strong>Ver la referencia mientras estás quieto</strong>
+          <label className={styles.check}><input type="checkbox" checked={framing} onChange={event => { setFraming(event.target.checked); setBottom(false); }} /><span>Estoy de perfil, completo en la imagen, y las líneas coinciden con mis articulaciones.</span></label>
+          {posture === "seated" && <label className={styles.check}><input type="checkbox" checked={bottom} disabled={!valid} onChange={event => setBottom(event.target.checked)} /><span>Estoy sentado, sin pedalear, y mantengo el pedal visible en su punto más bajo. Desmarcaré esto antes de moverme.</span></label>}
+          <p style={{ color: feedback.color }}>{posture === "standing" ? "De pie: las líneas azules permiten observar; no hay un rango ideal universal para colorear esta postura." : feedback.title}</p>
+          {showComparison && assessment.valid && <><strong>{Math.round(assessment.knee)}° · referencia 25–35°</strong><p>{feedback.action}</p></>}
+          <p className={styles.small}>La cámara no detecta la posición del pedal. Para pedalear, desmarca la confirmación. Apaga la cámara y bájate de la bici antes de ajustar componentes.</p>
+        </div>}
         <p className={styles.small}>Al cambiar de pestaña se apaga la cámara y se borra la sesión. No hay grabación, historial ni identificación de personas.</p>
       </div>
       <div className={styles.card} hidden={step === 0 || step === 1 && !hasPreview}>
@@ -387,21 +399,27 @@ export function BikeFit() {
         </div>
         <p className={styles.small}>{demo ? "Valores simulados para conocer la herramienta. No describen tu posición." : points.length && assessment.valid ? "Las líneas muestran los puntos detectados. Comprueba que coincidan con tus articulaciones." : "Si no aparecen líneas, mejora la luz, aléjate del borde o prueba el otro lado del cuerpo."}</p>
         <dl className={styles.metrics} hidden={!valid}>
-          {fitModule.metrics.map((metric, index) => <div key={metric} className={styles.metric} data-primary={index === 0}><dt>{({ knee: "Flexión de rodilla", hip: "Tronco–muslo (cadera)", elbow: "Ángulo interno de codo", torso: "Tronco respecto a horizontal" })[metric]}</dt><dd>{valid && assessment.valid ? `${Math.round(assessment[metric])}°` : "—"}</dd></div>)}
+          {fitModule.metrics.map((metric, index) => <div key={metric} className={styles.metric} data-primary={index === 0}><dt>{({ knee: "Flexión de rodilla", hip: "Tronco–muslo (cadera)", elbow: "Ángulo interno de codo", torso: "Tronco respecto a horizontal" })[metric]}</dt><dd style={{ color: metric === "knee" ? feedback.color : "#82bddd" }}>{valid && assessment.valid ? `${Math.round(assessment[metric])}°` : "—"}</dd><small>{metric === "knee" && (showComparison || demo && posture === "seated") ? feedback.title : "Observación · sin objetivo personalizado"}</small></div>)}
         </dl>
         <p hidden={!valid}>{fitModule.interpretation}</p>
         <details className={styles.metricHelp}><summary>Cómo leer estos ángulos</summary><p className={styles.small}>Rodilla: flexión de cadera–rodilla–tobillo; 0° es pierna recta. Tronco–muslo: hombro–cadera–rodilla, no flexión clínica de cadera ni movilidad de la pelvis. Codo: ángulo interno hombro–codo–muñeca; 180° es brazo recto. Tronco: línea cadera–hombro respecto a horizontal, no curvatura de la espalda. Son estimaciones 2D.</p></details>
         <div hidden={demo || !valid}>
         <h3 className={styles.comparisonTitle}>{fitModule.kneeReference ? "¿Cómo se compara mi rodilla?" : "Qué observar en este módulo"}</h3>
-        <label className={styles.check} hidden={!fitModule.kneeReference}><input type="checkbox" checked={bottom} disabled={!fitModule.kneeReference || !still || !valid} onChange={(event) => setBottom(event.target.checked)} />
+        <label className={styles.check} hidden={!fitModule.kneeReference}><input type="checkbox" checked={bottom} disabled={!fitModule.kneeReference || !staticCapture || !valid} onChange={(event) => setBottom(event.target.checked)} />
           <span>En esta captura estática estoy sentado y el pedal del lado elegido está en su punto más bajo.</span>
         </label>
-        <div className={styles.reference} data-fit={showComparison ? assessment.knee >= 25 && assessment.knee <= 35 ? "inside" : "outside" : "pending"}>
-          {showComparison && <><span className={styles.verdict}>{assessment.knee >= 25 && assessment.knee <= 35 ? "✓ Coincide con la referencia estática" : "Revisa la toma antes de ajustar"}</span><div className={styles.range} aria-label={`Flexión de rodilla ${Math.round(assessment.knee)} grados; referencia de 25 a 35 grados`}><span className={styles.rangeBand} /><i style={{ left: `${Math.max(0, Math.min(90, assessment.knee)) / 90 * 100}%` }} /></div><div className={styles.rangeLabels}><span>0°</span><span>25–35°</span><span>90°</span></div></>}
+        <div className={styles.reference} data-fit={feedback.state}>
+          {showComparison && <><span className={styles.verdict} style={{ color: feedback.color }}>{feedback.title}</span><div className={styles.range} aria-label={`Flexión de rodilla ${Math.round(assessment.knee)} grados; referencia de 25 a 35 grados`}><span className={styles.rangeBand} /><i style={{ left: `${Math.max(0, Math.min(90, assessment.knee)) / 90 * 100}%` }} /></div><div className={styles.rangeLabels}><span>0°</span><span>25–35°</span><span>90°</span></div><p>{feedback.action}</p><p className={styles.small}>Cambia una sola cosa, anota tu configuración anterior y repite la misma toma. No se calculan milímetros ni se interpreta el pedaleo en movimiento.</p></>}
           <strong>{posture === "standing" ? "De pie: sin comparación de altura de sillín" : "Referencia estática de rodilla: 25–35°"}</strong>
           <p>{posture === "standing" ? "Observa los ángulos y cómo cambia tu postura. El rango sentado no permite evaluar tu posición de ataque." : showComparison ? assessment.knee >= 25 && assessment.knee <= 35 ? "La estimación está dentro de esta referencia publicada. Esto no confirma un ajuste correcto de la bicicleta." : "La estimación está fuera de esta referencia publicada. Repite la toma y revisa la posición del pedal antes de interpretarla; no determina cuánto modificar el sillín." : "Detén la cámara o carga una foto, confirma el encuadre y la posición del pedal para comparar. No se interpreta el rango durante el pedaleo."}</p>
           <a hidden={!fitModule.kneeReference} href="https://pubmed.ncbi.nlm.nih.gov/32022807/" target="_blank" rel="noopener noreferrer">Fuente: Millour y colaboradores, 2019</a>
         </div>
+        </div>
+        <div hidden={!valid} className={styles.postureGuide}>
+          <h3>Guía visual · {selectedDiscipline.label}</h3>
+          <img src={illustration.image} width="760" height="430" alt={`Guía lateral de ${selectedDiscipline.label}, ${posture === "standing" ? "de pie" : "sentado"}`} />
+          <p>{illustration.note}</p>
+          <p className={styles.small}>Úsala para entender el apoyo de manos, la posición del pedal y el recorrido elegido. Tu cuerpo no tiene que coincidir exactamente con el dibujo.</p>
         </div>
         <details className={styles.details}><summary>¿Qué hago con estos resultados?</summary><p>Primero repite la toma para comprobar que el encuadre, el apoyo de las manos y la posición del pedal sean iguales. Diferencias pequeñas pueden deberse a la toma: no ajustes la bici por un grado aislado. Observa también cómo te sientes al pedalear: un ángulo aislado no describe toda tu postura.</p><p>Guarda una nota de tu configuración actual. Si realizas un ajuste, cambia una sola cosa, respeta las marcas y el apriete del fabricante y repite la toma. Esta herramienta no calcula cuánto subir el sillín ni qué potencia necesitas.</p></details>
         <button type="button" className="tp-btn tp-btn-primary" onClick={() => { if (demo) reset(); go(1); }}>{demo ? "Ahora probar con mi foto →" : "Elegir otra foto o repetir la toma"}</button>

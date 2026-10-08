@@ -2,6 +2,19 @@
 
 Ruta: `/biometria/`. Acceso en el pie de página → Ayuda y más información; incluida en sitemap. Componentes y estilos propios para evitar interferencias con el calculador de SAG.
 
+## Semáforo y guía visual (8 de octubre de 2026)
+
+- Los segmentos cadera–rodilla y rodilla–tobillo se colorean cuando hay detección válida y las confirmaciones de perfil y postura estática sentada con pedal abajo están activas. Verde: 25–35°. Amarillo: hasta 5° fuera del rango. Rojo: más de 5° fuera. La banda amarilla es una decisión de interfaz para representar distancia; no es una tolerancia biomecánica validada ni demuestra mejoría.
+- Sin comparación habilitada, y en todas las posturas de pie, las líneas son azules. Los brazos y el tronco no reciben un juicio de ajuste derivado del parecido con el muñeco.
+- La cámara permite ver colores en una postura quieta, sin pedalear, mediante confirmación explícita. No se detecta el pedal ni la fase del ciclo: el usuario debe desmarcar la confirmación antes de moverse. Una captura detenida exige confirmar nuevamente el pedal. Las fotos siguen admitiendo la comparación estática original.
+- Resultados con explicación visible: rodilla más extendida o más flexionada, repetir encuadre y apoyo del pie antes de revisar una posible altura excesiva o insuficiente del sillín. No se prescriben milímetros. Verde sólo describe esa referencia de rodilla.
+- Ilustraciones con ambas piernas, pedales, apoyo en manetas en ruta/gravel, manillar alto para urbano y sillín bajo al observar de pie. Trail de pie usa una posición de preparación; enduro y DH muestran flexión mayor. Enduro sentado usa una pose distinta de su postura de pie. Proporciones corporales constantes y ángulos calculados con los mismos puntos dibujados.
+- La guía aparece también junto a los resultados, para evitar volver al primer paso. La figura muestra una postura ilustrativa, no un objetivo personalizado.
+
+Fuentes: [Millour et al.](https://pubmed.ncbi.nlm.nih.gov/32022807/) para la referencia estática de rodilla; [Canyon, guía de posición MTB](https://www.canyon.com/en-us/blog-content/mountain-bike-news/mtb-riding-position/b08012025.html) para las diferencias cualitativas entre posición de preparación y ataque. Ninguna fuente se usa para inventar grados ideales por disciplina.
+
+Pruebas: geometría y proporciones de todas las ilustraciones; límites verde/amarillo/rojo, datos ausentes y orientación de los mensajes. La cámara física y la precisión biomecánica no se validaron con estas pruebas.
+
 ## Implementación
 
 Módulos por disciplina: Ruta/Gravel/Urbano priorizan rodilla, tronco y apoyo de brazos en toma sentada; XC inicia con rodilla y relación tronco–muslo; Trail ofrece sentado o de pie; Enduro inicia de pie y ofrece pedaleo sentado por separado; DH sólo permite observación de pie. La selección cambia preparación, apoyo de manos, prioridades e interpretación. Sólo la toma sentada habilita comparación estática de rodilla. No se han creado rangos ideales por disciplina ni un diagnóstico de alcance, manetas o control en terreno. Cambiar módulo borra la captura y sus confirmaciones. `node tests/bike-fit-modules.cjs` comprueba recorridos permitidos, prioridad de datos y exclusión del rango sentado en postura de pie. Chequeo de tipos de la sección completado; prueba de navegador actualizada pero no ejecutada debido al bloqueo previo de la herramienta de navegación.
