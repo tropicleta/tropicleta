@@ -159,3 +159,12 @@
 .tp-shop-showcase .tp-shop-section-arrow { display: none; }
 .tp-shop-showcase .tp-shop-section:hover { border-color: #ffad32; filter: brightness(1.08); }
 @media(max-width:700px) { .tp-shop-showcase .tp-shop-section { min-height: 0; padding: 22px 18px; gap: 14px; } .tp-shop-showcase .tp-shop-section > svg { width: 26px; height: 26px; } .tp-home-marketplace { padding-block: 28px; } }
+
+.tp-shop-showcase .tp-shop-section { min-height: 0; padding: 22px; }
+.tp-shop-showcase .tp-shop-section strong { font-size: clamp(20px,2vw,26px); }
+.tp-shop-showcase .tp-shop-section > .tp-shop-brand-visual { flex: 0 0 100px; display: grid; gap: 12px; justify-items: center; }
+.tp-shop-brand-visual img { max-width: 100%; height: auto; object-fit: contain; }
+.tp-shop-brand-visual .tp-shop-product-preview { height: 94px; width: 80px; background: #fff; border-radius: 10px; }
+.tp-shop-market-badge { display: inline-flex; align-items: center; gap: 10px; margin-top: 12px; padding: 6px 10px; border-radius: 8px; background: #ffe600; color: #25244b; font-size: 12px; font-weight: 700; }
+.tp-shop-market-badge img { display: block; width: 72px; height: 30px; object-fit: contain; }
+@media(max-width:420px) { .tp-shop-showcase .tp-shop-section { padding: 18px 14px; } .tp-shop-showcase .tp-shop-section > .tp-shop-brand-visual { flex-basis: 70px; } .tp-shop-showcase .tp-shop-section strong { font-size: 20px; } }
