@@ -22,7 +22,7 @@ function Suspension({ rear = false, discipline }: { rear?: boolean; discipline: 
   const fields = [
     { key: "length", label: rear ? "Carrera del amortiguador (mm)" : "Recorrido de horquilla (mm)", value: length, set: setLength, placeholder: rear ? "Ej.: 55" : "Ej.: 140" },
     { key: "target", label: "SAG objetivo (%)", value: target, set: setTarget, placeholder: "Ej.: 20" },
-    { key: "measured", label: "Hundimiento medido (mm, opcional)", value: measured, set: setMeasured, placeholder: rear ? "Ej.: 16,5" : "Ej.: 28" },
+    { key: "measured", label: "Lo que medí: del retén al anillo (mm)", value: measured, set: setMeasured, placeholder: rear ? "Ej.: 16,5" : "Ej.: 28" },
   ];
   return <section className={styles.card} aria-labelledby={`${id}-title`}>
     <span className="tp-kicker">{rear ? "Suspensión trasera" : "Suspensión delantera"}</span>
@@ -51,13 +51,16 @@ function Suspension({ rear = false, discipline }: { rear?: boolean; discipline: 
     </details>
     <div className={styles.targetHint} id={`${id}-suggestion`}>
       <b>{manualTarget !== null ? "Objetivo personalizado" : suggestion.verified ? "Propuesta dentro del rango del modelo" : "Escenario orientativo"}: {Number.isFinite(parseSagInput(target)) ? `${fmt(parseSagInput(target))} %` : "ingresa un porcentaje válido"}</b>
-      <p>{suggestion.range ? `Rango de referencia: ${suggestion.range}. Punto medio: ${fmt(suggestion.value)} %.` : "Puedes editar el ejemplo inicial con el objetivo de tu manual."} {suggestion.source}.</p>
+      <p>{suggestion.range ? `Referencia: ${suggestion.range}. Usamos el punto medio (${fmt(suggestion.value)} %) para empezar.` : "Es un ejemplo. Cámbialo si tu manual indica otro porcentaje."} {suggestion.verified ? "Comprueba que corresponda a tu modelo y versión." : "Antes de cambiar presión o muelle, confirma el objetivo de tu suspensión."}</p>
+      <details className={styles.details}><summary>¿De dónde sale este porcentaje?</summary><p>{suggestion.source}.</p></details>
       {manualTarget !== null && <button type="button" onClick={() => setTarget(null)}>Usar sugerencia de {fmt(suggestion.value)} %</button>}
     </div>
-    <p id={`${id}-help`}>{rear ? "Usa la carrera indicada en la ficha técnica: en 210 × 55 mm, ingresa 55. No uses 210 ni el recorrido de la rueda trasera; el vástago visible tampoco siempre equivale a la carrera útil." : "Busca el recorrido útil en la ficha técnica de tu horquilla. La longitud visible de las barras puede ser diferente."}</p>
+    <p id={`${id}-help`}>{rear ? "Carrera = cuánto puede acortarse el amortiguador. Si su ficha dice 210 × 55 mm, escribe 55. No es el recorrido de la rueda trasera." : "Recorrido = cuánto puede hundirse la horquilla en total. Búscalo en su ficha técnica; no midas solo el tubo que ves."}</p>
     <div className={styles.inputGrid}>{fields.map(field => <label className={styles.field} key={field.key} htmlFor={`${id}-${field.key}`}>
       {field.label}
       <input id={`${id}-${field.key}`} type="text" inputMode="decimal" value={field.value} placeholder={field.placeholder} aria-describedby={`${id}-help ${id}-result`} onChange={event => field.set(event.target.value)} />
+      {field.key === "target" && <small className={styles.fieldHelp}>Es la parte que quieres que se hunda con tu peso. Ejemplo: 20 % de 100 mm son 20 mm. Puedes editarlo.</small>}
+      {field.key === "measured" && <small className={styles.fieldHelp}>Escribe los milímetros que leíste con la regla. Puedes dejarlo vacío para ver solo el objetivo.</small>}
     </label>)}</div>
     <div id={`${id}-result`} className={styles.result} aria-live="polite" aria-atomic="true">
       {result.error ? <p>{length === "" ? "Ingresa las medidas de tu suspensión para calcular." : result.error}</p> : <>
@@ -96,7 +99,7 @@ export function SagSetup({ bike, discipline, setBike, setDiscipline }: SetupProp
 export function SagCalculator({ bike, discipline }: { bike: string; discipline: string }) {
   return <div>
       <h2 className={styles.stepTitle}>Calcula y compara</h2>
-      <p className={styles.note}>El porcentaje se propone automáticamente. Puedes editarlo con el valor de tu manual. Ingresa el recorrido y tu medición.</p>
+      <p className={styles.note}>Completa tres datos: recorrido o carrera, porcentaje objetivo y lo que mediste. No necesitas hacer las cuentas.</p>
       <div className={styles.grid}><Suspension discipline={discipline} /><div hidden={bike !== "full"}><Suspension rear discipline={discipline} /></div></div>
       <p className={styles.note}>La referencia por disciplina es general: puede diferir del objetivo de horquilla o amortiguador de tu modelo. No estima presión de aire.</p>
   </div>;

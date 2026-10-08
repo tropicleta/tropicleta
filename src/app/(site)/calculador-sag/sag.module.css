@@ -9,6 +9,7 @@
 .choice input { accent-color: var(--tp-orange); width: 20px; height: 20px; }
 .choice small { display: block; color: var(--tp-grey); margin-top: 4px; }
 .field { display: grid; gap: 8px; margin: 20px 0; font-weight: 600; }
+.fieldHelp { font-weight:400; color:var(--tp-grey); font-size:13px; line-height:1.5; }
 .field input { width: 100%; min-height: 48px; border: 1px solid var(--tp-grey-dark); border-radius: 8px; background: var(--tp-black); color: var(--tp-white); padding: 12px; font: inherit; }
 .field select { width:100%; min-width:0; min-height:48px; padding:12px; font:inherit; color:var(--tp-white); background:var(--tp-black); border:1px solid var(--tp-grey-dark); border-radius:8px; }
 .modelHelp { padding:18px; background:var(--tp-black-2); border-left:3px solid var(--tp-orange); border-radius:0 8px 8px 0; margin:12px 0 24px; }
@@ -46,6 +47,13 @@
 .readyStatus { margin:12px 0 0; }
 .setupSummary { display:flex; justify-content:space-between; flex-wrap:wrap; align-items:center; gap:12px; padding:14px 18px; background:var(--tp-card); border-radius:10px; font-size:14px; }
 .measureReminder { font-size:14px; line-height:1.6; color:var(--tp-grey); margin-top:16px; }
+.measureLesson { padding:20px; border:1px solid var(--tp-border); border-radius:12px; margin-bottom:24px; }
+.measureLesson h3 { font-size:18px; margin-bottom:16px; }
+.lessonSteps { display:grid; grid-template-columns:1fr 1fr; gap:16px 28px; padding-left:24px; margin:0; }
+.lessonSteps li::marker { color:var(--tp-orange); font-weight:800; }
+.lessonSteps b, .lessonSteps span { display:block; }
+.lessonSteps span { color:var(--tp-grey); font-size:14px; line-height:1.6; margin-top:6px; }
+@media(max-width:700px) { .lessonSteps { grid-template-columns:1fr; } }
 .purpose { padding:14px 18px; margin:0 0 28px; border-left:2px solid var(--tp-orange); background:var(--tp-black-2); color:var(--tp-grey); font-size:14px; line-height:1.6; }
 .disciplineRow { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,2fr); align-items:center; gap:24px; margin-bottom:24px; }
 .disciplineRow .field { margin:0; }

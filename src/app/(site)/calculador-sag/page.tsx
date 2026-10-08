@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 
 export default function SagPage() {
   return <>
-    <PageHero kicker="Aprende con tu bici" title="Ajusta tu" highlight="suspensión." intro="Tres pasos para ganar control y comodidad: prepara, mide el SAG y afina el rebote." />
+    <PageHero kicker="Aprende con tu bici" title="Ajusta tu" highlight="suspensión." intro="Aprende cuánto se hunde al subirte y cómo vuelve después de un bache. Te acompañamos paso a paso." />
     <section className="tp-section"><div className="tp-shell">
       <p className={styles.purpose}>Una primera aproximación gratuita para entender tu suspensión a tu ritmo. Los objetivos y ajustes son orientativos; se recomienda una sesión con un profesional para una puesta a punto personalizada.</p>
       <div id="sag-calculator" className={styles.calculatorAnchor}><SuspensionGuide /></div>
