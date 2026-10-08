@@ -1,3 +1,6 @@
-.image { width:100%; height:auto; aspect-ratio:9/5; object-fit:cover; display:block; border-bottom:1px solid var(--tp-border) }
-.card[class] { padding:0; gap:0; overflow:hidden }
-.body { display:grid; gap:10px; padding:22px; align-content:start }
+.image { width:144px; height:100px; object-fit:contain; display:block; background:#111a1e; border:1px solid var(--tp-border); border-radius:8px }
+.card[class] { grid-template-columns:116px minmax(0,1fr); gap:18px; padding:22px; align-items:start; overflow:hidden }
+.card .image { width:116px; height:90px }
+.body { display:grid; gap:10px; padding:0; min-width:0; align-content:start }
+.card h2 { font-size:23px }
+@media(max-width:600px) { .card[class] { grid-template-columns:88px minmax(0,1fr); gap:14px; padding:16px } .card .image { width:88px; height:72px } .card h2 { font-size:21px } }
