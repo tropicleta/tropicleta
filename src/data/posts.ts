@@ -83,6 +83,7 @@ Afloja el esfuerzo y revisa la transmisión. Puede haber desgaste de cadena o ca
 Si se repite, conviene un diagnóstico antes de seguir exigiendo la bici. No intentes solucionarlo pedaleando más fuerte.
 
 ## Qué recordar en tu próxima salida
+
 - Antes de parar, deja una marcha liviana si puedes hacerlo con control.
 - Arranca progresivamente y cambia con menos presión en los pedales.
 - Evita cruces extremos si tienes varios platos.
