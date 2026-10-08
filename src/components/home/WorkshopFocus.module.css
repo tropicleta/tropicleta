@@ -32,3 +32,7 @@
 .postComment .username:hover { text-decoration:underline }
 .originalComment { display:inline-block; color:var(--tp-grey); font-size:11px; line-height:1.5; margin-top:6px; text-decoration:underline; text-underline-offset:3px }
 @media(max-width:800px) { .cards { grid-template-columns:1fr } .race { grid-template-columns:1fr; padding:22px } .section { padding:36px 0 } }
+
+.postComment { display:flex; flex-direction:column; gap:8px; }
+.originalComment { margin-top:auto; padding-top:2px; align-self:flex-start; }
+@media(min-width:640px) { .postComment p { min-height:4.8em; } }

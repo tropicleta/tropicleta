@@ -337,3 +337,12 @@
 .tp-home-hub-shops .tp-shop-product-preview { height:70px; }
 @media(max-width:1000px) { .tp-home-hub-grid { grid-template-columns:1fr; gap:24px; } .tp-home-hub .tp-mobile-summary-grid { grid-template-columns:160px minmax(0,1fr); } .tp-home-hub-shops .tp-shop-sections { grid-template-columns:repeat(2,minmax(0,1fr)); } }
 @media(max-width:700px) { .tp-home-hub .tp-mobile-summary-grid { grid-template-columns:100px minmax(0,1fr); gap:16px; } .tp-home-hub .tp-mobile-summary-photo { width:100px; } .tp-home-hub .tp-section-title { font-size:26px; } .tp-home-hub .tp-btn { white-space:normal; text-align:center; font-size:12px; padding:12px; } .tp-home-hub-shops .tp-shop-sections { grid-template-columns:1fr; } }
+
+/* Publicaciones con títulos, descripciones y comentarios alineados. */
+.tp-instagram-gallery .tp-instagram-post { display:flex; flex-direction:column; min-width:0; }
+.tp-instagram-gallery .tp-instagram-post > a { flex:1; }
+.tp-instagram-gallery .tp-workshop-caption { text-align:left; padding:16px 18px; }
+.tp-instagram-gallery .tp-workshop-caption h3 { font-family:var(--font-body); font-size:17px; line-height:1.4; margin:0 0 8px; overflow-wrap:anywhere; }
+.tp-instagram-gallery .tp-workshop-caption p { line-height:1.6; }
+.tp-instagram-gallery .tp-instagram-post-link { margin-bottom:10px; line-height:1.5; }
+@media(min-width:640px) { .tp-instagram-gallery .tp-workshop-caption h3 { min-height:2.8em; } .tp-instagram-gallery .tp-workshop-caption p { min-height:4.8em; } }

@@ -19,7 +19,7 @@ export function WorkshopGallery() {
       </a>
       {comment && <div className={styles.postComment}>
         <p><a className={styles.username} href={comment.url} target="_blank" rel="noopener noreferrer">@{comment.username}</a>{" "}{comment.quote}</p>
-        <a className={styles.originalComment} href={comment.url} target="_blank" rel="noopener noreferrer">{comment.excerpt ? "Leer comentario completo en Instagram ↗" : "Ver comentario en Instagram ↗"}</a>
+        <a className={styles.originalComment} href={comment.url} target="_blank" rel="noopener noreferrer">Ver comentario en Instagram ↗</a>
       </div>}
       </article>;
     })}</div>
