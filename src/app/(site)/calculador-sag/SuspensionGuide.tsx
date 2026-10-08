@@ -51,7 +51,7 @@ export function SuspensionGuide() {
         <p role="status" className={styles.readyStatus}>{ready.filter(Boolean).length}/3 comprobaciones · {ready.every(Boolean) ? "Listo para medir." : "Revisa estos puntos antes de tomar la medición."}</p>
       </section>
       <details className={styles.details}><summary>Dos palabras que usaremos: SAG y rebote</summary><p><b>SAG = cuánto se hunde al subirte.</b> Lo medimos primero. <b>Rebote = qué tan rápido vuelve a estirarse después de un bache.</b> Lo revisamos después.</p><p>El aire o el muelle sostienen tu peso. Los controles de compresión y rebote regulan cómo se mueve la suspensión.</p></details>
-      <button type="button" className="tp-btn" onClick={() => go(1)}>Empezar con el SAG →</button>
+      <button type="button" className={`tp-btn ${ready.every(Boolean) ? "tp-btn-primary" : "tp-btn-secondary"}`} onClick={() => go(1)}>Empezar con el SAG →</button>
     </div>
     <div hidden={step !== 1}>
       <p className={styles.lead}>Vas a medir una distancia pequeña con la regla. Esa medida nos dice cuánto se hundió la suspensión al subirte.</p>
