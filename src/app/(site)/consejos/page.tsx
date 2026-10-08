@@ -17,12 +17,6 @@ export default function ConsejosPage() {
       <PageHero kicker="Consejos" title="Desde el" highlight="taller." intro="Guías cortas para cuidar tu bici entre visitas al taller." />
       <section className="tp-section">
         <div className="tp-shell tp-post-grid">
-          <Link href="/prepara-tu-carrera/" className="tp-post-card">
-            <span className="tp-meta">Guía práctica · Competición</span>
-            <h2 className="tp-display">Prepara tu próxima carrera</h2>
-            <p>Revisa tu bici, anota qué necesitas y coordina los servicios con la fecha de tu carrera a la vista.</p>
-            <span className="tp-service-link">Preparar mi revisión →</span>
-          </Link>
           <Link href="/biometria/" className="tp-post-card">
             <span className="tp-meta">Herramienta orientativa · Postura</span>
             <h2 className="tp-display">Observa tu posición</h2>
