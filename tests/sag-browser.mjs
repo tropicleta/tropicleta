@@ -16,10 +16,10 @@ try {
   assert.equal(await page.$eval("#fork-target", node => node.value), "20");
   await page.click('input[value="full"]');
   await page.evaluate(() => { document.querySelectorAll("nav button").forEach(button => { if (button.textContent.includes("Mide el SAG")) button.click(); }); document.querySelectorAll("details").forEach(node => node.open = true); });
-  await page.click('button[aria-label="Ampliar foto del anillo medidor de SAG"]');
-  assert.equal(await page.$eval("dialog", node => node.open), true);
+  await page.click('button[aria-label="Activar zoom de la foto del anillo medidor de SAG"]');
+  assert.equal(await page.$eval(".tp-inline-zoom", node => node.getAttribute("aria-pressed")), "true");
   await page.keyboard.press("Escape");
-  assert.equal(await page.$eval("dialog", node => node.open), false);
+  assert.equal(await page.$eval(".tp-inline-zoom", node => node.getAttribute("aria-pressed")), "false");
   assert.equal(await page.evaluate(() => document.body.textContent.includes("Pedir ayuda al taller")), false);
   await page.select("#fork-brand", "FOX");
   await page.select("#fork-model", "36 · 2024");

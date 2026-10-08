@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import Image from "next/image";
+import { ImageZoom } from "@/components/shop/ImageZoom";
 import { SagCalculator, SagSetup } from "./SagCalculator";
 import styles from "./sag.module.css";
 
@@ -29,7 +30,6 @@ export function SuspensionGuide() {
   const [ready, setReady] = useState<boolean[]>([false, false, false]);
   const heading = useRef<HTMLHeadingElement>(null);
   const root = useRef<HTMLDivElement>(null);
-  const photoDialog = useRef<HTMLDialogElement>(null);
   function go(next: number) { setStep(next); requestAnimationFrame(() => { heading.current?.focus(); heading.current?.scrollIntoView({ block: "start", behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" }); }); }
   function download() {
     const values = Array.from(root.current?.querySelectorAll<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>("input[id], textarea[id], select[id]") ?? []).filter(input => input.value.trim() && input.type !== "checkbox" && !(bike === "hardtail" && input.id.startsWith("shock-"))).map(input => `${root.current?.querySelector(`label[for="${input.id}"]`)?.firstChild?.textContent?.trim() || input.id}: ${input.value}`);
@@ -62,10 +62,9 @@ export function SuspensionGuide() {
         <li><b>Baja despacio</b><span>No saltes ni rebotes. Al quitar tu peso, la suspensión se estira y el anillo queda marcando cuánto se hundió.</span></li>
         <li><b>Mide el espacio</b><span>Con la regla, mide del retén al anillo, en milímetros. Escribe ese número en «Lo que medí». Repite para comprobarlo.</span></li>
       </ol><figure className={styles.measurePhoto}>
-        <button type="button" className={styles.photoZoom} aria-label="Ampliar foto del anillo medidor de SAG" aria-haspopup="dialog" onClick={() => photoDialog.current?.showModal()}><Image src="/suspension/medicion-sag-horquilla.png" width={923} height={636} sizes="(max-width: 600px) 280px, 300px" alt="Horquilla con un anillo rojo en la barra y una regla entre el retén y el anillo para medir el SAG." /><span>Ampliar foto ↗</span></button>
+        <div><div className={styles.photoFrame}><Image src="/suspension/medicion-sag-horquilla.png" width={923} height={636} sizes="(max-width: 600px) 280px, 300px" alt="Horquilla con un anillo rojo en la barra y una regla entre el retén y el anillo para medir el SAG." /><ImageZoom src="/suspension/medicion-sag-horquilla.png" name="la foto del anillo medidor de SAG" /></div><p className={styles.zoomHint}>Toca la foto para acercar. Mueve el cursor o arrastra para ver los detalles; toca otra vez para salir.</p></div>
         <figcaption><b>Este es el anillo medidor de SAG</b><p>En la foto es rojo; el tuyo puede ser de otro color. Después de bajarte sin rebotar, mide la distancia entre el retén y el anillo con la suspensión estirada. Esa distancia es tu SAG en milímetros.</p><small>La foto sirve para ubicar el anillo y la regla. Desconecta la bomba antes de subirte a medir.</small></figcaption>
       </figure><details className={styles.details}><summary>Ver el dibujo y casos especiales</summary><Diagram /><p>El dibujo muestra la distancia que debes medir con la suspensión ya estirada. Si no encuentras el anillo o no puedes acceder al tubo, consulta el método de tu modelo.</p><p>En algunos amortiguadores de muelle se mide la distancia entre sus dos anclajes, primero sin peso y después con el ciclista. La diferencia es el hundimiento. Para el porcentaje se usa la carrera del amortiguador, no el recorrido de la rueda.</p><p>Si cambiaste la presión de aire, sigue el procedimiento del manual para equilibrar sus cámaras antes de medir otra vez.</p></details></div>
-      <dialog ref={photoDialog} className={styles.photoDialog} aria-label="Foto ampliada del anillo medidor de SAG" onClick={event => { if (event.target === event.currentTarget) photoDialog.current?.close(); }}><button type="button" className={styles.photoClose} onClick={() => photoDialog.current?.close()} autoFocus>Cerrar ✕</button><Image src="/suspension/medicion-sag-horquilla.png" width={923} height={636} sizes="(max-width: 960px) 94vw, 923px" alt="Detalle ampliado: anillo rojo sobre la barra y regla para medir la distancia desde el retén." /></dialog>
       <div className={styles.setupSummary}><span>{bike === "hardtail" ? "Hardtail · horquilla" : "Doble suspensión · horquilla y amortiguador"}</span><button type="button" onClick={() => go(0)}>Cambiar tipo de bicicleta</button></div>
       <p className={styles.measureReminder}>¿Tienes la medida? Completa los campos de abajo. El bloqueo debe estar abierto y las demás perillas preparadas según el manual.</p>
       <SagCalculator bike={bike} />

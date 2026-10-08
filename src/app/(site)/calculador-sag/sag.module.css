@@ -71,13 +71,9 @@
 .measurePhoto figcaption { font-size:14px; line-height:1.6; }
 .measurePhoto p { margin:8px 0; color:var(--tp-grey); }
 .measurePhoto small { display:block; color:var(--tp-grey); font-size:12px; }
-.photoZoom { display:block; width:100%; max-width:300px; margin:auto; padding:0; border:0; background:transparent; color:var(--tp-orange); font:inherit; cursor:zoom-in; }
-.photoZoom span { display:block; margin-top:6px; font-size:13px; text-align:center; }
-.photoDialog { width:min(94vw,955px); max-width:94vw; max-height:94dvh; margin:auto; padding:52px 12px 12px; border:1px solid var(--tp-border); border-radius:12px; background:var(--tp-black-2); color:var(--tp-white); }
-.photoDialog::backdrop { background:rgba(0,0,0,.85); }
-.photoDialog img { display:block; width:100%; height:auto; max-height:calc(94dvh - 68px); object-fit:contain; }
-.photoClose { position:absolute; top:8px; right:12px; min-height:36px; padding:6px 12px; border:1px solid var(--tp-border); border-radius:8px; background:var(--tp-card); color:var(--tp-white); font:inherit; cursor:pointer; }
-@media(max-width:600px) { .measurePhoto { grid-template-columns:1fr; gap:12px; } .measurePhoto img { max-width:280px; margin:auto; } }
+.photoFrame { position:relative; max-width:300px; margin:auto; overflow:hidden; border-radius:10px; }
+.measurePhoto .zoomHint { font-size:12px; line-height:1.5; margin:8px 0 0; }
+@media(max-width:600px) { .measurePhoto { grid-template-columns:1fr; gap:12px; } .photoFrame { max-width:280px; } }
 @media(max-width:700px) { .lessonSteps { grid-template-columns:1fr; } }
 .purpose { padding:14px 18px; margin:0 0 28px; border-left:2px solid var(--tp-orange); background:var(--tp-black-2); color:var(--tp-grey); font-size:14px; line-height:1.6; }
 .disciplineRow { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,2fr); align-items:center; gap:24px; margin-bottom:24px; }
