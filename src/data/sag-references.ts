@@ -7,10 +7,30 @@ const fox = "https://tech.ridefox.com/bike/owners-manuals/";
 const marz = "https://cdn.shopify.com/s/files/1/0252/8700/0144/files/";
 const foxFork = "Abre la compresión y mide con tu equipo habitual, siguiendo la posición del manual.";
 const foxShock = "Confirma la carrera y la recomendación del cuadro. Prepara las cámaras de aire según el manual.";
+const ohlins38 = "https://ohlins.com/storage/4D81EA83A21214EDFB4A57331844F3692B56F2CCA1ED9BD1BE95A5CDFE6D1B1E/9bd7e6402a3e42ff93f357c6b15e645b/pdf/media/0377e17f271d4af39560e027d515d36d/Owners%20manual%20RXF38%20m.2.pdf";
+const ohlins36 = "https://www.ohlins.com/storage/5AE83FB930CA36F45700C32CCF7A91A96A7798B3D1C60B1AB10761D262BBE26B/24e7fcb03154439ea9ae0b6150bcede7/pdf/media/751e4a2b1cc24d338664758d74947fe0/Owner%27s%20manual%20RXF36m.3.pdf";
 function entries(brand: string, labels: string[], rear: boolean, spring: "air" | "coil", range: readonly [number, number] | null, url: string, note: string): SagReference[] {
   return labels.map(label => ({ brand, label, rear, spring, range, url, note }));
 }
 export const sagReferences: SagReference[] = [
+  ...entries("Manitou", ["Mara Pro PB Gen 2 · guía 2024"], true, "air", [25,30], "https://hayesbicycle.zendesk.com/hc/en-us/article_attachments/28476110600727", "Usa primero el SAG recomendado por el fabricante del cuadro. Esta guía propone 25–30 % solo si no hay esa recomendación. Equilibra las cámaras según Balance Groove."),
+  ...entries("Öhlins", ["RXF36 m.3 Air · manual m.3"], false, "air", [10,15], ohlins36, "Rango aproximado para aire. Prepara primero ramp-up y después la cámara principal. Sigue el método de recuperación de longitud tras bajar presión."),
+  ...entries("Öhlins", ["RXF36 m.3 Coil · manual m.3"], false, "coil", [15,20], ohlins36, "Rango aproximado para muelle. Confirma el muelle y prepara la precarga según el manual m.3."),
+  ...entries("Manitou", ["Mezzer Pro Gen 2 · guía 2025", "Mezzer LT Pro Gen 2 · guía 2025"], false, "air", [20,25], "https://hayesbicycle.zendesk.com/hc/en-us/article_attachments/43742231652503", "Guía Gen 2: ajusta sin cargar la horquilla y presuriza IRT primero. La versión LT tiene recorridos y ajustes específicos; usa su columna en la tabla."),
+  ...entries("Manitou", ["Mezzer Expert Gen 2 · guía Gen 2"], false, "air", [20,25], "https://hayesbicycle.zendesk.com/hc/en-us/article_attachments/41067689282071", "Usa la guía Expert Gen 2 y su procedimiento de medición. No copies la preparación de cámaras de la versión Pro."),
+  ...entries("FOX", ["34SL · 2026"], false, "air", [15,20], `${fox}3087/fork--2026-34sl`, foxFork),
+  ...entries("FOX", ["36SL · 2026"], false, "air", [15,20], `${fox}3088/fork--2026-36sl`, foxFork),
+  ...entries("FOX", ["38 FLOAT / E-Bike+ / Rhythm · 2026"], false, "air", [15,20], `${fox}3103/fork--2026-38mm`, "El SAG es común a estas versiones; sus presiones y límites son distintos. Usa la tabla de tu versión."),
+  ...entries("FOX", ["Podium · 2026"], false, "air", [15,20], `${fox}3108/fork--2026-podium-`, "Horquilla invertida. Identifica anillo y retén según su manual; no copies la dirección de una horquilla convencional."),
+  ...entries("FOX", ["FLOAT SL · 2026", "FLOAT X · 2026"], true, "air", [25,30], `${fox}3098/shock--2026-float-sl-and-float-x`, foxShock),
+  ...entries("FOX", ["FLOAT X2 · 2026"], true, "air", [30,30], `${fox}3023/shock--2026-float-x2`, "Referencia aproximada de 30 %. Usa el manual de 2026: la presión máxima y el procedimiento deben corresponder a esta generación."),
+  ...entries("FOX", ["DHX · 2026"], true, "coil", [30,30], `${fox}3100/shock--2026-dhx-`, "Referencia aproximada. Mide entre anclajes con y sin tu peso; respeta los límites de precarga del manual."),
+  ...entries("FOX", ["DHX2 · 2026"], true, "coil", [30,30], `${fox}3090/shock--2026-dhx2`, "Referencia aproximada de esta generación. Confirma el muelle y mide entre anclajes según el manual."),
+  ...entries("Öhlins", ["RXF38 m.2 Air · manual m.2"], false, "air", [10,15], ohlins38, "Rango aproximado para aire, no para muelle. Prepara primero la cámara ramp-up y luego la principal, siguiendo el manual."),
+  ...entries("Öhlins", ["RXF38 m.2 Coil · manual m.2"], false, "coil", [15,20], ohlins38, "Rango aproximado para muelle. Usa el procedimiento de precarga y la tabla de muelles del manual m.2."),
+  ...entries("DVO", ["Topaz Prime · guía 2.1 / 2024", "Topaz Pro · guía 2.1 / 2024"], true, "air", [20,30], "https://dvosuspension.com/wp-content/uploads/2024/05/DVO-Topaz-Setup-Guide-May9-1.pdf", "Usa la carrera del amortiguador. La cámara principal y la cámara bladder tienen ajustes distintos: sigue la guía de tu versión."),
+  ...entries("DVO", ["Diamond · guía Fork Set-Up", "Onyx SC · guía Fork Set-Up", "Onyx DC · guía Fork Set-Up", "Beryl · guía Fork Set-Up", "Sapphire 32 · guía Fork Set-Up", "Sapphire 34 · guía Fork Set-Up"], false, "air", [15,20], "https://tech.dvosuspension.com/wp-content/uploads/2018/08/DVO-SET-UP-GUIDE_fork.pdf", "Referencia de las familias descritas en esta guía. No extrapoles a nuevas versiones 36/38, SL o Core sin confirmar el manual. Ajusta OTT y presión siguiendo la secuencia de tu modelo."),
+  ...entries("Manitou", ["Mezzer Pro · guía Pro"], false, "air", [20,25], "https://hayesbicycle.zendesk.com/hc/en-us/article_attachments/360056778633", "La guía Pro mide de pie, con 70 % del peso en pedales y 30 % en manillar. Sigue el orden de las cámaras principal e IRT. No extrapoles a Mezzer Gen 2 o LT."),
   ...entries("FOX", ["36 · 2024", "38 · 2024"], false, "air", [15,20], `${fox}2930/fork--2024-36mm-`, foxFork),
   ...entries("FOX", ["32 / Step-Cast / Taper-Cast · 2025", "34 / Step-Cast / Rhythm · 2025"], false, "air", [15,20], `${fox}2978/fork--2025-32mm--or-34mm-(including-step-cast-and-taper-cast)`, foxFork),
   ...entries("FOX", ["36 · 2025", "38 · 2025"], false, "air", [15,20], `${fox}2979/fork--2025-36mm-or-38mm`, foxFork),

@@ -34,3 +34,8 @@ for (const item of sagReferences) {
 }
 assert.equal(new Set(sagReferences.map(item => `${item.brand}:${item.label}:${item.rear}`)).size, sagReferences.length);
 console.log(`${sagReferences.length} referencias oficiales: alcance y objetivos OK.`);
+assert.equal(suggestSag("unknown", false, findSagReference("Öhlins", "RXF38 m.2 Air · manual m.2", false, "air")).value, 12.5);
+assert.equal(suggestSag("unknown", false, findSagReference("Öhlins", "RXF38 m.2 Coil · manual m.2", false, "coil")).value, 17.5);
+assert.equal(findSagReference("Öhlins", "RXF38 m.2 Air · manual m.2", false, "coil"), undefined);
+assert.equal(suggestSag("unknown", true, findSagReference("DVO", "Topaz Prime · guía 2.1 / 2024", true, "air")).value, 25);
+assert.equal(suggestSag("unknown", false, findSagReference("FOX", "Podium · 2026", false, "air")).value, 17.5);

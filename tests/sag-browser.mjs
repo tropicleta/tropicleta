@@ -76,6 +76,15 @@ try {
   await page.select("#fork-brand", "SR Suntour");
   await page.select("#fork-model", "DUROLUX38 EQ · guía 2022");
   assert.equal(await page.$eval("#fork-target", node => node.value), "30");
+  await page.select("#fork-brand", "Öhlins");
+  await page.select("#fork-model", "RXF36 m.3 Air · manual m.3");
+  assert.equal(await page.$eval("#fork-target", node => node.value), "12.5");
+  await page.select("#fork-brand", "Manitou");
+  await page.select("#fork-model", "Mezzer LT Pro Gen 2 · guía 2025");
+  assert.equal(await page.$eval("#fork-target", node => node.value), "22.5");
+  await page.select("#shock-brand", "DVO");
+  await page.select("#shock-model", "Topaz Prime · guía 2.1 / 2024");
+  assert.equal(await page.$eval("#shock-target", node => node.value), "25");
   assert.deepEqual(errors, []);
   console.log("SAG: selección, cálculo, decimales y distribución móvil/escritorio OK.");
 } finally { await browser.close(); }

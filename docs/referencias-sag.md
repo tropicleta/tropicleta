@@ -1,6 +1,10 @@
 # Referencias oficiales de SAG
 
-Revisadas el 8 de octubre de 2026. La lista utilizada por el selector y la tabla está en `src/data/sag-references.ts`: 27 entradas, con fabricante, componente, resorte, versión o revisión de guía, rango y enlace oficial.
+Revisadas el 8 de octubre de 2026. La lista utilizada por el selector y la tabla está en `src/data/sag-references.ts`: 53 entradas, con fabricante, componente, resorte, versión o revisión de guía, rango y enlace oficial.
+
+Ampliación moderna: FOX 34SL/36SL, 38, Podium, FLOAT SL/X/X2 y DHX/DHX2 (2026); Öhlins RXF36 m.3 y RXF38 m.2, aire y muelle separados; Manitou Mezzer Pro/LT Pro/Expert Gen 2 y Mara Pro PB Gen 2; DVO Topaz Prime/Pro guía 2.1. También se incorporaron las familias de horquilla de la guía Fork Set-Up de DVO y Mezzer Pro de primera generación, con alcance explícito.
+
+Los rangos aproximados Öhlins son 10–15 % en aire y 15–20 % en muelle para estos manuales. Mezzer Gen 2 usa 20–25 %. Mara Pro PB Gen 2 prioriza el cuadro y ofrece 25–30 % si no existe su recomendación. DVO Topaz Prime/Pro usa 20–30 %; la guía de horquillas citada usa 15–20 %, sin extrapolar a nuevos modelos Core/36/38.
 
 - FOX: 36/38 (2024); 32/34, 36/38 y 40 FLOAT (2025): 15–20 % del recorrido. DPS/DPX2 (2018), FLOAT, FLOAT SL y FLOAT X (2025): 25–30 % de carrera. FLOAT X2, DHX y DHX2 (2025): aproximadamente 30 %.
 - Marzocchi: Bomber Z2 Rev. A y Z1/Z1 Coil Rev. B: 15–20 %. Bomber Air 2022 Rev. A: 25–30 %. Bomber CR Rev. A: 30 %. PDFs enlazados desde su biblioteca oficial.

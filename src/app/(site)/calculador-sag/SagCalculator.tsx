@@ -38,7 +38,7 @@ function Suspension({ rear = false }: { rear?: boolean }) {
       <label className={styles.field} htmlFor={`${id}-brand`}>Marca de {rear ? "amortiguador" : "horquilla"}
         <select id={`${id}-brand`} value={brand} onChange={event => { setBrand(event.target.value); setModel("unknown"); setTarget(null); }}>
           <option value="unknown">No sé qué marca tengo</option>
-          {["FOX", "RockShox", "SR Suntour", "Marzocchi", "Öhlins", "Otra"].map(name => <option key={name}>{name}</option>)}
+          {[...new Set(sagReferences.map(item => item.brand)), "Otra"].map(name => <option key={name}>{name}</option>)}
         </select>
       </label>
       {models.length > 0 && <label className={styles.field} htmlFor={`${id}-model`}>Modelo, versión o guía de referencia
