@@ -3,7 +3,6 @@
 import { useRef, useState } from "react";
 import Image from "next/image";
 import { SagCalculator, SagSetup } from "./SagCalculator";
-import { cyclingDisciplines } from "@/data/cycling-disciplines";
 import styles from "./sag.module.css";
 
 const steps = ["Prepara", "Mide el SAG", "Ajusta el rebote"];
@@ -27,14 +26,13 @@ export function SuspensionGuide() {
   const [sensation, setSensation] = useState<number | null>(null);
   const [saved, setSaved] = useState(false);
   const [bike, setBike] = useState("hardtail");
-  const [discipline, setDiscipline] = useState("unknown");
   const [ready, setReady] = useState<boolean[]>([false, false, false]);
   const heading = useRef<HTMLHeadingElement>(null);
   const root = useRef<HTMLDivElement>(null);
   function go(next: number) { setStep(next); requestAnimationFrame(() => { heading.current?.focus(); heading.current?.scrollIntoView({ block: "start", behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" }); }); }
   function download() {
     const values = Array.from(root.current?.querySelectorAll<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>("input[id], textarea[id], select[id]") ?? []).filter(input => input.value.trim() && input.type !== "checkbox" && !(bike === "hardtail" && input.id.startsWith("shock-"))).map(input => `${root.current?.querySelector(`label[for="${input.id}"]`)?.firstChild?.textContent?.trim() || input.id}: ${input.value}`);
-    const blob = new Blob([`Mi configuración de suspensión · ${new Date().toLocaleDateString("es-CL")}\nBicicleta: ${bike === "hardtail" ? "Hardtail" : "Doble suspensión"}\nDisciplina: ${cyclingDisciplines.find(item => item.id === discipline)?.label}\n\n${values.join("\n")}\n\nObjetivos orientativos; confirma con el manual del modelo. Rebote: clics desde cerrado suavemente, siguiendo el manual. Horquilla y amortiguador se ajustan por separado.\n`], { type: "text/plain;charset=utf-8" });
+    const blob = new Blob([`Mi configuración de suspensión · ${new Date().toLocaleDateString("es-CL")}\nBicicleta: ${bike === "hardtail" ? "Hardtail" : "Doble suspensión"}\n\n${values.join("\n")}\n\nConfirma el objetivo con el manual del modelo y la recomendación de tu bicicleta. Rebote: clics desde cerrado suavemente, siguiendo el manual. Horquilla y amortiguador se ajustan por separado.\n`], { type: "text/plain;charset=utf-8" });
     const url = URL.createObjectURL(blob); const link = document.createElement("a"); link.href = url; link.download = "mi-suspension.txt"; link.click(); setTimeout(() => URL.revokeObjectURL(url), 1000); setSaved(true);
   }
   return <div ref={root} className={styles.journey}>
@@ -42,7 +40,7 @@ export function SuspensionGuide() {
     <h2 ref={heading} tabIndex={-1} className={styles.journeyTitle}>{steps[step]}</h2>
     <div hidden={step !== 0}>
       <p className={styles.lead}>Cuando te subes, tu peso hunde un poco la suspensión. Ese hundimiento se llama SAG. Aquí aprenderás a medirlo; la calculadora hace las cuentas por ti.</p>
-      <SagSetup bike={bike} discipline={discipline} setBike={setBike} setDiscipline={setDiscipline} />
+      <SagSetup bike={bike} setBike={setBike} />
       <section className={styles.preflight} aria-labelledby="sag-ready"><h3 id="sag-ready">Antes de medir: abre el bloqueo</h3><p>La suspensión debe poder moverse al subirte. Si tienes una palanca de bloqueo, ponla en <b>Open / abierto</b>, también si se maneja desde el manillar.</p><p>¿Tienes otras perillas? Anota cómo están y revisa en el manual cómo dejarlas para medir. No todas se preparan igual.</p>
         <details className={styles.details}><summary>Ejemplos oficiales: FOX y RockShox</summary><p><a href="https://tech.ridefox.com/bike/owners-manuals/2930/fork--2024-36mm-" target="_blank" rel="noopener noreferrer">FOX 36/38 (2024)</a>: compresión abierta para medir. <a href="https://docs.sram.com/en-US/publications/5ODr3E6BhL1uWDnWhq4ATB/UM%20-%20Suspension?models=fs-sid-xxwc-b2" target="_blank" rel="noopener noreferrer">RockShox: Solo Air / DebonAir / Dual Position Air</a>: la guía citada pide abrir compresión y rebote. <a href="https://www.sram.com/en/rockshox/rockshox-technology/vivid-air-setup" target="_blank" rel="noopener noreferrer">Vivid Air</a>: Threshold abierto y diales de compresión / rebote en la mitad. Confirma qué guía corresponde a tu versión.</p></details>
         {[
@@ -66,10 +64,10 @@ export function SuspensionGuide() {
         <Image src="/suspension/medicion-sag-horquilla.png" width={923} height={636} sizes="(max-width: 600px) 280px, 300px" alt="Horquilla con un anillo rojo en la barra y una regla entre el retén y el anillo para medir el SAG." />
         <figcaption><b>Este es el anillo medidor de SAG</b><p>En la foto es rojo; el tuyo puede ser de otro color. Después de bajarte sin rebotar, mide la distancia entre el retén y el anillo con la suspensión estirada. Esa distancia es tu SAG en milímetros.</p><small>La foto sirve para ubicar el anillo y la regla. Desconecta la bomba antes de subirte a medir.</small></figcaption>
       </figure><details className={styles.details}><summary>Ver el dibujo y casos especiales</summary><Diagram /><p>El dibujo muestra la distancia que debes medir con la suspensión ya estirada. Si no encuentras el anillo o no puedes acceder al tubo, consulta el método de tu modelo.</p><p>En algunos amortiguadores de muelle se mide la distancia entre sus dos anclajes, primero sin peso y después con el ciclista. La diferencia es el hundimiento. Para el porcentaje se usa la carrera del amortiguador, no el recorrido de la rueda.</p><p>Si cambiaste la presión de aire, sigue el procedimiento del manual para equilibrar sus cámaras antes de medir otra vez.</p></details></div>
-      <div className={styles.setupSummary}><span>{bike === "hardtail" ? "Hardtail · horquilla" : "Doble suspensión · horquilla y amortiguador"} · {cyclingDisciplines.find(item => item.id === discipline)?.label}</span><button type="button" onClick={() => go(0)}>Cambiar bicicleta o disciplina</button></div>
+      <div className={styles.setupSummary}><span>{bike === "hardtail" ? "Hardtail · horquilla" : "Doble suspensión · horquilla y amortiguador"}</span><button type="button" onClick={() => go(0)}>Cambiar tipo de bicicleta</button></div>
       <p className={styles.measureReminder}>¿Tienes la medida? Completa los campos de abajo. El bloqueo debe estar abierto y las demás perillas preparadas según el manual.</p>
-      <SagCalculator bike={bike} discipline={discipline} />
-      <details className={styles.details}><summary>¿Cómo corrijo el SAG?</summary><p><b>Primero valida el objetivo en el manual de la bicicleta y del componente.</b> El escenario por disciplina sirve para explorar el cálculo; no justifica por sí solo cambiar presión o precarga.</p><p><b>Aire:</b> con un objetivo confirmado, más hundimiento suele requerir más presión; menos hundimiento, menos presión. Usa una bomba de suspensión, respeta límites y temperatura de referencia y realiza la ecualización indicada. Desconecta la bomba antes de medir; al reconectarla, la manguera se llena y puede bajar la lectura sin que exista una fuga.</p><p><b>Muelle:</b> la precarga cambia la carga inicial, no la dureza del muelle. No compenses un muelle inadecuado apretando sin límite; puede hacer falta otro muelle. El límite depende del modelo: no uses un número universal de vueltas.</p><p>Si el resultado cambia mucho entre intentos, revisa posición, fricción y estado de la suspensión antes de seguir ajustando.</p></details>
+      <SagCalculator bike={bike} />
+      <details className={styles.details}><summary>¿Cómo corrijo el SAG?</summary><p><b>Usa el objetivo del manual de tu suspensión o la recomendación específica de tu bicicleta.</b> Si aún no encontraste esa referencia, puedes practicar el cálculo con el ejemplo y buscar el dato antes de ajustar.</p><p><b>Aire:</b> con un objetivo confirmado, más hundimiento suele requerir más presión; menos hundimiento, menos presión. Usa una bomba de suspensión, respeta límites y temperatura de referencia y realiza la ecualización indicada. Desconecta la bomba antes de medir; al reconectarla, la manguera se llena y puede bajar la lectura sin que exista una fuga.</p><p><b>Muelle:</b> la precarga cambia la carga inicial, no la dureza del muelle. No compenses un muelle inadecuado apretando sin límite; puede hacer falta otro muelle. El límite depende del modelo: no uses un número universal de vueltas.</p><p>Si el resultado cambia mucho entre intentos, revisa posición, fricción y estado de la suspensión antes de seguir ajustando.</p></details>
       <button type="button" className="tp-btn" onClick={() => go(2)}>Seguir con el rebote →</button>
     </div>
     <div hidden={step !== 2}>

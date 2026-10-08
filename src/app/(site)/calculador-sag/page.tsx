@@ -3,6 +3,7 @@ import { PageHero } from "@/components/PageHero";
 import { siteUrl } from "@/lib/site-url";
 import { SuspensionGuide } from "./SuspensionGuide";
 import styles from "./sag.module.css";
+import { sagReferences } from "@/data/sag-references";
 
 export const metadata: Metadata = {
   title: "Ajusta tu suspensión: SAG y rebote",
@@ -30,28 +31,26 @@ export default function SagPage() {
       </section>
       <section className={styles.guide} aria-labelledby="sag-reference">
         <span className="tp-kicker">Referencias oficiales</span><h2 id="sag-reference" className="tp-display">El objetivo depende de tu suspensión</h2>
-        <p>Consulta primero el manual de tu modelo. La disciplina sirve como referencia inicial, pero no define un objetivo universal.</p>
-        <details className={styles.details}><summary>Ver rangos por modelo y disciplina</summary>
+        <p>Consulta el manual de tu suspensión y la recomendación de tu bicicleta. El uso y tus preferencias ayudan a afinar después ese punto de partida.</p>
+        <details className={styles.details}><summary>Ver referencias por modelo y versión</summary>
         <div className={styles.tableWrap}><table><caption>Rangos de referencia y su alcance</caption><thead><tr><th scope="col">Fabricante / aplicación</th><th scope="col">SAG</th><th scope="col">Alcance</th></tr></thead><tbody>
-          <tr><td>FOX 36 / 38 (2024)</td><td>15–20 %</td><td>Horquilla; rango propio de esos modelos</td></tr>
-          <tr><td>FOX FLOAT DPS / DPX2 (2018)</td><td>25–30 %</td><td>Amortiguador; porcentaje de su carrera</td></tr>
-          <tr><td>SIMPLON: XC / maratón</td><td>20–25 %</td><td>Referencia general por disciplina</td></tr>
-          <tr><td>SIMPLON: all mountain / trail</td><td>25–30 %</td><td>Referencia general por disciplina</td></tr>
-          <tr><td>SIMPLON: enduro</td><td>25–35 %</td><td>Referencia general por disciplina</td></tr>
-          <tr><td>SIMPLON: freeride / downhill</td><td>30–40 %</td><td>Referencia general por disciplina</td></tr>
+          {sagReferences.map(item => <tr key={`${item.brand}-${item.label}`}><td><a href={item.url} target="_blank" rel="noopener noreferrer">{item.brand} {item.label}</a></td><td>{item.range ? item.range[0] === item.range[1] ? `${item.range[0]} %` : `${item.range[0]}–${item.range[1]} %` : "Usa presión / TrailHead"}</td><td>{item.rear ? "Amortiguador; % de carrera" : "Horquilla; % de recorrido"}. {item.spring === "coil" ? "Muelle" : "Aire"}.</td></tr>)}
         </tbody></table></div>
-        <p>Los rangos generales de SIMPLON no distinguen horquilla y amortiguador: no sustituyen sus objetivos específicos. El punto medio automático solo ilustra el cálculo. Una doble suspensión requiere dos mediciones y referencias independientes.</p>
+        <p>Cada referencia corresponde a la versión indicada. En rangos usamos el punto medio como propuesta editable; los valores únicos son puntos de partida del fabricante. Para DebonAir+ de horquilla, sigue su método de presión. Una doble suspensión requiere dos mediciones independientes.</p>
         </details>
         <details className={styles.details}><summary>Fuentes y límites del cálculo</summary>
         <ul>
           <li><a href="https://tech.ridefox.com/bike/owners-manuals/2930/fork--2024-36mm-" target="_blank" rel="noopener noreferrer">FOX: manual de horquillas 36 / 38 de 2024</a></li>
           <li><a href="https://tech.ridefox.com/bike/owners-manuals/824/ownersmanuals" target="_blank" rel="noopener noreferrer">FOX: manual FLOAT DPS / DPX2 de 2018</a></li>
-          <li><a href="https://www.simplon.com/en/About-us/Magazine/How-to-adjust-your-MTB-s-suspension_bba_10490" target="_blank" rel="noopener noreferrer">SIMPLON: guía de ajuste por disciplina (2025)</a></li>
+          <li><a href="https://tech.ridefox.com/bike/list/owners-manuals" target="_blank" rel="noopener noreferrer">FOX: buscador oficial de manuales por año</a></li>
+          <li><a href="https://bike.marzocchi.com/pages/product-service-manuals" target="_blank" rel="noopener noreferrer">Marzocchi: guías de ajuste y manuales</a></li>
+          <li><a href="https://trailhead.rockshox.com/" target="_blank" rel="noopener noreferrer">RockShox TrailHead: busca por número de serie</a></li>
+          <li><a href="https://www.srsuntour.com/support/product-support/owners-manuals/" target="_blank" rel="noopener noreferrer">SR Suntour: biblioteca de manuales</a></li>
           <li><a href="https://www.sram.com/en/rockshox/rockshox-technology/vivid-air-setup" target="_blank" rel="noopener noreferrer">RockShox: preparación y ecualización específica de Vivid Air</a></li>
           <li><a href="https://www.sram.com/en/rockshox/learn/suspension-fine-tuning" target="_blank" rel="noopener noreferrer">RockShox: rebote, compresión y ajuste fino</a></li>
           <li><a href="https://tech.ridefox.com/bike/owners-manuals/1146/shock--2022-all-coil-shocks-%28dhx2-and-dhx-models%29" target="_blank" rel="noopener noreferrer">FOX DHX / DHX2 (2022): medición entre ejes y límites de precarga</a></li>
         </ul>
-        <p>Fuentes consultadas el 7 de octubre de 2026. La conversión matemática usa tus datos; la elección del objetivo y la medición son aproximadas. La posición, fricción y geometría influyen. El porcentaje trasero corresponde al amortiguador: no predice el desplazamiento de rueda, cuya relación puede variar durante el recorrido.</p>
+        <p>Fuentes consultadas el 8 de octubre de 2026. La conversión matemática usa tus datos. La posición, fricción y geometría influyen en la medición. El porcentaje trasero corresponde al amortiguador: no predice el desplazamiento de rueda, cuya relación puede variar durante el recorrido.</p>
         <p>La calculadora no determina presión de aire a partir del peso ni un número universal de clics de rebote o compresión. Para presión inicial necesitas la tabla del modelo, año y fabricante; el peso por sí solo no basta.</p>
         </details>
       </section></div></details>

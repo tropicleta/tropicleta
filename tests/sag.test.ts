@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import { calculateSag, parseSagInput, suggestSag } from "../src/lib/sag";
+import { findSagReference, sagReferences } from "../src/data/sag-references";
 
 assert.deepEqual(calculateSag(140, 20, 28), { targetMm: 28, measuredPercent: 20, differenceMm: 0 });
 assert.deepEqual(calculateSag(55, 30, 16.5), { targetMm: 16.5, measuredPercent: 30, differenceMm: 0 });
@@ -13,11 +14,23 @@ assert.equal(parseSagInput("16,5"), 16.5);
 assert.ok(Number.isNaN(parseSagInput(" ")));
 assert.ok(Number.isNaN(parseSagInput("abc")));
 console.log("SAG: conversiones y validación correctas.");
-assert.equal(suggestSag("xc", false, false).value, 22.5);
-assert.equal(suggestSag("trail", true, false).value, 27.5);
-assert.equal(suggestSag("enduro", false, false).value, 30);
-assert.equal(suggestSag("dh", false, true).value, 17.5);
-assert.equal(suggestSag("xc", true, true).value, 27.5);
-assert.equal(suggestSag("unknown", false, false).value, 20);
-assert.equal(suggestSag("xc", false, false).verified, false);
-assert.equal(suggestSag("xc", false, true).verified, true);
+assert.equal(suggestSag("xc", false).value, 22.5);
+assert.equal(suggestSag("trail", true).value, 27.5);
+assert.equal(suggestSag("enduro", false).value, 30);
+assert.equal(suggestSag("dh", false, findSagReference("FOX", "36 · 2024", false, "air")).value, 17.5);
+assert.equal(suggestSag("xc", true, findSagReference("FOX", "FLOAT DPS · 2018", true, "air")).value, 27.5);
+assert.equal(suggestSag("unknown", false).value, 20);
+assert.equal(suggestSag("xc", false).verified, false);
+assert.equal(suggestSag("xc", false, findSagReference("FOX", "36 · 2024", false, "air")).verified, true);
+assert.equal(findSagReference("FOX", "36 · 2024", false, "coil"), undefined);
+assert.equal(findSagReference("FOX", "FLOAT X2 · 2025", false, "air"), undefined);
+assert.equal(suggestSag("xc", true, findSagReference("FOX", "FLOAT X2 · 2025", true, "air")).value, 30);
+assert.equal(suggestSag("xc", false, findSagReference("SR Suntour", "DUROLUX38 EQ · guía 2022", false, "air")).value, 30);
+assert.equal(suggestSag("dh", false, findSagReference("RockShox", "ZEB · DebonAir+", false, "air")).verified, false);
+assert.equal(suggestSag("dh", false, findSagReference("RockShox", "ZEB · DebonAir+", false, "air")).range, null);
+for (const item of sagReferences) {
+  assert.ok(item.url.startsWith("https://"));
+  if (item.range) assert.ok(item.range[0] > 0 && item.range[0] <= item.range[1] && item.range[1] < 100);
+}
+assert.equal(new Set(sagReferences.map(item => `${item.brand}:${item.label}:${item.rear}`)).size, sagReferences.length);
+console.log(`${sagReferences.length} referencias oficiales: alcance y objetivos OK.`);

@@ -12,12 +12,8 @@ try {
   await page.goto(`${process.env.SAG_TEST_ORIGIN || "http://localhost:3012"}/calculador-sag/`, { waitUntil: "networkidle0" });
   assert.equal(await page.$$eval('input[type="radio"]', nodes => nodes.length), 2);
   assert.ok(await page.evaluate(() => document.body.textContent.includes("Antes de medir: abre el bloqueo")));
-  await page.select("#sag-discipline", "xc");
-  assert.equal(await page.$eval("#fork-target", node => node.value), "22.5");
-  await page.select("#sag-discipline", "enduro");
-  assert.ok(await page.$eval("#sag-discipline", node => node.value === "enduro"));
-  assert.ok(await page.evaluate(() => document.body.textContent.includes("25–35 %")));
-  assert.equal(await page.$eval("#fork-target", node => node.value), "30");
+  assert.equal(await page.$("#sag-discipline"), null);
+  assert.equal(await page.$eval("#fork-target", node => node.value), "20");
   await page.click('input[value="full"]');
   await page.evaluate(() => { document.querySelectorAll("nav button").forEach(button => { if (button.textContent.includes("Mide el SAG")) button.click(); }); document.querySelectorAll("details").forEach(node => node.open = true); });
   assert.equal(await page.evaluate(() => document.body.textContent.includes("Pedir ayuda al taller")), false);
@@ -39,9 +35,8 @@ try {
   await page.evaluate(() => { document.querySelectorAll("nav button").forEach(button => { if (button.textContent.includes("Mide el SAG")) button.click(); }); });
   assert.equal(await page.$eval("#fork-length", node => node.value), "140");
   await page.evaluate(() => { document.querySelectorAll("nav button").forEach(button => { if (button.textContent.includes("Prepara")) button.click(); }); });
-  await page.select("#sag-discipline", "trail");
   assert.equal(await page.$eval("#fork-target", node => node.value), "20");
-  assert.equal(await page.$eval("#shock-target", node => node.value), "27.5");
+  assert.equal(await page.$eval("#shock-target", node => node.value), "30");
   await page.evaluate(() => { document.querySelectorAll("nav button").forEach(button => { if (button.textContent.includes("Mide el SAG")) button.click(); }); });
   for (const width of [1440, 390]) {
     await page.setViewport({ width, height: 900 });
@@ -62,6 +57,21 @@ try {
   await page.select("#fork-spring", "coil");
   assert.equal(await page.$("#fork-model"), null);
   assert.ok(await page.$eval("#fork-result", node => node.textContent.includes("La precarga no cambia la dureza del muelle")));
+  await page.select("#shock-brand", "FOX");
+  await page.select("#shock-model", "FLOAT X · 2025");
+  assert.equal(await page.$eval("#shock-target", node => node.value), "27.5");
+  await page.select("#shock-model", "FLOAT X2 · 2025");
+  assert.equal(await page.$eval("#shock-target", node => node.value), "30");
+  await page.select("#fork-spring", "air");
+  await page.select("#fork-brand", "Marzocchi");
+  await page.select("#fork-model", "Bomber Z2 · guía Rev. A");
+  assert.equal(await page.$eval("#fork-target", node => node.value), "17.5");
+  await page.select("#fork-brand", "RockShox");
+  await page.select("#fork-model", "ZEB · DebonAir+");
+  assert.ok(await page.$eval("#fork-suggestion", node => node.textContent.includes("no objetivo del manual")));
+  await page.select("#fork-brand", "SR Suntour");
+  await page.select("#fork-model", "DUROLUX38 EQ · guía 2022");
+  assert.equal(await page.$eval("#fork-target", node => node.value), "30");
   assert.deepEqual(errors, []);
   console.log("SAG: selección, cálculo, decimales y distribución móvil/escritorio OK.");
 } finally { await browser.close(); }
