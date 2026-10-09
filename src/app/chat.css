@@ -263,7 +263,7 @@
 .tp-chat-launcher .tp-tropi { transition:transform .3s; }
 .tp-chat-whatsapp { background:#128c4a; border-color:#25d366; color:#fff; padding:0; }
 .tp-chat-whatsapp:hover { background:#107b41; transform:translateY(-2px); }
-.tp-chat-launcher .tp-chat-teaser { text-decoration:none; }
+.tp-chat-launcher .tp-chat-teaser { display:none; }
 @media (max-width: 639px) {
   .tp-chat-launcher .tp-chat-teaser { display:none; }
   .tp-chat-launcher .tp-chat-fab { width:44px; height:44px; }

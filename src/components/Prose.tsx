@@ -1,6 +1,11 @@
 /** Renderiza texto simple: párrafos separados por línea en blanco, "## " = subtítulo, "- " = lista. */
 export function Prose({ text }: { text: string }) {
-  const blocks = text.trim().split(/\n\s*\n/);
+  const blocks = text.trim().split(/\n\s*\n/).flatMap(block => {
+    const lines = block.split("\n");
+    return lines[0].startsWith("## ") && lines.length > 1
+      ? [lines[0], lines.slice(1).join("\n")]
+      : [block];
+  });
   return (
     <div className="tp-prose">
       {blocks.map((b, i) => {

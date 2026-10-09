@@ -219,3 +219,15 @@
 .tp-shop-catalog-cards .tp-shop-section[aria-current="page"] { border-color:var(--tp-orange); box-shadow:none; color:#fff; }
 .tp-shop-catalog-cards .tp-shop-section[aria-current="page"] small { color:#ddd; }
 @media(prefers-reduced-motion:reduce) { .tp-shop-showcase .tp-shop-section { transition:none; } }
+
+/* Lectura completa del catálogo y controles cómodos en pantallas pequeñas. */
+.tp-product-card:not(.tp-recommendation-card) { display:flex; flex-direction:column; }
+.tp-product-card:not(.tp-recommendation-card) .tp-product-body { display:flex; flex-direction:column; flex:1; gap:10px; }
+.tp-product-card:not(.tp-recommendation-card) .tp-product-name { display:block; min-height:2.8em; -webkit-line-clamp:unset; overflow:visible; line-height:1.4; overflow-wrap:anywhere; }
+.tp-product-card:not(.tp-recommendation-card) .tp-product-price { margin-top:auto; }
+.tp-recommendation-card .tp-product-name { min-height:4.2em; line-height:1.4; -webkit-line-clamp:3; }
+.tp-cart-line .tp-qty button, .tp-qty button { width:44px; height:44px; }
+@media(max-width:600px) {
+  .tp-page-hero:not(.tp-services-hero) h1 { font-size:clamp(30px,7.5vw,40px); line-height:1.12; }
+  .tp-shop-toolbar { gap:12px; }
+}

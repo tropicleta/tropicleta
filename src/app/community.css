@@ -345,7 +345,8 @@
 .tp-instagram-gallery .tp-workshop-caption h3 { font-family:var(--font-body); font-size:17px; line-height:1.4; margin:0 0 8px; overflow-wrap:anywhere; }
 .tp-instagram-gallery .tp-workshop-caption p { line-height:1.6; }
 .tp-instagram-gallery .tp-instagram-post-link { margin-bottom:10px; line-height:1.5; }
-@media(min-width:640px) { .tp-instagram-gallery .tp-workshop-caption h3 { min-height:2.8em; } .tp-instagram-gallery .tp-workshop-caption p { min-height:4.8em; } }
+@media(min-width:640px) { .tp-instagram-gallery .tp-workshop-caption h3 { min-height:0; } .tp-instagram-gallery .tp-workshop-caption p { min-height:0; } }
+@media(max-width:480px) { .tp-events-page .tp-feature-grid { grid-template-columns:1fr; } }
 
 /* Navegación principal corta y páginas complementarias bajo Más. */
 .tp-nav-more { position:relative; }

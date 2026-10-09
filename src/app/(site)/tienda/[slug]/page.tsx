@@ -74,7 +74,7 @@ export default async function ProductoPage({ params }: Props) {
             </div>
             <p style={{ marginBottom: 20 }}>
               {p.stock > 0 ? (
-                <span className="tp-badge tp-badge-green">{p.stock <= 3 ? `Últimas ${p.stock} unidades` : "Disponible"}</span>
+                <span className="tp-badge tp-badge-green">{p.stock === 1 ? "Última unidad" : p.stock <= 3 ? `Últimas ${p.stock} unidades` : "Disponible"}</span>
               ) : (
                 <span className="tp-badge tp-badge-red">Agotado</span>
               )}
