@@ -119,7 +119,7 @@ export function AnimatedEmblem() {
 
         <div className="tp-emblem-mascot">
           <div className="tp-emblem-mascot-idle">
-            <Image src="/brand/mascota-actualizada.webp" alt="" fill sizes="(max-width: 719px) 170px, (max-width: 979px) 220px, 270px" preload />
+            <Image unoptimized src="/brand/mascota-nitida.webp" alt="" fill sizes="(max-width: 719px) 170px, (max-width: 979px) 220px, 270px" preload />
             <svg className="tp-emblem-eyes" viewBox="0 0 1024 1024">
               <defs>
                 {EYES.map((e) => (
