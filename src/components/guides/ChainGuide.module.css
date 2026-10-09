@@ -16,6 +16,7 @@
 .chainPhoto img { display:block; width:100%; height:auto; background:white }
 .chainPhoto figcaption { padding:16px }
 .chainPhoto strong { color:#ff9393 }
+.chainPhoto strong.correct { color:#92dec7 }
 .chainPhoto ol { padding-left:22px; line-height:1.7 }
 .chainPhoto li + li { margin-top:8px }
 .chainPhoto a { color:var(--tp-orange); text-underline-offset:3px }
