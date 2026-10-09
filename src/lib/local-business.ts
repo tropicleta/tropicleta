@@ -9,7 +9,7 @@ export function localBusinessJsonLd() {
     name: site.name,
     description: "Taller de bicicletas en Tierra Amarilla, con retiro y entrega en Copiapó y Paipote y asistencia mecánica para eventos en Atacama.",
     url: siteUrl("/"),
-    logo: siteUrl("/brand/logo-buscador-oscuro.png"),
+    logo: siteUrl("/brand/mascota-nitida.webp"),
     image: siteUrl("/taller/equipo-tropicleta.jpeg"),
     telephone: "+" + site.whatsappNumber,
     sameAs: site.socials.map(s => s.href),

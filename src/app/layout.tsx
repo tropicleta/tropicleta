@@ -32,8 +32,8 @@ export const metadata: Metadata = {
   },
   description:
     "Servicio técnico de bicicletas con atención coordinada en Tierra Amarilla, cerca de Paipote y Copiapó. Mantenciones, ajustes y servicios especializados.",
-  openGraph: { type: "website", locale: "es_CL", siteName: "Tropicleta", images: [{ url: "/brand/logo-buscador-oscuro.png", width: 512, height: 512, alt: "Tropicleta · Taller de bicicletas" }] },
-  twitter: { card: "summary", images: ["/brand/logo-buscador-oscuro.png"] },
+  openGraph: { type: "website", locale: "es_CL", siteName: "Tropicleta", images: [{ url: "/brand/mascota-nitida.webp", width: 1254, height: 1254, alt: "Tropicleta · Taller de bicicletas" }] },
+  twitter: { card: "summary", images: ["/brand/mascota-nitida.webp"] },
 };
 
 export const viewport: Viewport = { themeColor: "#0d0e0f" };
