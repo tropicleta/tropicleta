@@ -3,7 +3,7 @@ import Link from "next/link";
 export function ShopSections({ current, showcase = true, recommendationPreview }: { current?: "tienda" | "recomendados"; showcase?: boolean; recommendationPreview?: { image: string; name: string } }) {
   if (current) return <nav className="tp-shop-sections tp-shop-showcase tp-shop-catalog-cards" aria-label="Dónde comprar">
     <Link className="tp-shop-section tp-shop-direct" href="/tienda/" aria-current={current === "tienda" ? "page" : undefined}>
-      <span className="tp-shop-brand-visual"><img src="/brand/mascota-actualizada.webp" alt="Tropicleta" width="64" height="64" /></span>
+      <span className="tp-shop-brand-visual"><img src="/brand/wordmark-stacked.webp" alt="Tropicleta" width="700" height="473" /></span>
       <span><strong>Tienda Tropicleta</strong><small>Compra directamente en el taller</small></span>
       <span className="tp-shop-section-arrow" aria-hidden="true">→</span>
     </Link>
@@ -15,7 +15,7 @@ export function ShopSections({ current, showcase = true, recommendationPreview }
   </nav>;
   return <nav className={`tp-shop-sections tp-shop-showcase${current ? " tp-shop-catalog-cards" : ""}`} aria-label="Dónde comprar">
     <Link className="tp-shop-section tp-shop-direct" href="/tienda/" aria-current={current === "tienda" ? "page" : undefined}>
-      {showcase ? <span className="tp-shop-brand-visual"><img src="/brand/mascota-actualizada.webp" alt="Tropicleta" width="64" height="64" /><img className="tp-shop-product-preview" src="/productos/racelub-clean-80ml-frente.png" alt="Lubricante disponible en el taller" width="90" height="100" loading="lazy" /></span> : <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true"><path d="M5 7h14l1 14H4L5 7Z"/><path d="M8 8V6a4 4 0 0 1 8 0v2"/></svg>}
+      {showcase ? <span className="tp-shop-brand-visual"><img src="/brand/wordmark-stacked.webp" alt="Tropicleta" width="700" height="473" /><img className="tp-shop-product-preview" src="/productos/racelub-clean-80ml-frente.png" alt="Lubricante disponible en el taller" width="90" height="100" loading="lazy" /></span> : <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true"><path d="M5 7h14l1 14H4L5 7Z"/><path d="M8 8V6a4 4 0 0 1 8 0v2"/></svg>}
       <span>{showcase && <span className="tp-shop-eyebrow">Tienda Tropicleta</span>}<strong>{showcase ? "Repuestos y cuidados del taller" : "Tienda Tropicleta"}</strong><small>{showcase ? "Productos disponibles en nuestro taller para cuidar tu bici." : "Compra aquí · Añade productos a tu carrito"}</small>{showcase && <span className="tp-shop-cta">Comprar en Tropicleta <span aria-hidden="true">→</span></span>}</span>
       <span className="tp-shop-section-arrow" aria-hidden="true">→</span>
     </Link>

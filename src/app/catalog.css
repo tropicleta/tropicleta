@@ -202,20 +202,20 @@
 .tp-shop-catalog-nav .tp-shop-section[aria-current="page"] > svg { color:var(--tp-orange); }
 
 .tp-shop-catalog-cards { margin-bottom:24px; gap:12px; }
-.tp-shop-catalog-cards .tp-shop-section { grid-template-columns:76px minmax(0,1fr) auto; gap:16px; padding:16px 18px; }
+.tp-shop-catalog-cards .tp-shop-section { grid-template-columns:76px minmax(0,1fr) 20px; gap:16px; padding:16px 18px; min-height:96px; box-sizing:border-box; border-width:2px; }
 .tp-shop-catalog-cards .tp-shop-section > .tp-shop-brand-visual { width:76px; }
 .tp-shop-catalog-cards .tp-shop-market-logo { width:100%; box-sizing:border-box; }
-.tp-shop-catalog-cards .tp-shop-brand-visual > img:first-child { width:54px; height:54px; }
+.tp-shop-catalog-cards .tp-shop-brand-visual > img:first-child { width:76px; height:52px; }
 .tp-shop-catalog-cards .tp-shop-section > span:not(.tp-shop-brand-visual):not(.tp-shop-section-arrow) { gap:4px; align-self:center; }
 .tp-shop-catalog-cards .tp-shop-section strong { font-size:18px; line-height:1.4; }
 .tp-shop-catalog-cards .tp-shop-section small { font-size:13px; line-height:1.5; }
 .tp-shop-catalog-cards .tp-shop-section-arrow { display:block; font-size:20px; }
 @media(max-width:700px) {
   .tp-shop-catalog-cards { gap:10px; margin-bottom:20px; }
-  .tp-shop-catalog-cards .tp-shop-section { grid-template-columns:64px minmax(0,1fr) auto; gap:12px; padding:14px; }
+  .tp-shop-catalog-cards .tp-shop-section { grid-template-columns:64px minmax(0,1fr) 20px; gap:12px; padding:12px; }
   .tp-shop-catalog-cards .tp-shop-section > .tp-shop-brand-visual { width:64px; }
   .tp-shop-catalog-cards .tp-shop-section strong { font-size:17px; }
 }
-.tp-shop-catalog-cards .tp-shop-section[aria-current="page"] { border-color:var(--tp-orange); box-shadow:inset 0 0 0 1px var(--tp-orange); color:#fff; }
+.tp-shop-catalog-cards .tp-shop-section[aria-current="page"] { border-color:var(--tp-orange); box-shadow:none; color:#fff; }
 .tp-shop-catalog-cards .tp-shop-section[aria-current="page"] small { color:#ddd; }
 @media(prefers-reduced-motion:reduce) { .tp-shop-showcase .tp-shop-section { transition:none; } }
