@@ -12,6 +12,13 @@
 .diagrams figure:first-child strong { color:#78d6be }
 .diagrams figure:last-child strong { color:#ff9393 }
 .small { font-size:13px }
+.chainPhoto { margin:20px 0; border:1px solid var(--tp-border); border-radius:10px; overflow:hidden }
+.chainPhoto img { display:block; width:100%; height:auto; background:white }
+.chainPhoto figcaption { padding:16px }
+.chainPhoto strong { color:#ff9393 }
+.chainPhoto ol { padding-left:22px; line-height:1.7 }
+.chainPhoto li + li { margin-top:8px }
+.chainPhoto a { color:var(--tp-orange); text-underline-offset:3px }
 .single { padding:20px; background:#162b26; border:1px solid #316e60; border-radius:10px; margin-bottom:24px }
 .single strong { color:#92dec7 }
 .situations { display:flex; flex-wrap:wrap; gap:10px }
