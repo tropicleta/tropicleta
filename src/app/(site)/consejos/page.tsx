@@ -46,7 +46,7 @@ export default function ConsejosPage() {
               </span>
               <h2 className="tp-display">{p.title}</h2>
               <p>{p.excerpt}</p>
-              <span className="tp-service-link" style={{ marginTop: 6 }}>
+              <span className="tp-service-link">
                 Leer →
               </span>
               </div>

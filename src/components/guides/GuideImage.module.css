@@ -1,6 +1,9 @@
 .image { width:144px; height:100px; object-fit:contain; display:block; background:#111a1e; border:1px solid var(--tp-border); border-radius:8px }
-.card[class] { grid-template-columns:116px minmax(0,1fr); gap:18px; padding:22px; align-items:start; overflow:hidden }
-.card .image { width:116px; height:90px }
-.body { display:grid; gap:10px; padding:0; min-width:0; align-content:start }
-.card h2 { font-size:23px }
-@media(max-width:600px) { .card[class] { grid-template-columns:88px minmax(0,1fr); gap:14px; padding:16px } .card .image { width:88px; height:72px } .card h2 { font-size:21px } }
+.card[class] { grid-template-columns:116px minmax(0,1fr); grid-template-rows:1fr; gap:18px; padding:22px; align-items:stretch; min-height:252px; overflow:hidden }
+.card .image { width:116px; height:90px; align-self:start }
+.body { display:grid; grid-template-rows:minmax(36px,auto) minmax(54px,auto) 1fr auto; gap:10px; padding:0; min-width:0; height:100%; align-content:stretch }
+.card[class] h2 { font-size:22px; line-height:1.2; overflow-wrap:break-word; text-wrap:balance }
+.body > span:first-child { line-height:1.5; align-self:start }
+.body > p { line-height:1.6 }
+.body > span:last-child { align-self:end; margin-top:0; padding-top:4px }
+@media(max-width:600px) { .card[class] { grid-template-columns:88px minmax(0,1fr); gap:14px; padding:16px; min-height:0 } .card .image { width:88px; height:72px } .card[class] h2 { font-size:20px } .body { grid-template-rows:auto auto 1fr auto } }
