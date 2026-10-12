@@ -360,3 +360,16 @@
 .tp-mobile-nav .tp-nav-more { width:100%; }
 .tp-mobile-nav .tp-nav-more summary { padding:14px 12px; }
 .tp-mobile-nav .tp-nav-more-links { position:static; box-shadow:none; margin:0 0 8px; min-width:0; }
+
+/* Portada móvil: marca y producto arriba; texto con todo el ancho debajo. */
+@media(max-width:700px) {
+  .tp-home-hub-shops .tp-shop-section { grid-template-columns:minmax(0,1fr); padding:20px; gap:16px; }
+  .tp-home-hub-shops .tp-shop-section > .tp-shop-brand-visual { display:flex; width:100%; min-width:0; align-items:center; justify-content:space-between; gap:20px; }
+  .tp-home-hub-shops .tp-shop-brand-visual > img:first-child { width:92px; height:56px; }
+  .tp-home-hub-shops .tp-shop-market-logo { width:104px; height:44px; box-sizing:border-box; flex-shrink:0; }
+  .tp-home-hub-shops .tp-shop-brand-visual .tp-shop-product-preview { width:60px; height:64px; flex-shrink:0; }
+  .tp-home-hub-shops .tp-shop-section > .tp-shop-copy { gap:10px; }
+  .tp-home-hub-shops .tp-shop-section strong { font-size:22px; line-height:1.3; letter-spacing:0; word-spacing:normal; }
+  .tp-home-hub-shops .tp-shop-section small { font-size:14px; line-height:1.6; }
+  .tp-home-hub-shops .tp-shop-cta { width:100%; justify-content:space-between; margin-top:4px; padding-top:12px; border-top:1px solid #ffffff20; }
+}
