@@ -13,8 +13,9 @@ export function Footer() {
       </div>
       <div className="tp-footer-contact">
 
-        <a href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(site.address + ", Atacama, Chile")}`} target="_blank" rel="noopener">{site.address} ↗</a>
+        <a href="https://www.google.com/maps?cid=16614543370593599727" target="_blank" rel="noopener">{site.address} ↗</a>
         <span>Atención con coordinación previa</span>
+        <a href={`tel:+${site.whatsappNumber}`}>{site.whatsappDisplay}</a>
         <a href={`mailto:${site.email}`}>{site.email}</a>
       </div>
       <nav className="tp-footer-navigation" aria-label="Enlaces del pie de página">

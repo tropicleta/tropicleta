@@ -34,12 +34,12 @@ export default async function HomePage() {
               </div></div>
 
               <h1 id="tp-main-title" className="tp-display">
-                Tu próxima ruta <span>empieza en el taller.</span>
+                Taller de bicicletas <span>en Tierra Amarilla.</span>
               </h1>
 
               <p className="tp-hero-copy">
-                Mantención, frenos, transmisión, suspensión y ruedas en Tierra Amarilla.
-                Cotiza los trabajos que necesitas y coordina tu atención.
+                Mantención y reparación de bicicletas: frenos, transmisión, suspensión y ruedas.
+                Atendemos en Carlos Condell 105, con retiro y entrega en Copiapó y Paipote, previa coordinación.
               </p>
 
               <div className="tp-actions">
@@ -56,6 +56,24 @@ export default async function HomePage() {
       </section>
 
       <WorkshopGallery />
+
+      <section className="tp-section" aria-labelledby="taller-local">
+        <div className="tp-shell tp-two-col">
+          <div>
+            <span className="tp-kicker">Servicio técnico en Atacama</span>
+            <h2 id="taller-local" className="tp-display tp-category-heading">Mantención y reparación para tu próxima ruta</h2>
+            <p className="tp-section-intro">¿Tu bicicleta necesita un ajuste de cambios, revisión de frenos o mantención completa? En Tropicleta revisamos tu bici y te entregamos un presupuesto antes de realizar el trabajo. El diagnóstico es gratuito y la mano de obra tiene 2 semanas de garantía.</p>
+            <p>Consulta los servicios disponibles, selecciona lo que necesitas y coordina la atención. Los repuestos y los trabajos adicionales se cotizan aparte.</p>
+            <div className="tp-actions"><Link className="tp-btn tp-btn-primary" href="/servicios/">Ver servicios de reparación y cotizar</Link></div>
+          </div>
+          <div className="tp-panel">
+            <h2 className="tp-display tp-category-heading">¿Buscas taller de bicicletas en Copiapó o Paipote?</h2>
+            <p>Nuestro taller está en {site.address}, Región de Atacama. Si estás en Copiapó o Paipote, puedes solicitar retiro y entrega de tu bicicleta en sectores definidos. Confirma disponibilidad y costo según tu ubicación antes de coordinar.</p>
+            <p>La atención del taller es con coordinación previa. Escríbenos al <a href={`tel:+${site.whatsappNumber}`}>{site.whatsappDisplay}</a> para consultar por tu bicicleta.</p>
+            <Link className="tp-btn tp-btn-secondary" href="/contacto/">Cómo llegar al taller y consultar por retiro</Link>
+          </div>
+        </div>
+      </section>
 
       <section className="tp-section tp-mobile-summary tp-home-hub" aria-label="Taller móvil, tienda y recomendados">
         <div className="tp-shell tp-home-hub-grid">

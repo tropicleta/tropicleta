@@ -12,6 +12,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     changeFrequency: "weekly" as const,
     priority: p === "/" ? 1 : 0.8,
   }));
+  const articles = posts.map((p) => ({ url: siteUrl(`/consejos/${p.slug}/`), lastModified: p.date, priority: 0.5 }));
   try {
     const [services, products] = await Promise.all([
       db.select({ slug: schema.services.slug }).from(schema.services).where(eq(schema.services.active, true)),
@@ -21,9 +22,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       ...staticPages,
       ...services.map((s) => ({ url: siteUrl(`/servicios/${s.slug}/`), priority: 0.6 })),
       ...products.map((p) => ({ url: siteUrl(`/tienda/${p.slug}/`), priority: 0.5 })),
-      ...posts.map((p) => ({ url: siteUrl(`/consejos/${p.slug}/`), lastModified: p.date, priority: 0.5 })),
+      ...articles,
     ];
   } catch {
-    return staticPages;
+    return [...staticPages, ...articles];
   }
 }

@@ -12,6 +12,8 @@ export function localBusinessJsonLd() {
     logo: siteUrl("/brand/mascota-nitida.webp"),
     image: siteUrl("/taller/equipo-tropicleta.jpeg"),
     telephone: "+" + site.whatsappNumber,
+    hasMap: "https://www.google.com/maps?cid=16614543370593599727",
+    knowsLanguage: "es-CL",
     sameAs: site.socials.map(s => s.href),
     areaServed: site.coverage.map(name => ({ "@type": "Place", name })),
     address: {

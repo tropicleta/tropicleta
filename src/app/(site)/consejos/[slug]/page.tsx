@@ -26,13 +26,17 @@ export default async function PostPage({ params }: Props) {
     "@context": "https://schema.org",
     "@type": "Article",
     headline: post.title,
+    description: post.excerpt,
+    mainEntityOfPage: siteUrl(`/consejos/${post.slug}/`),
+    image: siteUrl(`/guias/${post.slug}.svg`),
     datePublished: post.date,
-    author: { "@type": "Organization", name: "Tropicleta" },
+    author: { "@type": "Organization", "@id": siteUrl("/#taller"), name: "Tropicleta", url: siteUrl("/nosotros/") },
+    publisher: { "@id": siteUrl("/#taller") },
   };
 
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }} />
       <section className="tp-hero tp-page-hero">
         <div className="tp-shell" style={{ position: "relative", zIndex: 1 }}>
           <nav className="tp-breadcrumb" aria-label="Ruta">
@@ -56,10 +60,10 @@ export default async function PostPage({ params }: Props) {
           <div className="tp-local-box" style={{ marginTop: 40, maxWidth: 720 }}>
             <span className="tp-kicker">¿Prefieres que lo hagamos nosotros?</span>
             <p className="tp-section-intro" style={{ marginBottom: 20 }}>
-              Diagnóstico gratuito y garantía de 2 semanas.
+              Taller de bicicletas en Tierra Amarilla, con retiro y entrega en Copiapó y Paipote, previa coordinación. Diagnóstico gratuito y garantía de 2 semanas.
             </p>
-            <Link className="tp-btn tp-btn-primary" href="/agendar/">
-              Solicitar hora
+            <Link className="tp-btn tp-btn-primary" href="/servicios/">
+              Cotizar mantención de bicicleta
             </Link>
           </div>
           <h2 className="tp-display tp-category-heading" style={{ marginTop: 56 }}>

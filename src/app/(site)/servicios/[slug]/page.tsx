@@ -15,7 +15,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!data) return { title: "Servicio no encontrado" };
   return {
     alternates: { canonical: siteUrl(`/servicios/${data.service.slug}/`) },
-    title: data.service.name,
+    title: `${data.service.name} en Tierra Amarilla`,
     description: data.service.summary ?? `${data.service.name} en Tropicleta, Tierra Amarilla.`,
   };
 }
@@ -25,6 +25,29 @@ export default async function ServicioPage({ params }: Props) {
   const data = await getService(slug);
   if (!data) notFound();
   const { service: s, category: c } = data;
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Service",
+        "@id": siteUrl(`/servicios/${s.slug}/#servicio`),
+        name: s.name,
+        description: s.summary ?? `${s.name} en Tropicleta, Tierra Amarilla.`,
+        url: siteUrl(`/servicios/${s.slug}/`),
+        serviceType: c.name,
+        provider: { "@id": siteUrl("/#taller") },
+        areaServed: ["Tierra Amarilla", "Copiapó", "Paipote"].map(name => ({ "@type": "Place", name })),
+      },
+      {
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: "Inicio", item: siteUrl("/") },
+          { "@type": "ListItem", position: 2, name: "Servicios", item: siteUrl("/servicios/") },
+          { "@type": "ListItem", position: 3, name: s.name, item: siteUrl(`/servicios/${s.slug}/`) },
+        ],
+      },
+    ],
+  };
 
   const includes = s.includes.length
     ? s.includes
@@ -32,8 +55,10 @@ export default async function ServicioPage({ params }: Props) {
 
   return (
     <section className="tp-hero tp-page-hero">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData).replace(/</g, "\\u003c") }} />
       <div className="tp-shell" style={{ position: "relative", zIndex: 1 }}>
         <nav className="tp-breadcrumb" aria-label="Ruta">
+          <Link href="/">Inicio</Link><span>/</span>
           <Link href="/servicios/">Servicios</Link>
           <span>/</span>
           <Link href={`/servicios/#${c.slug}`}>{c.name}</Link>
@@ -43,6 +68,7 @@ export default async function ServicioPage({ params }: Props) {
           <div>
             <span className="tp-kicker">{c.name}</span>
             <h1 className="tp-display">{s.name}</h1>
+            <p className="tp-muted">Servicio en nuestro taller de Tierra Amarilla. Retiro y entrega en Copiapó y Paipote, previa coordinación. <Link href="/contacto/">Consulta ubicación y cobertura</Link>.</p>
             {s.summary && <p className="tp-hero-copy">{s.summary}</p>}
             {s.description && (
               <div className="tp-muted" style={{ whiteSpace: "pre-line", marginBottom: 24, maxWidth: 650 }}>

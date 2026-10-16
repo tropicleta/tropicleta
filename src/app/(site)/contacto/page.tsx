@@ -18,7 +18,7 @@ export default function ContactoPage() {
         <div className="tp-shell" style={{ position: "relative", zIndex: 1 }}>
           <span className="tp-kicker">Contacto</span>
           <h1 className="tp-display">
-            Hablemos de <span>tu bici.</span>
+            Taller de bicicletas <span>en Tierra Amarilla.</span>
           </h1>
           <p className="tp-hero-copy">
             Atendemos con coordinación previa desde Tierra Amarilla y contamos con retiro y entrega en sectores definidos
@@ -60,6 +60,7 @@ export default function ContactoPage() {
                 Ubicación
               </div>
               <div className="tp-trust-value">{site.addressNote}</div>
+              <a className="tp-btn tp-btn-secondary" style={{ marginTop: 16 }} href={`https://www.google.com/maps?cid=16614543370593599727`} target="_blank" rel="noopener noreferrer">Ver Tropicleta en Google Maps</a>
             </div>
 
             <div className="tp-panel">
