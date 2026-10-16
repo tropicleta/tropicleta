@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { BookingServices } from "@/components/BookingServices";
 import Link from "next/link";
 import { randomUUID } from "node:crypto";
 import { eq } from "drizzle-orm";
@@ -66,14 +67,8 @@ export default async function ReservaAdmin({ params }: Props) {
                 </div>
               )}
               <div>
-                <dt>Vehículo</dt>
-                <dd>
-                  {b.vehicleType} {b.vehicleDetails}
-                </dd>
-              </div>
-              <div>
                 <dt>Servicios</dt>
-                <dd>{b.serviceNames.join(", ")}</dd>
+                <dd><BookingServices booking={b} /></dd>
               </div>
               <div>
                 <dt>Preferencia</dt>

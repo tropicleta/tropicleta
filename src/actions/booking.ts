@@ -61,7 +61,7 @@ export async function createBooking(_prev: FormState, fd: FormData): Promise<For
       <p>Código <b>${code}</b></p>
       <p><b>${escapeHtml(d.name)}</b> · ${displayPhone(d.phone)} ${d.email ? "· " + escapeHtml(d.email) : ""}</p>
       <p>${groups.length} ${groups.length===1?"vehículo":"vehículos"}</p>
-      <p>Servicios: ${serviceNames.map(escapeHtml).join(", ")}</p>
+      ${groups.map(g=>`<h3>${escapeHtml(g.label)}</h3>${g.details?`<p>${escapeHtml(g.details)}</p>`:""}<ul>${g.calculation.lines.map(s=>`<li>${escapeHtml(s.name)} ×${s.quantity}</li>`).join("")}</ul>`).join("")}
       <p>${escapeHtml(packageDetail)}</p><p>${escapeHtml(quoteText)}</p>
       <p>Fecha preferida: ${formatDate(d.preferredDate)}, en la ${slot}</p>
       ${d.pickup ? `<p>${transportLabels[d.transportMode]} en ${escapeHtml(d.pickupCommune!)}: ${escapeHtml(d.pickupAddress!)}</p>` : ""}

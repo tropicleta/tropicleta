@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { BookingServices } from "@/components/BookingServices";
 import Link from "next/link";
 import { and, count, desc, eq } from "drizzle-orm";
 import { updateBookingStatus } from "@/actions/admin";
@@ -74,11 +75,7 @@ export default async function ReservasAdmin({ searchParams }: Props) {
                   <span className="tp-hint">{displayPhone(b.phone)}</span>
                 </td>
                 <td>
-                  {b.serviceNames.join(", ")}
-                  <br />
-                  <span className="tp-hint">
-                    {b.vehicleType} {b.vehicleDetails}
-                  </span>
+                  <BookingServices booking={b} />
                   {b.quotedPrice != null && (
                     <>
                       <br />

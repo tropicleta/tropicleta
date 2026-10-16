@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { BookingServices } from "@/components/BookingServices";
 import Link from "next/link";
 import { eq } from "drizzle-orm";
 import { notFound } from "next/navigation";
@@ -40,17 +41,11 @@ export default async function GraciasAgendarPage({ searchParams }: Props) {
           <dl className="tp-dl">
             <div>
               <dt>Servicios</dt>
-              <dd>{b.serviceNames.join(", ")}</dd>
+              <dd><BookingServices booking={b} /></dd>
             </div>
             <div>
               <dt>Detalle de la cotización</dt>
               <dd style={{ whiteSpace: "pre-wrap" }}>{b.notes ?? "Consulta los valores con el taller."}</dd>
-            </div>
-            <div>
-              <dt>Vehículo</dt>
-              <dd>
-                {b.vehicleType === "scooter" ? "Scooter eléctrico" : "Bicicleta"} {b.vehicleDetails ?? ""}
-              </dd>
             </div>
             <div>
               <dt>Fecha preferida</dt>

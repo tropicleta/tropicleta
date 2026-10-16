@@ -1283,6 +1283,9 @@
 .tp-gallery-thumbnails button { flex: 0 0 84px; height: 84px; padding: 4px; border: 2px solid transparent; border-radius: 10px; background: #fff; cursor: pointer; }
 .tp-gallery-thumbnails button[aria-pressed="true"] { border-color: var(--tp-orange); }
 .tp-gallery-thumbnails img { display: block; width: 100%; height: 100%; object-fit: contain; }
+.tp-booking-services { display:grid; gap:12px; }
+.tp-booking-services ul { margin:4px 0 0; padding-left:18px; }
+.tp-booking-services li { margin:2px 0; }
 .tp-recommendation-card { display: flex; flex-direction: column; }
 .tp-recommendation-card .tp-product-body { flex: 1; display: flex; flex-direction: column; gap: 8px; }
 .tp-recommendation-card .tp-product-body .tp-btn { margin-top: auto; padding: 10px 12px; font-size: 13px; }
