@@ -225,7 +225,10 @@
 .tp-product-card:not(.tp-recommendation-card) .tp-product-body { display:flex; flex-direction:column; flex:1; gap:10px; }
 .tp-product-card:not(.tp-recommendation-card) .tp-product-name { display:block; min-height:2.8em; -webkit-line-clamp:unset; overflow:visible; line-height:1.4; overflow-wrap:anywhere; }
 .tp-product-card:not(.tp-recommendation-card) .tp-product-price { margin-top:auto; }
-.tp-recommendation-card .tp-product-name { min-height:4.2em; line-height:1.4; -webkit-line-clamp:3; }
+.tp-recommendation-card .tp-product-body { padding:12px; gap:6px; }
+.tp-recommendation-card .tp-product-name { min-height:2.8em; font-size:14px; line-height:1.4; -webkit-line-clamp:2; }
+.tp-recommendation-card .tp-product-price { font-size:22px; line-height:1.2; }
+.tp-recommendation-card .tp-product-body .tp-btn { min-height:44px; padding:8px 10px; font-size:12px; }
 .tp-cart-line .tp-qty button, .tp-qty button { width:44px; height:44px; }
 @media(max-width:600px) {
   .tp-page-hero:not(.tp-services-hero) h1 { font-size:clamp(30px,7.5vw,40px); line-height:1.12; }
