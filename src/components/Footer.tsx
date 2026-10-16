@@ -23,6 +23,6 @@ export function Footer() {
         <details className="tp-footer-help"><summary>Ayuda y más información</summary><ul>{[...footerLinks.taller.filter(l => !["/servicios/", "/eventos/"].includes(l.href)), ...footerLinks.ayuda].map(l => <li key={l.href}><Link href={l.href}>{l.label}</Link></li>)}</ul></details>
       </nav>
     </div>
-    <div className="tp-footer-bottom"><span>© {year} {site.domain}</span><span>Diagnóstico gratuito · Garantía 2 semanas</span><small style={{ fontSize: 11, color: "#a8b0b2" }}>Desarrollado por <a href="https://el-arca-six.vercel.app/" target="_blank" rel="noopener noreferrer" style={{ color: "inherit" }}>El Arca</a></small></div>
+    <div className="tp-footer-bottom"><span>© {year} {site.domain}</span><span>Diagnóstico gratuito · Garantía 2 semanas</span><small style={{ fontSize: 11, color: "#a8b0b2" }}>Desarrollada por <a href="https://el-arca-six.vercel.app/" target="_blank" rel="noopener noreferrer" style={{ color: "#80ff55" }}>El Arca</a> y <a href="https://naitre.cl/" target="_blank" rel="noopener noreferrer" style={{ color: "#ff9f43" }}>Naitre</a></small></div>
   </div></footer>;
 }
