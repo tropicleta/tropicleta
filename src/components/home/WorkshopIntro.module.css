@@ -19,7 +19,7 @@
 .play svg { margin-left:3px }
 .poster:hover .play { background:#ffa637 }
 .duration { position:absolute; z-index:1; right:12px; bottom:12px; padding:3px 6px; background:#000b; border-radius:4px; color:white; font-size:11px }
-.player iframe { display:block; width:100%; height:100%; border:0 }
+.player video { display:block; width:100%; height:100%; border:0; object-fit:contain }
 .caption { display:flex; flex-direction:column; gap:4px; padding:12px 0 0 }
 .caption strong { color:var(--tp-white); font-size:15px }
 .caption > span { color:var(--tp-grey); font-size:12px; line-height:1.5 }

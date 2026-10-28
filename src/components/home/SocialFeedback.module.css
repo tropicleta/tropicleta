@@ -1,6 +1,5 @@
-.section { border-top:1px solid var(--tp-border); padding-block:32px }
-.layout { max-width:640px; display:grid; gap:16px }
-.heading h2 { margin:0; font-size:25px; line-height:1.25; font-weight:700; letter-spacing:-.6px }
+.layout { display:grid; gap:12px; min-width:0 }
+.heading h3 { margin:0; font-size:18px; line-height:1.25; font-weight:700; letter-spacing:-.3px }
 .heading p { margin:6px 0 0; color:var(--tp-grey); font-size:12px; line-height:1.5 }
 .carousel { min-width:0 }
 .window { position:relative; display:grid; overflow:hidden; isolation:isolate; border:1px solid var(--tp-border); border-radius:12px; background:var(--tp-card); touch-action:pan-x pinch-zoom }
@@ -12,7 +11,7 @@
 .previous { animation:fromAbove 650ms cubic-bezier(.4,0,.2,1) both }
 .exitNext { animation:toAbove 650ms cubic-bezier(.4,0,.2,1) both }
 .exitPrevious { animation:toBelow 650ms cubic-bezier(.4,0,.2,1) both }
-.author { display:flex; align-items:center; gap:12px; min-width:0 }
+.author { display:flex; align-items:center; gap:9px; min-width:0 }
 .avatar { width:32px; height:32px; flex-shrink:0; display:grid; place-items:center; border:1px solid #676b72; border-radius:50%; color:var(--tp-white); background:#2b2e33; font-size:10px; font-weight:700 }
 .identity { display:flex; flex-direction:column; gap:4px; min-width:0 }
 .identity strong { font-size:13px; color:var(--tp-white); overflow-wrap:anywhere }
@@ -21,7 +20,8 @@
 .instagram svg { color:#ed80b4 }
 .tiktok svg { color:#7ee9ed }
 .comment blockquote { margin:16px 0; padding:0 }
-.comment blockquote p { margin:0; color:var(--tp-white); font-size:16px; line-height:1.6; overflow-wrap:anywhere; white-space:pre-wrap }
+.comment blockquote p { margin:0; color:var(--tp-white); font-size:15px; line-height:1.6; overflow-wrap:anywhere; white-space:pre-wrap }
+.platformName { display:none }
 .source { margin-top:auto; border-top:1px solid var(--tp-border); padding-top:10px; display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:4px 16px }
 .source p { margin:0; font-size:11px; line-height:1.6; color:var(--tp-grey); flex:1 1 220px }
 .source a { display:inline-flex; align-items:center; gap:10px; min-height:32px; color:var(--tp-white); font-size:12px; text-decoration:underline; text-underline-offset:4px }
@@ -38,13 +38,8 @@
 @keyframes fromAbove { from { transform:translate3d(0,-100%,0) } to { transform:translate3d(0,0,0) } }
 @keyframes toAbove { from { transform:translate3d(0,0,0) } to { transform:translate3d(0,-100%,0) } }
 @keyframes toBelow { from { transform:translate3d(0,0,0) } to { transform:translate3d(0,100%,0) } }
-@media(min-width:701px) and (max-width:1024px) {
-  .layout { max-width:580px }
-}
 @media(max-width:700px) {
-  .section { padding-block:24px }
   .layout { gap:12px }
-  .heading h2 { font-size:22px }
   .comment { padding:16px 44px 16px 16px }
   .author { gap:9px }
   .identity strong { font-size:12px }

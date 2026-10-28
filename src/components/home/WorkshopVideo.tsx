@@ -13,7 +13,10 @@ export function WorkshopVideo() {
     <figure className={styles.video}>
       <div className={styles.player}>
         {playing ? (
-          <iframe src="https://www.youtube.com/embed/1O98cXZ4-8A?autoplay=1&playsinline=1&rel=0" title="Tropicleta: cómo tubelizar la rueda de tu bicicleta" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowFullScreen referrerPolicy="strict-origin-when-cross-origin" />
+          <video controls autoPlay playsInline preload="none" poster={posterUrl} aria-label="Tropicleta: cómo tubelizar la rueda de tu bicicleta">
+            <source src="/taller/tutorial-tubeless.mp4" type="video/mp4" />
+            Tu navegador no permite reproducir este video. <a href={videoUrl}>Ver tutorial en YouTube</a>.
+          </video>
         ) : (
           <button type="button" className={styles.poster} onClick={() => setPlaying(true)} aria-label="Reproducir tutorial de tubeless de Tropicleta, 1 minuto y 30 segundos">
             <Image unoptimized src={posterUrl} alt="Portada del tutorial de tubeless de Tropicleta" fill sizes="(max-width: 700px) 280px, 300px" />

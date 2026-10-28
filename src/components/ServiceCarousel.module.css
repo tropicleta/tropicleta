@@ -1,0 +1,12 @@
+.viewport { display:grid; overflow:hidden; isolation:isolate; border-radius:var(--tp-radius); box-shadow:0 16px 50px #0006 }
+.card { grid-area:1 / 1; min-width:0; visibility:hidden; box-shadow:none; backface-visibility:hidden }
+.active { visibility:visible; z-index:2 }
+.leaving { visibility:visible; z-index:1; pointer-events:none }
+.enterNext { animation:fromRight 650ms cubic-bezier(.4,0,.2,1) both }
+.enterPrevious { animation:fromLeft 650ms cubic-bezier(.4,0,.2,1) both }
+.exitNext { animation:toLeft 650ms cubic-bezier(.4,0,.2,1) both }
+.exitPrevious { animation:toRight 650ms cubic-bezier(.4,0,.2,1) both }
+@keyframes fromRight { from { transform:translate3d(100%,0,0) } to { transform:translate3d(0,0,0) } }
+@keyframes fromLeft { from { transform:translate3d(-100%,0,0) } to { transform:translate3d(0,0,0) } }
+@keyframes toLeft { from { transform:translate3d(0,0,0) } to { transform:translate3d(-100%,0,0) } }
+@keyframes toRight { from { transform:translate3d(0,0,0) } to { transform:translate3d(100%,0,0) } }

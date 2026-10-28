@@ -1,0 +1,10 @@
+.expanded[class] :global(.tp-chat-fab) { width:64px; height:64px; animation:welcome .45s ease-out both }
+.teaser[class] { animation:message 4s ease both }
+@keyframes welcome { from { transform:scale(.82) } to { transform:scale(1) } }
+@keyframes message {
+  0% { opacity:0; transform:translateX(12px) scale(.95) }
+  12%,90% { opacity:1; transform:translateX(0) scale(1) }
+  100% { opacity:0; transform:translateX(6px) scale(.95) }
+}
+@media(max-width:700px) { .expanded[class] :global(.tp-chat-fab) { width:54px; height:54px } }
+@media(prefers-reduced-motion:reduce) { .expanded[class] :global(.tp-chat-fab),.teaser[class] { animation:none } }

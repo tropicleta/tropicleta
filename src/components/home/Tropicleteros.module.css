@@ -1,0 +1,19 @@
+.layout { display:grid; grid-template-columns:minmax(0,1fr) 350px; grid-template-areas:"heading comments" "photos comments"; gap:24px 32px; align-items:start }
+.heading { grid-area:heading; min-width:0 }
+.heading p { max-width:530px }
+.comments { grid-area:comments; min-width:0 }
+.photos[class] { grid-area:photos; width:100%; display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px; margin:0 }
+@media(min-width:701px) and (max-width:1000px) {
+  .layout { grid-template-columns:minmax(0,1fr) 320px; gap:20px }
+  .photos[class] { grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px }
+  .photos article:last-child { grid-column:1 / -1 }
+  .photos article:last-child > a > div:nth-child(2) { aspect-ratio:2.5 }
+}
+@media(max-width:700px) {
+  .layout { grid-template-columns:minmax(0,1fr); grid-template-areas:"heading" "photos" "comments"; gap:20px; max-width:540px }
+  .photos[class] { grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px }
+  .photos article:last-child { grid-column:1 / -1 }
+  .photos article:last-child > a > div:nth-child(2) { aspect-ratio:2.5 }
+  .photos :global(.tp-instagram-post-header) { padding:10px; gap:6px }
+  .photos :global(.tp-instagram-post-header small) { font-size:9px }
+}

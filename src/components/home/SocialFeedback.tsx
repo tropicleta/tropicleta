@@ -49,11 +49,11 @@ export function SocialFeedback() {
     if (Math.abs(deltaY) >= 48 && Math.abs(deltaY) > Math.abs(deltaX) * 1.25) move(deltaY < 0 ? 1 : -1);
   }
   return (
-    <section id="comentarios" className={`tp-section ${styles.section}`} aria-labelledby="feedback-title">
-      <div className={`tp-shell ${styles.layout}`}>
+    <aside id="comentarios" aria-labelledby="feedback-title">
+      <div className={styles.layout}>
         <div className={styles.heading}>
           <div>
-            <h2 id="feedback-title">Lo que dicen del taller.</h2>
+            <h3 id="feedback-title">En sus propias palabras.</h3>
             <p>Comentarios públicos, con enlace a la publicación original.</p>
           </div>
         </div>
@@ -90,6 +90,6 @@ export function SocialFeedback() {
           <span className={styles.srOnly} aria-live={autoPlaying ? "off" : "polite"} aria-atomic="true">Comentario {position.index + 1} de {workshopComments.length}</span>
         </div>
       </div>
-    </section>
+    </aside>
   );
 }
