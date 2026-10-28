@@ -18,7 +18,7 @@ export const site = {
   ],
   socials: [
     { name: "Instagram", href: "https://instagram.com/tropicleta" },
-    { name: "Facebook", href: "https://www.facebook.com/tropicleta" },
+    { name: "Facebook", href: "https://www.facebook.com/profile.php?id=100094616691669" },
     { name: "TikTok", href: "https://www.tiktok.com/@tropicleta" },
     { name: "YouTube", href: "https://www.youtube.com/@tropicleta" },
   ],

@@ -6,6 +6,7 @@ import { ServiceCarousel } from "@/components/ServiceCarousel";
 import { ShopSections } from "@/components/shop/ShopSections";
 import { site } from "@/data/site";
 import { WorkshopGallery } from "@/components/WorkshopGallery";
+import { SocialFeedback } from "@/components/home/SocialFeedback";
 import { AnimatedEmblem } from "@/components/AnimatedEmblem";
 import { and, desc, eq, isNotNull } from "drizzle-orm";
 import { db, schema } from "@/db";
@@ -56,6 +57,8 @@ export default async function HomePage() {
       </section>
 
       <WorkshopGallery />
+
+      <SocialFeedback />
 
       <section className="tp-section" aria-labelledby="taller-local">
         <div className="tp-shell tp-two-col">
