@@ -2,10 +2,10 @@ import assert from "node:assert/strict";
 import { PGlite } from "@electric-sql/pglite";
 import { drizzle } from "drizzle-orm/pglite";
 import { migrate } from "drizzle-orm/pglite/migrator";
-import { eq } from "drizzle-orm";
+import { eq, inArray } from "drizzle-orm";
 import * as schema from "../src/db/schema";
 import type { DB } from "../src/db/client";
-import { addRequestedShockFramePack, updateRequestedBrakePacks } from "../src/db/requested-packs";
+import { addRequestedShockFramePack, updateRequestedBrakePacks, restoreRequestedFullMaintenancePack } from "../src/db/requested-packs";
 import { packageQuote, validateHierarchy } from "../src/lib/package-quote";
 import { packageReference } from "../src/lib/package-reference";
 import { serviceQuote } from "../src/lib/service-quote";
@@ -61,8 +61,19 @@ async function main() {
     await db.update(schema.services).set({ price: 26000 }).where(eq(schema.services.id, brakePack.id));
     assert.equal(await updateRequestedBrakePacks(db as unknown as DB), 0);
     assert.equal((await db.select().from(schema.services).where(eq(schema.services.id, brakePack.id)))[0].price, 26000);
+    // Match the live catalog: these maintenance components are already published.
+    await db.update(schema.services).set({ active: true }).where(inArray(schema.services.slug, ["mantencion-basica", "mantencion-completa"]));
+    assert.equal(await restoreRequestedFullMaintenancePack(db as unknown as DB), 1);
+    const corrected = await db.select().from(schema.services);
+    const restored = corrected.find(s => s.slug === "mantencion-completa-sangrado")!;
+    assert.equal(restored.active, true);
+    assert.equal(restored.price, 70000);
+    assert.equal(corrected.find(s => s.slug === "pack-doble-suspension")!.active, false);
+    assert.equal(serviceQuote(packageQuote(corrected, { manual: [], packages: [restored.slug], excluded: [] }, "bicicleta").lines).total, 70000);
+    assert.equal(await restoreRequestedFullMaintenancePack(db as unknown as DB), 0);
     console.log("Pack: $70.000 directo y automático, $5.000 de ahorro, sin duplicados y sin sobrescribir cambios posteriores.");
     console.log("Frenos: dos por $25.000, uno por $15.000, packs retirados y cambios posteriores conservados.");
+    console.log("Aclaración: completa + purgado vuelve activa a $70.000; el pack antiguo de doble suspensión sigue desactivado.");
   } finally { await client.close(); }
 }
 main().catch(error => { console.error(error); process.exitCode = 1; });

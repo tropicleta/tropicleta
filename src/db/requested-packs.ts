@@ -76,3 +76,21 @@ export async function updateRequestedBrakePacks(db: DB) {
     return existing ? 0 : 1;
   });
 }
+
+/** Clarification: keep full maintenance + bleeding; retire only the old suspension bundle. */
+export async function restoreRequestedFullMaintenancePack(db: DB) {
+  const summary = "Conservar completa+purgado; retirar solo doble suspensión $140.000 (28/10/2026)";
+  return db.transaction(async (tx) => {
+    const [applied] = await tx.select({ id: schema.adminAudit.id }).from(schema.adminAudit)
+      .where(and(eq(schema.adminAudit.entity, "service"), eq(schema.adminAudit.summary, summary))).limit(1);
+    if (applied) return 0;
+    const catalog = await tx.select().from(schema.services);
+    const pack = catalog.find(s => s.slug === "mantencion-completa-sangrado");
+    if (!pack || pack.kind !== "package") throw new Error("No se encontró el pack de mantención completa y purgado.");
+    validateHierarchy(catalog.map(s => s.id === pack.id ? { ...s, active: true, removed: false } : s.slug === "pack-doble-suspension" ? { ...s, active: false } : s));
+    await tx.update(schema.services).set({ active: true, removed: false }).where(eq(schema.services.id, pack.id));
+    await tx.update(schema.services).set({ active: false, featured: false }).where(eq(schema.services.slug, "pack-doble-suspension"));
+    await tx.insert(schema.adminAudit).values({ action: "update", entity: "service", entityId: pack.id.toString(), summary });
+    return 1;
+  });
+}

@@ -1,5 +1,7 @@
 # Ajuste de packs e iconos
 
+Aclaración posterior del usuario: se conserva Mantención completa y purgado de frenos ($70.000). Se retira únicamente el Pack Doble Suspensión de $140.000. La corrección se registra y aplica una vez después de la actualización inicial descrita a continuación.
+
 - Se desactivan `mantencion-completa-sangrado` y `pack-doble-suspension`, conservando sus registros para consulta y edición.
 - Se crea `purgado-ambos-frenos`, Purgado de ambos frenos, por $25.000. Sus componentes obligatorios son el purgado delantero y trasero, de $15.000 cada uno: ahorro de $5.000.
 - El pack shock + cuadro de $70.000 permanece disponible.
