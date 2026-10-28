@@ -9,6 +9,9 @@ export function PackIcon({ name, slug, components }: { name: string; slug: strin
   let badge: ServiceVisual | undefined;
   if (slug === "mantencion-completa") {
     main = "toolbox";
+  } else if (slug === "pack-mantencion-completa-cuadro") {
+    main = "toolbox";
+    badge = "frame";
   } else if (slug === "mantencion-basica") {
     main = "cleaning";
   } else if (types.has("wheel-build") && types.has("tubeless")) {

@@ -160,3 +160,37 @@ export async function addRequestedWheelTubelessPack(db: DB) {
     return existing ? 0 : 1;
   });
 }
+
+export async function replaceRequestedShockFramePack(db: DB) {
+  const summary = "Reemplazar shock+cuadro por mantención completa+cuadro a $70.000 (28/10/2026)";
+  return db.transaction(async (tx) => {
+    const [applied] = await tx.select({ id: schema.adminAudit.id }).from(schema.adminAudit)
+      .where(and(eq(schema.adminAudit.entity, "service"), eq(schema.adminAudit.summary, summary))).limit(1);
+    if (applied) return 0;
+    const catalog = await tx.select().from(schema.services);
+    const maintenance = catalog.find(s => s.slug === "mantencion-completa");
+    const frame = catalog.find(s => s.slug === "servicio-al-cuadro");
+    if (!maintenance || !frame || maintenance.price !== 50000 || frame.price !== 25000 ||
+        [maintenance, frame].some(s => !s.active || s.removed || !s.vehicles.includes("bicicleta"))) {
+      throw new Error("El pack requiere mantención completa activa de $50.000 y servicio al cuadro de $25.000.");
+    }
+    const slug = "pack-mantencion-completa-cuadro";
+    const existing = catalog.find(s => s.slug === slug);
+    const pack = {
+      slug, name: "Mantención completa + servicio al cuadro", categoryId: maintenance.categoryId,
+      summary: "Mantención completa de tu bicicleta más servicio al cuadro por $70.000.",
+      description: "Incluye la mantención completa ($50.000) y el servicio al cuadro ($25.000) por $70.000. Repuestos y trabajos adicionales se cotizan aparte.",
+      includes: [maintenance.name, frame.name], price: 70000, priceFrom: false, kind: "package",
+      components: [{ slug: maintenance.slug, required: true }, { slug: frame.slug, required: true }],
+      vehicles: ["bicicleta"], individuallySelectable: true, active: true, sort: 49,
+    };
+    validateHierarchy([
+      ...catalog.map(s => s.slug === "pack-shock-cuadro" ? { ...s, active: false } : s),
+      ...(existing ? [] : [pack]),
+    ]);
+    await tx.update(schema.services).set({ active: false, featured: false }).where(eq(schema.services.slug, "pack-shock-cuadro"));
+    if (!existing) await tx.insert(schema.services).values(pack).onConflictDoNothing();
+    await tx.insert(schema.adminAudit).values({ action: "update", entity: "service", entityId: slug, summary });
+    return existing ? 0 : 1;
+  });
+}
