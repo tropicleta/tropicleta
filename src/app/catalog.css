@@ -32,15 +32,24 @@
 .tp-quote-layout .tp-form-grid { gap:12px; }
 .tp-quote-layout .tp-field { gap:5px; }
 .tp-quote-layout .tp-options, .tp-quote-layout .tp-package-grid { gap:8px; }
+.tp-quote-layout .tp-package-grid { align-items:start; }
 .tp-quote-layout .tp-option { padding:10px 12px; gap:9px; min-height:44px; }
-.tp-quote-layout .tp-package-option { padding:10px; }
+.tp-quote-layout .tp-package-option { display:flex; flex-direction:column; min-width:0; padding:10px; }
 .tp-quote-layout .tp-package-option > .tp-option { padding:4px; }
 .tp-quote-layout .tp-package-option b { margin-block:4px; }
 .tp-pack-copy { flex:1; min-width:0; }
 .tp-pack-heading { display:flex; align-items:center; justify-content:space-between; gap:12px; }
 .tp-pack-heading strong { min-width:0; line-height:1.4; }
-.tp-quote-layout .tp-pack-details { padding:6px 4px 2px; }
-.tp-quote-layout .tp-pack-details summary { min-height:32px; display:flex; align-items:center; }
+.tp-pack-pricing { display:flex; flex-wrap:wrap; align-items:baseline; justify-content:space-between; gap:4px 12px; }
+.tp-pack-savings { color:var(--tp-orange); font-size:11px; line-height:1.4; }
+.tp-pack-reference { font-size:11px; }
+.tp-quote-layout .tp-package-option > .tp-option { width:100%; }
+.tp-quote-layout .tp-pack-details { width:100%; margin-top:8px; padding:6px 4px 0; border-top:1px solid var(--tp-border); }
+.tp-quote-layout .tp-pack-details summary { min-height:32px; display:flex; align-items:center; justify-content:space-between; gap:8px; cursor:pointer; color:var(--tp-grey); font-size:12px; }
+.tp-pack-details summary::after { content:"+"; color:var(--tp-orange); font-size:18px; }
+.tp-pack-details[open] summary::after { content:"−"; }
+.tp-pack-description { margin:8px 0; color:var(--tp-grey); font-size:12px; line-height:1.6; }
+.tp-pack-details ul { margin:8px 0; padding-left:18px; color:var(--tp-grey); font-size:12px; line-height:1.6; }
 .tp-quote-layout .tp-quote-heading { margin:10px 0 6px; font-size:20px; }
 .tp-quote-layout .tp-quote-category { margin:12px 0 6px; }
 .tp-quote-layout .tp-service-option { padding:4px; }
