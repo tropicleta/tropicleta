@@ -350,6 +350,12 @@
 
 /* All main destinations remain direct links, including in the mobile menu. */
 .tp-mobile-nav { max-height:calc(100dvh - var(--tp-header-h)); overflow-y:auto; }
+.tp-about-guides .tp-post-grid { grid-template-columns:repeat(3,minmax(0,1fr)); }
+.tp-about-guides .tp-panel { display:flex; flex-direction:column; gap:12px; }
+.tp-about-guides .tp-panel h3 { margin:0; }
+.tp-about-guides .tp-panel p { margin:0; color:var(--tp-grey); font-size:14px; line-height:1.6; }
+.tp-about-guides .tp-service-link { margin-top:auto; color:var(--tp-orange); }
+@media(max-width:700px) { .tp-about-guides .tp-post-grid { grid-template-columns:minmax(0,1fr); } }
 
 /* Portada móvil: marca y producto arriba; texto con todo el ancho debajo. */
 @media(max-width:700px) {

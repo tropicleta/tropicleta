@@ -67,7 +67,7 @@ export default function NosotrosPage() {
           </aside>
         </div>
       </section>
-      <section id="guias" className="tp-section" aria-labelledby="guias-title">
+      <section id="guias" className="tp-section tp-about-guides" aria-labelledby="guias-title">
         <div className="tp-shell">
           <h2 id="guias-title" className="tp-display tp-section-title">Guías del taller</h2>
           <p className="tp-section-intro">Herramientas y consejos para conocer mejor tu bici y cuidarla entre visitas.</p>
