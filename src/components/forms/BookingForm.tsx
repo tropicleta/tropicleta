@@ -20,6 +20,7 @@ type Catalog = PackageCatalog;
 export function BookingForm({ catalog, vehicles, preselected, initialVehicleSlug, minDate, initialNotes }: { catalog: Catalog; vehicles:QuoteVehicle[]; preselected?: string; initialVehicleSlug?:string; minDate: string; initialNotes?: string }) {
   const [state, action] = useActionState<FormState, FormData>(createBooking, {});
   const [step,setStep]=useState(1);
+  const [quoteExpanded,setQuoteExpanded]=useState(false);
   const stepHeading=useRef<HTMLHeadingElement>(null);
   const goStep=(next:number)=>{setStep(next);requestAnimationFrame(()=>stepHeading.current?.focus());};
   const all = catalog.flatMap(c => c.services);
@@ -159,7 +160,9 @@ export function BookingForm({ catalog, vehicles, preselected, initialVehicleSlug
 </details></div>
       </div>
       <aside className="tp-local-box tp-quote-summary" aria-label="Tu cotización">
-        <h2>Tu cotización</h2><p className="tp-hint">{vehicleQuotes.length} {vehicleQuotes.length===1?"vehículo":"vehículos"}</p>
+        <header className="tp-quote-summary-head"><h2>Tu cotización</h2><button type="button" className="tp-quote-expand" aria-expanded={quoteExpanded} aria-controls="quote-breakdown" onClick={()=>setQuoteExpanded(value=>!value)}>{quoteExpanded?"Ocultar detalle":"Ver detalle"}<span aria-hidden="true">{quoteExpanded?" −":" +"}</span></button></header>
+        <div id="quote-breakdown" className="tp-quote-scroll" data-expanded={quoteExpanded} role="region" aria-label="Detalle de tu cotización" tabIndex={0}>
+        <p className="tp-hint">{vehicleQuotes.length} {vehicleQuotes.length===1?"vehículo":"vehículos"}</p>
         <label hidden={step!==3} className="tp-option"><input type="checkbox" name="firstService" checked={firstService} onChange={e => setFirstService(e.target.checked)} /><span>Es mi primer servicio en Tropicleta<small>10% de descuento en el total de servicios. No incluye retiro, entrega ni repuestos.</small></span></label>
         <div className="tp-summary-details">{groups.map(g=><section key={g.id} className="tp-vehicle-summary"><h3>{g.label}</h3>{g.details&&<p className="tp-hint">{g.details}</p>}{!g.calculation.lines.length?<p className="tp-hint">Selecciona servicios para este vehículo.</p>:<ul className="tp-quote-items">{g.calculation.lines.map(s=><li key={s.slug}><span>{s.name}<small>{priceLabel(s)}{s.automatic?" · Pack reconocido":""}</small>{s.included.length>0&&<details><summary>Ver trabajos incluidos</summary>{s.included.map(slug=><small key={slug}>✓ {all.find(c=>c.slug===slug)!.name} · Incluido</small>)}</details>}</span><button type="button" className="tp-btn tp-btn-ghost tp-btn-sm" onClick={()=>{setActiveId(g.id);setVehicleQuotes(rows=>rows.map(r=>r.id===g.id?{...r,selection:cleanSelectionQuantities(all,s.automatic?{...r.selection,manual:r.selection.manual.filter(slug=>!s.included.includes(slug)),excluded:[...new Set([...r.selection.excluded,...s.included])]}:setSelectionQuantity(all,r.selection,s.slug,0))}:r));}} aria-label={"Quitar "+s.name+" de "+g.label}>Quitar</button></li>)}</ul>}<p className="tp-hint">Subtotal: <strong>{formatCLP(serviceQuote(g.calculation.lines).subtotal)}</strong></p></section>)}</div>
         <dl className="tp-dl">
@@ -168,12 +171,16 @@ export function BookingForm({ catalog, vehicles, preselected, initialVehicleSlug
           <div><dt>Servicios (precio cotizado)</dt><dd>{formatCLP(quote.subtotal)}</dd></div>
           {firstService && <div><dt>Primer servicio −10%</dt><dd>−{formatCLP(quote.discount)}</dd></div>}
           {pickup && <div><dt>{transportLabels[transportMode]}{commune ? ` · ${commune}` : ""}</dt><dd>{quote.transport === null ? "Elige tu zona" : formatCLP(quote.transport)}</dd></div>}
-          <div aria-live="polite" aria-atomic="true"><dt>{quote.from ? "Total estimado desde" : "Total estimado"}</dt><dd className="tp-quote-total">{formatCLP(quote.total)}</dd></div>
         </dl>
-        {quote.pending && <p>Hay servicios o transporte pendientes de cotizar; no están incluidos en la suma.</p>}
-        <p className="tp-hint">El taller confirma el valor final tras el diagnóstico gratuito. Repuestos y trabajos adicionales se cotizan aparte. Revisaremos si los servicios elegidos incluyen trabajos en común.</p>
-        {step<3&&<button type="button" className="tp-btn tp-btn-secondary tp-btn-sm" disabled={!chosen.length||incomplete||!!selectionError} onClick={()=>goStep(3)}>Revisar y enviar</button>}
+        <details className="tp-quote-conditions"><summary>Condiciones de la cotización</summary><p className="tp-hint">El taller confirma el valor final tras el diagnóstico gratuito. Repuestos y trabajos adicionales se cotizan aparte. Revisaremos si los servicios elegidos incluyen trabajos en común.</p>
         {savings.savings>0&&<p className="tp-hint">El ahorro del pack ya está aplicado a sus precios. El descuento del primer servicio es adicional.</p>}
+        </details>
+        </div>
+        <footer className="tp-quote-summary-footer">
+        <dl className="tp-dl tp-quote-total-row"><div aria-live="polite" aria-atomic="true"><dt>{quote.from ? "Total estimado desde" : "Total estimado"}</dt><dd className="tp-quote-total">{formatCLP(quote.total)}</dd></div></dl>
+        {quote.pending && <p className="tp-hint tp-quote-pending">Hay valores pendientes de cotizar, fuera del total.</p>}
+        {step<3&&<button type="button" className="tp-btn tp-btn-secondary tp-btn-sm" disabled={!chosen.length||incomplete||!!selectionError} onClick={()=>goStep(3)}>Revisar y enviar</button>}
+        </footer>
       </aside>
     </form>
   );
