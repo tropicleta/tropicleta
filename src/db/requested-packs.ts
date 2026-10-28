@@ -94,3 +94,20 @@ export async function restoreRequestedFullMaintenancePack(db: DB) {
     return 1;
   });
 }
+
+/** Final request: remove full maintenance + bleeding as well. */
+export async function retireRequestedFullMaintenancePack(db: DB) {
+  const summary = "Retirar también mantención completa+purgado (aclaración final 28/10/2026)";
+  return db.transaction(async (tx) => {
+    const [applied] = await tx.select({ id: schema.adminAudit.id }).from(schema.adminAudit)
+      .where(and(eq(schema.adminAudit.entity, "service"), eq(schema.adminAudit.summary, summary))).limit(1);
+    if (applied) return 0;
+    const catalog = await tx.select().from(schema.services);
+    const pack = catalog.find(s => s.slug === "mantencion-completa-sangrado");
+    if (!pack) throw new Error("No se encontró el pack de mantención completa y purgado.");
+    validateHierarchy(catalog.map(s => s.id === pack.id ? { ...s, active: false } : s));
+    await tx.update(schema.services).set({ active: false, featured: false }).where(eq(schema.services.id, pack.id));
+    await tx.insert(schema.adminAudit).values({ action: "update", entity: "service", entityId: pack.id.toString(), summary });
+    return 1;
+  });
+}

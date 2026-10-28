@@ -5,7 +5,7 @@ import { migrate } from "drizzle-orm/pglite/migrator";
 import { eq, inArray } from "drizzle-orm";
 import * as schema from "../src/db/schema";
 import type { DB } from "../src/db/client";
-import { addRequestedShockFramePack, updateRequestedBrakePacks, restoreRequestedFullMaintenancePack } from "../src/db/requested-packs";
+import { addRequestedShockFramePack, updateRequestedBrakePacks, restoreRequestedFullMaintenancePack, retireRequestedFullMaintenancePack } from "../src/db/requested-packs";
 import { packageQuote, validateHierarchy } from "../src/lib/package-quote";
 import { packageReference } from "../src/lib/package-reference";
 import { serviceQuote } from "../src/lib/service-quote";
@@ -71,9 +71,17 @@ async function main() {
     assert.equal(corrected.find(s => s.slug === "pack-doble-suspension")!.active, false);
     assert.equal(serviceQuote(packageQuote(corrected, { manual: [], packages: [restored.slug], excluded: [] }, "bicicleta").lines).total, 70000);
     assert.equal(await restoreRequestedFullMaintenancePack(db as unknown as DB), 0);
+    assert.equal(await retireRequestedFullMaintenancePack(db as unknown as DB), 1);
+    const final = await db.select().from(schema.services);
+    assert.equal(final.find(s => s.slug === "mantencion-completa-sangrado")!.active, false);
+    assert.equal(final.find(s => s.slug === "pack-doble-suspension")!.active, false);
+    assert.equal(final.find(s => s.slug === "purgado-ambos-frenos")!.active, true);
+    assert.equal(final.find(s => s.slug === "purgado-ambos-frenos")!.price, 26000); // Admin edit remains untouched.
+    assert.equal(final.find(s => s.slug === "mantencion-completa")!.active, true);
+    assert.equal(await retireRequestedFullMaintenancePack(db as unknown as DB), 0);
     console.log("Pack: $70.000 directo y automático, $5.000 de ahorro, sin duplicados y sin sobrescribir cambios posteriores.");
     console.log("Frenos: dos por $25.000, uno por $15.000, packs retirados y cambios posteriores conservados.");
-    console.log("Aclaración: completa + purgado vuelve activa a $70.000; el pack antiguo de doble suspensión sigue desactivado.");
+    console.log("Aclaración final: completa + purgado retirada; mantención completa y pack de ambos frenos conservados.");
   } finally { await client.close(); }
 }
 main().catch(error => { console.error(error); process.exitCode = 1; });
