@@ -2,7 +2,7 @@ import { useId } from "react";
 import { serviceVisual, type ServiceVisual } from "@/lib/service-visuals";
 
 /** Workshop pictograms: white technical linework, orange accents and metallic components. */
-export function ServiceIcon({name,slug,size=80,visual}:{name:string;slug:string;size?:number;visual?:ServiceVisual}) {
+export function ServiceIcon({name,slug,size=80,visual}:{name:string;slug:string;size?:number;visual?:ServiceVisual|"toolbox"}) {
   const id=useId();const metal=`url(#${id})`;const type=visual??serviceVisual({name,slug});
   const gear=(x:number,y:number,r:number)=><g><circle cx={x} cy={y} r={r} fill="#242629"/><circle cx={x} cy={y} r={r/2.3} stroke="#f28a17"/>{Array.from({length:8},(_,i)=><path key={i} transform={`rotate(${i*45} ${x} ${y})`} d={`M${x} ${y-r-3}v6`}/>)}</g>;
   const wheel=<g><circle cx="47" cy="47" r="30"/><circle cx="47" cy="47" r="25" stroke="#a9adb3"/><circle cx="47" cy="47" r="4" stroke="#f28a17"/>{Array.from({length:8},(_,i)=><path key={i} transform={`rotate(${i*45} 47 47)`} d="M47 22v21" stroke="#a9adb3" strokeWidth="1.6"/>)}</g>;
@@ -10,6 +10,7 @@ export function ServiceIcon({name,slug,size=80,visual}:{name:string;slug:string;
   const bike=<g><circle cx="22" cy="65" r="15"/><circle cx="75" cy="65" r="15"/><path d="M22 65 37 36l17 29H22l35-29 18 29M33 30h12M57 36l3-13h10"/><circle cx="54" cy="65" r="3" stroke="#f28a17"/></g>;
   let drawing:React.ReactNode;
   switch(type){
+    case "toolbox":drawing=<g><path d="M34 32v-9a5 5 0 0 1 5-5h18a5 5 0 0 1 5 5v9" stroke="#a9adb3" strokeWidth="4"/><rect x="10" y="34" width="76" height="48" rx="7" fill="#242629"/><path d="M10 50V39a5 5 0 0 1 5-5h66a5 5 0 0 1 5 5v11Z" fill={metal}/><path d="M11 50h74" stroke="#f28a17"/><rect x="40" y="43" width="16" height="15" rx="2" fill="#f28a17" stroke="#f28a17"/><path d="M46 49h4" stroke="#242629"/><path d="M20 66h18M20 73h12" stroke="#a9adb3"/><path d="m56 74 12-12m-3-8-5 7 7 7 7-5" strokeWidth="3.5"/></g>;break;
     case "frame":drawing=<g><path d="M17 66 35 27l21 39H17l45-38 18 38M29 20h13M61 28l3-12h9" strokeWidth="5"/><circle cx="56" cy="66" r="5" stroke="#f28a17"/><path d="M40 43 53 38l8 10" stroke="#f28a17"/></g>;break;
     case "bleed":drawing=<g><path d="M37 14C28 28 20 34 20 45a17 17 0 0 0 34 0c0-11-8-17-17-31Z" fill="#f28a17" stroke="#f28a17"/><path d="M27 44c0 7 3 10 8 11" stroke="#fff"/><g transform="rotate(25 71 49)"><rect x="64" y="28" width="14" height="32" rx="3" fill={metal}/><path d="M71 14v14M62 14h18M67 60v11h8V60M71 71v13M66 36h5M66 43h5M66 50h5"/></g></g>;break;
     case "fork-lowers":drawing=<g><path d="M29 18v28M65 18v28" stroke="#a9adb3" strokeWidth="7"/><path d="M29 82V47a18 18 0 0 1 36 0v35" strokeWidth="8"/><path d="M29 47v33M65 47v33" stroke="#f28a17" strokeWidth="3"/><path d="M25 83h8M61 83h8"/><circle cx="29" cy="83" r="3"/><circle cx="65" cy="83" r="3"/></g>;break;

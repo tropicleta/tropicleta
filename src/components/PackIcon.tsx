@@ -5,9 +5,11 @@ import styles from "./PackIcon.module.css";
 /** Reuse the workshop's pictograms; the actual included jobs determine the motif. */
 export function PackIcon({ name, slug, components }: { name: string; slug: string; components: readonly { name: string; slug: string }[] }) {
   const types = new Set(components.map(serviceVisual));
-  let main: ServiceVisual = serviceVisual({ name, slug });
+  let main: ServiceVisual | "toolbox" = serviceVisual({ name, slug });
   let badge: ServiceVisual | undefined;
-  if (slug === "mantencion-basica") {
+  if (slug === "mantencion-completa") {
+    main = "toolbox";
+  } else if (slug === "mantencion-basica") {
     main = "cleaning";
   } else if (types.has("wheel-build") && types.has("tubeless")) {
     main = "wheel-build";
