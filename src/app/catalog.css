@@ -36,6 +36,9 @@
 .tp-quote-layout .tp-package-option { padding:10px; }
 .tp-quote-layout .tp-package-option > .tp-option { padding:4px; }
 .tp-quote-layout .tp-package-option b { margin-block:4px; }
+.tp-pack-copy { flex:1; min-width:0; }
+.tp-pack-heading { display:flex; align-items:center; justify-content:space-between; gap:12px; }
+.tp-pack-heading strong { min-width:0; line-height:1.4; }
 .tp-quote-layout .tp-pack-details { padding:6px 4px 2px; }
 .tp-quote-layout .tp-pack-details summary { min-height:32px; display:flex; align-items:center; }
 .tp-quote-layout .tp-quote-heading { margin:10px 0 6px; font-size:20px; }

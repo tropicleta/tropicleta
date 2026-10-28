@@ -1,6 +1,7 @@
 import { and, eq } from "drizzle-orm";
 import type { DB } from "./client";
 import * as schema from "./schema";
+import { validateHierarchy } from "../lib/package-quote";
 
 const marker = "Pack shock + cuadro de $70.000 solicitado el 28/10/2026";
 const slug = "pack-shock-cuadro";
@@ -35,5 +36,43 @@ export async function addRequestedShockFramePack(db: DB) {
     }
     await tx.insert(schema.adminAudit).values({ action: "create", entity: "service", entityId: serviceId?.toString(), summary: marker });
     return added;
+  });
+}
+
+/** Retire the two superseded packs and install the two-brake price once. */
+export async function updateRequestedBrakePacks(db: DB) {
+  const summary = "Retirar packs completa+purgado y doble suspensión; ambos frenos por $25.000 (28/10/2026)";
+  return db.transaction(async (tx) => {
+    const [applied] = await tx.select({ id: schema.adminAudit.id }).from(schema.adminAudit)
+      .where(and(eq(schema.adminAudit.entity, "service"), eq(schema.adminAudit.summary, summary))).limit(1);
+    if (applied) return 0;
+    const catalog = await tx.select().from(schema.services);
+    const retired = new Set(["mantencion-completa-sangrado", "pack-doble-suspension"]);
+    const front = catalog.find(s => s.slug === "purga-frenos-hidraulicos");
+    const rear = catalog.find(s => s.slug === "sangrado-freno-trasero");
+    if (!front || !rear || [front, rear].some(s => !s.active || s.removed || s.price !== 15000 || s.kind !== "individual" || !s.vehicles.includes("bicicleta"))) {
+      throw new Error("El pack de purgado requiere ambos servicios individuales activos a $15.000 cada uno.");
+    }
+    const brakeSlug = "purgado-ambos-frenos";
+    const existing = catalog.find(s => s.slug === brakeSlug);
+    const previousPack = catalog.find(s => retired.has(s.slug));
+    const pack = {
+      slug: brakeSlug, name: "Purgado de ambos frenos", categoryId: previousPack?.categoryId ?? front.categoryId,
+      summary: "Purgado del freno delantero y trasero por $25.000. Ahorra $5.000 frente a contratarlos por separado.",
+      description: "Incluye el purgado de los dos frenos hidráulicos de tu bicicleta. Cada freno cuesta $15.000 por separado; el pack cuesta $25.000. Los repuestos y trabajos adicionales se cotizan aparte.",
+      includes: [front.name, rear.name], price: 25000, priceFrom: false, kind: "package",
+      components: [{ slug: front.slug, required: true }, { slug: rear.slug, required: true }],
+      vehicles: ["bicicleta"], individuallySelectable: true, active: true, sort: 46,
+    };
+    validateHierarchy([
+      ...catalog.map(s => retired.has(s.slug) ? { ...s, active: false } : s),
+      ...(existing ? [] : [pack]),
+    ]);
+    for (const service of catalog.filter(s => retired.has(s.slug))) {
+      await tx.update(schema.services).set({ active: false, featured: false }).where(eq(schema.services.id, service.id));
+    }
+    if (!existing) await tx.insert(schema.services).values(pack).onConflictDoNothing();
+    await tx.insert(schema.adminAudit).values({ action: "update", entity: "service", entityId: brakeSlug, summary });
+    return existing ? 0 : 1;
   });
 }

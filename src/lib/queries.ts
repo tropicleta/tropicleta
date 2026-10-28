@@ -31,7 +31,7 @@ export const getServiceCatalog = unstable_cache(
     ]);
     return cats.map((c) => ({ ...c, services: rows.filter((s) => s.categoryId === c.id).map(s=>({...s,name:shortServiceName(s)})) })).filter(c => c.services.length > 0);
   },
-  ["service-catalog-v12"],
+  ["service-catalog-v13"],
   catalogCache,
 );
 
@@ -45,7 +45,7 @@ export const getService = unstable_cache(
       .limit(1);
     return rows[0] ? {...rows[0],service:{...rows[0].service,name:shortServiceName(rows[0].service)}} : null;
   },
-  ["service-v12"],
+  ["service-v13"],
   catalogCache,
 );
 

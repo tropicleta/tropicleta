@@ -1,0 +1,3 @@
+.icon { position:relative; display:inline-block; width:54px; height:54px; flex:0 0 54px; }
+.icon > svg { display:block; }
+.badge { position:absolute; right:0; bottom:0; display:grid; place-items:center; width:28px; height:28px; background:var(--tp-card); border:1px solid var(--tp-border); border-radius:7px; }

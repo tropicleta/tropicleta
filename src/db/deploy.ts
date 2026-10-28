@@ -5,7 +5,7 @@ import { migrate } from "drizzle-orm/node-postgres/migrator";
 import * as schema from "./schema";
 import { databaseUrl } from "./url";
 import { completeCatalog } from "./catalog";
-import { addRequestedShockFramePack } from "./requested-packs";
+import { addRequestedShockFramePack, updateRequestedBrakePacks } from "./requested-packs";
 
 async function main() {
   const url = databaseUrl();
@@ -16,6 +16,8 @@ async function main() {
     await migrate(db, { migrationsFolder: "./drizzle" });
     const added = await completeCatalog(db);
     const packs = await addRequestedShockFramePack(db);
+    const brakePacks = await updateRequestedBrakePacks(db);
+    console.log(`Packs de frenos: ${brakePacks} agregados; actualización revisada.`);
     console.log(`Packs solicitados: ${packs} agregados.`);
     console.log(`Catálogo: ${added.services} servicios y ${added.drafts} borradores de productos agregados.`);
     console.log("Base de datos preparada; datos existentes conservados.");

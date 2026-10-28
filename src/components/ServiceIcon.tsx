@@ -1,9 +1,9 @@
 import { useId } from "react";
-import { serviceVisual } from "@/lib/service-visuals";
+import { serviceVisual, type ServiceVisual } from "@/lib/service-visuals";
 
 /** Workshop pictograms: white technical linework, orange accents and metallic components. */
-export function ServiceIcon({name,slug,size=80}:{name:string;slug:string;size?:number}) {
-  const id=useId();const metal=`url(#${id})`;const type=serviceVisual({name,slug});
+export function ServiceIcon({name,slug,size=80,visual}:{name:string;slug:string;size?:number;visual?:ServiceVisual}) {
+  const id=useId();const metal=`url(#${id})`;const type=visual??serviceVisual({name,slug});
   const gear=(x:number,y:number,r:number)=><g><circle cx={x} cy={y} r={r} fill="#242629"/><circle cx={x} cy={y} r={r/2.3} stroke="#f28a17"/>{Array.from({length:8},(_,i)=><path key={i} transform={`rotate(${i*45} ${x} ${y})`} d={`M${x} ${y-r-3}v6`}/>)}</g>;
   const wheel=<g><circle cx="47" cy="47" r="30"/><circle cx="47" cy="47" r="25" stroke="#a9adb3"/><circle cx="47" cy="47" r="4" stroke="#f28a17"/>{Array.from({length:8},(_,i)=><path key={i} transform={`rotate(${i*45} 47 47)`} d="M47 22v21" stroke="#a9adb3" strokeWidth="1.6"/>)}</g>;
   const drop=<path d="M72 49C67 57 62 62 62 68a10 10 0 0 0 20 0c0-6-5-11-10-19Z" fill="#f28a17" stroke="#f28a17"/>;
