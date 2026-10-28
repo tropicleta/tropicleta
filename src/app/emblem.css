@@ -114,6 +114,10 @@
   inset: 0;
   border-radius: 50%;
   overflow: hidden;
+  /* Explicit clipping also applies to the animated 3D compositing layer. */
+  clip-path: circle(50% at 50% 50%);
+  -webkit-mask-image: radial-gradient(circle closest-side, #000 99.5%, transparent 100%);
+  mask-image: radial-gradient(circle closest-side, #000 99.5%, transparent 100%);
   pointer-events: none;
   transform: translateZ(50px);
 }
