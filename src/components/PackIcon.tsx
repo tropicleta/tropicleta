@@ -17,6 +17,9 @@ export function PackIcon({ name, slug, components }: { name: string; slug: strin
   } else if (types.has("wheel-build") && types.has("tubeless")) {
     main = "wheel-build";
     badge = "sealant";
+  } else if (types.has("shock") && types.has("fork-air")) {
+    main = "fork-air";
+    badge = "shock";
   } else if (types.has("shock") && types.has("frame")) {
     main = types.has("fork-air") ? "fork-air" : "frame";
     badge = "shock";

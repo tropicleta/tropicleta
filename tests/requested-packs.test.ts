@@ -9,6 +9,7 @@ import { addRequestedShockFramePack, updateRequestedBrakePacks, restoreRequested
 import { packageQuote, validateHierarchy } from "../src/lib/package-quote";
 import { packageReference } from "../src/lib/package-reference";
 import { serviceQuote } from "../src/lib/service-quote";
+import { addRequestedAirForkShockPack } from "../src/db/requested-packs";
 
 async function main() {
   const client = new PGlite();
@@ -118,6 +119,26 @@ async function main() {
       assert.equal(quote.leaves.includes("servicio-amortiguador"), false);
     }
     assert.equal(await replaceRequestedShockFramePack(db as unknown as DB), 0);
+    assert.equal(await addRequestedAirForkShockPack(db as unknown as DB), 1);
+    const suspensionCatalog = await db.select().from(schema.services);
+    const suspensionPack = suspensionCatalog.find(s => s.slug === "pack-horquilla-aire-shock")!;
+    assert.deepEqual(packageReference(suspensionCatalog, suspensionPack), { reference: 100000, savings: 5000 });
+    assert.deepEqual(suspensionPack.components, [{ slug: "servicio-completo-horquilla", required: true }, { slug: "servicio-amortiguador", required: true }]);
+    for (const selection of [
+      { manual: [], packages: [suspensionPack.slug], excluded: [] },
+      { manual: ["servicio-completo-horquilla", "servicio-amortiguador"], packages: [], excluded: [] },
+      { manual: ["servicio-completo-horquilla", "servicio-amortiguador"], packages: [suspensionPack.slug], excluded: [] },
+    ]) {
+      const quote = packageQuote(suspensionCatalog, selection, "bicicleta");
+      assert.equal(quote.lines.length, 1);
+      assert.equal(serviceQuote(quote.lines).total, 95000);
+      assert.deepEqual(new Set(quote.leaves), new Set(["servicio-completo-horquilla", "servicio-basico-horquilla", "servicio-amortiguador"]));
+    }
+    assert.throws(() => packageQuote(suspensionCatalog, { manual: [], packages: [suspensionPack.slug], excluded: [] }, "scooter"));
+    await db.update(schema.services).set({ price: 96000 }).where(eq(schema.services.id, suspensionPack.id));
+    assert.equal(await addRequestedAirForkShockPack(db as unknown as DB), 0);
+    assert.equal((await db.select().from(schema.services).where(eq(schema.services.id, suspensionPack.id)))[0].price, 96000);
+    console.log("Horquilla de aire + shock: $95.000, ahorro $5.000, sin duplicados y cambios posteriores conservados.");
     console.log("Pack: $70.000 directo y automático, $5.000 de ahorro, sin duplicados y sin sobrescribir cambios posteriores.");
     console.log("Frenos: dos por $25.000, uno por $15.000, packs retirados y cambios posteriores conservados.");
     console.log("Aclaración final: completa + purgado retirada; mantención completa y pack de ambos frenos conservados.");

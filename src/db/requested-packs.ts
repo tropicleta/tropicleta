@@ -161,6 +161,39 @@ export async function addRequestedWheelTubelessPack(db: DB) {
   });
 }
 
+export async function addRequestedAirForkShockPack(db: DB) {
+  const summary = "Crear servicio de horquilla de aire + shock por $95.000 (28/10/2026)";
+  return db.transaction(async (tx) => {
+    const [applied] = await tx.select({ id: schema.adminAudit.id }).from(schema.adminAudit)
+      .where(and(eq(schema.adminAudit.entity, "service"), eq(schema.adminAudit.summary, summary))).limit(1);
+    if (applied) return 0;
+    const catalog = await tx.select().from(schema.services);
+    const slug = "pack-horquilla-aire-shock";
+    const existing = catalog.find(s => s.slug === slug);
+    if (!existing) {
+      const slugs = ["servicio-completo-horquilla", "servicio-amortiguador"];
+      const jobs = slugs.map(slug => catalog.find(s => s.slug === slug));
+      if (jobs.some(s => !s || !s.active || s.removed || s.kind !== "individual" || s.price !== 50000 || !s.vehicles.includes("bicicleta"))) {
+        throw new Error("El pack requiere servicio de horquilla de aire y shock activos a $50.000 cada uno.");
+      }
+      const included = jobs.filter((s): s is typeof catalog[number] => !!s);
+      const pack = {
+        slug, name: "Servicio de horquilla de aire + shock",
+        categoryId: catalog.find(s => s.slug === "pack-mantencion-completa-cuadro")?.categoryId ?? included[0].categoryId,
+        summary: "Servicio de horquilla de aire y shock por $95.000. Ahorra $5.000 frente a contratarlos por separado.",
+        description: "Incluye el servicio completo de horquilla de aire ($50.000) y el servicio de shock ($50.000) por $95.000. Repuestos y trabajos adicionales se cotizan aparte.",
+        includes: included.map(s => s.name), price: 95000, priceFrom: false, kind: "package",
+        components: slugs.map(slug => ({ slug, required: true })), vehicles: ["bicicleta"],
+        individuallySelectable: true, active: true, sort: 48,
+      };
+      validateHierarchy([...catalog, pack]);
+      await tx.insert(schema.services).values(pack).onConflictDoNothing();
+    }
+    await tx.insert(schema.adminAudit).values({ action: "create", entity: "service", entityId: slug, summary });
+    return existing ? 0 : 1;
+  });
+}
+
 export async function replaceRequestedShockFramePack(db: DB) {
   const summary = "Reemplazar shock+cuadro por mantención completa+cuadro a $70.000 (28/10/2026)";
   return db.transaction(async (tx) => {
