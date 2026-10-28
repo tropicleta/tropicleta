@@ -111,3 +111,17 @@ export async function retireRequestedFullMaintenancePack(db: DB) {
     return 1;
   });
 }
+
+export async function renameRequestedBrakePack(db: DB) {
+  const summary = "Renombrar pack a Purgado de frenos x2 (28/10/2026)";
+  return db.transaction(async (tx) => {
+    const [applied] = await tx.select({ id: schema.adminAudit.id }).from(schema.adminAudit)
+      .where(and(eq(schema.adminAudit.entity, "service"), eq(schema.adminAudit.summary, summary))).limit(1);
+    if (applied) return 0;
+    const [pack] = await tx.select().from(schema.services).where(eq(schema.services.slug, "purgado-ambos-frenos"));
+    if (!pack) throw new Error("No se encontró el pack de purgado de ambos frenos.");
+    await tx.update(schema.services).set({ name: "Purgado de frenos x2" }).where(eq(schema.services.id, pack.id));
+    await tx.insert(schema.adminAudit).values({ action: "update", entity: "service", entityId: pack.id.toString(), summary });
+    return 1;
+  });
+}
