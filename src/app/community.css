@@ -157,7 +157,7 @@
 .tp-home-photo-hero .tp-single-carousel { width:min(100%,340px); }
 .tp-home-photo-hero .tp-poster-crop { aspect-ratio:720/998; }
 .tp-home-photo-hero .tp-poster-crop img { width:100%; height:100%; object-fit:contain; }
-.tp-mobile-summary { background:linear-gradient(120deg,#1d2426,#11181c); border-block:1px solid #ffad3225; }
+.tp-mobile-summary { background:var(--tp-black-2); border-block:1px solid var(--tp-border); }
 .tp-mobile-summary-grid { display:grid; grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr); gap:56px; align-items:center; }
 .tp-mobile-summary-photo { order:-1; }
 .tp-mobile-summary .tp-section-title { max-width:18ch; }
