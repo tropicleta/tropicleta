@@ -1,0 +1,37 @@
+.section { border-top:1px solid var(--tp-border); padding-block:44px }
+.layout { max-width:1000px; display:grid; grid-template-columns:minmax(0,1fr) 280px; grid-template-areas:"copy video" "location video"; column-gap:72px; row-gap:26px; align-items:start }
+.copy { grid-area:copy; min-width:0 }
+.copy h2 { margin:0 0 18px; font-size:clamp(28px,3vw,36px); line-height:1.12; max-width:20ch }
+.copy p { margin:0 0 16px; color:var(--tp-grey); font-size:15px; line-height:1.75; max-width:58ch }
+.copy > a { margin-top:4px }
+.location { grid-area:location; min-width:0; border-top:1px solid var(--tp-border); padding-top:20px }
+.location h3 { margin:0 0 9px; color:var(--tp-white); font-size:17px; line-height:1.4 }
+.location p { margin:0; color:var(--tp-grey); font-size:13px; line-height:1.75; max-width:64ch }
+.links { display:flex; flex-wrap:wrap; gap:10px 20px; margin-top:14px }
+.links a { color:var(--tp-white); font-size:12px; line-height:1.6; text-decoration:underline; text-underline-offset:4px }
+.links a:hover,.caption a:hover { color:var(--tp-orange) }
+.video { grid-area:video; margin:0; width:100%; max-width:280px; justify-self:center; min-width:0 }
+.player { position:relative; aspect-ratio:9 / 16; overflow:hidden; border:1px solid var(--tp-border); border-radius:12px; background:#000 }
+.poster { display:block; width:100%; height:100%; padding:0; border:0; background:#000; color:white; cursor:pointer }
+.poster img { object-fit:cover }
+.poster::after { content:""; position:absolute; inset:0; background:linear-gradient(transparent 65%,rgba(0,0,0,.55)); pointer-events:none }
+.play { position:absolute; z-index:1; top:50%; left:50%; transform:translate(-50%,-50%); width:64px; height:64px; display:grid; place-items:center; border-radius:50%; background:var(--tp-orange); color:#101112; box-shadow:0 4px 24px #0006 }
+.play svg { margin-left:3px }
+.poster:hover .play { background:#ffa637 }
+.duration { position:absolute; z-index:1; right:12px; bottom:12px; padding:3px 6px; background:#000b; border-radius:4px; color:white; font-size:11px }
+.player iframe { display:block; width:100%; height:100%; border:0 }
+.caption { display:flex; flex-direction:column; gap:4px; padding:12px 0 0 }
+.caption strong { color:var(--tp-white); font-size:15px }
+.caption > span { color:var(--tp-grey); font-size:12px; line-height:1.5 }
+.caption a { color:var(--tp-grey); font-size:12px; line-height:1.5; padding:6px 0; text-decoration:underline; text-underline-offset:4px; align-self:flex-start }
+.poster:focus-visible { outline:3px solid var(--tp-orange); outline-offset:-4px }
+.links a:focus-visible,.caption a:focus-visible { outline:2px solid var(--tp-orange); outline-offset:4px }
+@media(min-width:701px) and (max-width:1000px) { .layout { column-gap:32px; grid-template-columns:minmax(0,1fr) 240px }.video { max-width:240px }.copy h2 { font-size:29px } }
+@media(max-width:700px) {
+  .section { padding-block:32px }
+  .layout { max-width:540px; grid-template-columns:minmax(0,1fr); grid-template-areas:"copy" "video" "location"; row-gap:24px }
+  .copy h2 { font-size:28px }
+  .copy p { font-size:14px; line-height:1.7 }
+  .video { max-width:250px }
+  .location h3 { font-size:16px }
+}

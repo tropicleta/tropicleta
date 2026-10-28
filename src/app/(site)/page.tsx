@@ -7,6 +7,7 @@ import { ShopSections } from "@/components/shop/ShopSections";
 import { site } from "@/data/site";
 import { WorkshopGallery } from "@/components/WorkshopGallery";
 import { SocialFeedback } from "@/components/home/SocialFeedback";
+import { WorkshopIntro } from "@/components/home/WorkshopIntro";
 import { AnimatedEmblem } from "@/components/AnimatedEmblem";
 import { and, desc, eq, isNotNull } from "drizzle-orm";
 import { db, schema } from "@/db";
@@ -60,23 +61,7 @@ export default async function HomePage() {
 
       <SocialFeedback />
 
-      <section className="tp-section" aria-labelledby="taller-local">
-        <div className="tp-shell tp-two-col">
-          <div>
-            <span className="tp-kicker">Servicio técnico en Atacama</span>
-            <h2 id="taller-local" className="tp-display tp-category-heading">Mantención y reparación para tu próxima ruta</h2>
-            <p className="tp-section-intro">¿Tu bicicleta necesita un ajuste de cambios, revisión de frenos o mantención completa? En Tropicleta revisamos tu bici y te entregamos un presupuesto antes de realizar el trabajo. El diagnóstico es gratuito y la mano de obra tiene 2 semanas de garantía.</p>
-            <p>Consulta los servicios disponibles, selecciona lo que necesitas y coordina la atención. Los repuestos y los trabajos adicionales se cotizan aparte.</p>
-            <div className="tp-actions"><Link className="tp-btn tp-btn-primary" href="/servicios/">Ver servicios de reparación y cotizar</Link></div>
-          </div>
-          <div className="tp-panel">
-            <h2 className="tp-display tp-category-heading">¿Buscas taller de bicicletas en Copiapó o Paipote?</h2>
-            <p>Nuestro taller está en {site.address}, Región de Atacama. Si estás en Copiapó o Paipote, puedes solicitar retiro y entrega de tu bicicleta en sectores definidos. Confirma disponibilidad y costo según tu ubicación antes de coordinar.</p>
-            <p>La atención del taller es con coordinación previa. Escríbenos al <a href={`tel:+${site.whatsappNumber}`}>{site.whatsappDisplay}</a> para consultar por tu bicicleta.</p>
-            <Link className="tp-btn tp-btn-secondary" href="/contacto/">Cómo llegar al taller y consultar por retiro</Link>
-          </div>
-        </div>
-      </section>
+      <WorkshopIntro />
 
       <section className="tp-section tp-mobile-summary tp-home-hub" aria-label="Taller móvil, tienda y recomendados">
         <div className="tp-shell tp-home-hub-grid">
