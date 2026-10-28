@@ -125,3 +125,38 @@ export async function renameRequestedBrakePack(db: DB) {
     return 1;
   });
 }
+
+export async function addRequestedWheelTubelessPack(db: DB) {
+  const summary = "Crear Armado de rueda y tubeless x2 por $75.000 (28/10/2026)";
+  return db.transaction(async (tx) => {
+    const [applied] = await tx.select({ id: schema.adminAudit.id }).from(schema.adminAudit)
+      .where(and(eq(schema.adminAudit.entity, "service"), eq(schema.adminAudit.summary, summary))).limit(1);
+    if (applied) return 0;
+    const catalog = await tx.select().from(schema.services);
+    const slug = "armado-rueda-tubeless-x2";
+    const existing = catalog.find(s => s.slug === slug);
+    let packId = existing?.id;
+    if (!existing) {
+      const slugs = ["armado-de-rueda", "armado-rueda-trasera", "tubeless-completo", "tubeless-rueda-trasera"];
+      const jobs = slugs.map(slug => catalog.find(s => s.slug === slug));
+      if (jobs.some(s => !s || !s.active || s.removed || s.kind !== "individual" || s.price !== 20000 || !s.vehicles.includes("bicicleta"))) {
+        throw new Error("El pack requiere armado y tubeless de ambas ruedas, activos a $20.000 por trabajo.");
+      }
+      const included = jobs.filter((s): s is typeof catalog[number] => !!s);
+      const category = catalog.find(s => s.slug === "purgado-ambos-frenos")?.categoryId ?? included[0].categoryId;
+      const pack = {
+        slug, name: "Armado de rueda y tubeless x2", categoryId: category,
+        summary: "Armado y tubeless para las ruedas delantera y trasera. Ahorra $5.000 frente a contratarlos por separado.",
+        description: "Incluye el armado de la rueda delantera y trasera, más tubeless en ambas ruedas, por $75.000. Los cuatro trabajos cuestan $80.000 por separado. Los rayos se cotizan aparte.",
+        includes: included.map(s => s.name), price: 75000, priceFrom: false, kind: "package",
+        components: slugs.map(slug => ({ slug, required: true })), vehicles: ["bicicleta"],
+        individuallySelectable: true, active: true, sort: 50,
+      };
+      validateHierarchy([...catalog, pack]);
+      const [created] = await tx.insert(schema.services).values(pack).onConflictDoNothing().returning({ id: schema.services.id });
+      packId = created?.id;
+    }
+    await tx.insert(schema.adminAudit).values({ action: "create", entity: "service", entityId: packId?.toString(), summary });
+    return existing ? 0 : 1;
+  });
+}
