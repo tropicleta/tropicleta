@@ -12,7 +12,7 @@ export const metadata: Metadata = { alternates: { canonical: siteUrl("/nosotros/
 const values = [
   { n: "01", t: "Diagnóstico honesto", d: "Revisamos gratis y te explicamos qué necesita tu bici y qué puede esperar. Sin sorpresas en la cuenta." },
   { n: "02", t: "Alcance claro", d: "El catálogo detalla los trabajos e inclusiones. Consulta la compatibilidad de tus componentes y coordina los repuestos y la fecha de entrega con el taller." },
-  { n: "03", t: "Cerca tuyo", d: "Coordinamos por WhatsApp y retiramos en Tierra Amarilla, Paipote y Copiapó para que no pierdas tiempo." },
+  { n: "03", t: "Cerca de ti", d: "Coordinamos por WhatsApp y retiramos en Tierra Amarilla, Paipote y Copiapó para que no pierdas tiempo." },
 ];
 
 export default function NosotrosPage() {
@@ -65,6 +65,17 @@ export default function NosotrosPage() {
               </div>
             </div>
           </aside>
+        </div>
+      </section>
+      <section id="guias" className="tp-section" aria-labelledby="guias-title">
+        <div className="tp-shell">
+          <h2 id="guias-title" className="tp-display tp-section-title">Guías del taller</h2>
+          <p className="tp-section-intro">Herramientas y consejos para conocer mejor tu bici y cuidarla entre visitas.</p>
+          <div className="tp-post-grid">
+            <Link className="tp-panel" href="/consejos/"><h3>Cuida tu bicicleta</h3><p className="tp-hint">Guías de mantención, transmisión y revisión antes de salir.</p><span className="tp-service-link">Ver las guías →</span></Link>
+            <Link className="tp-panel" href="/biometria/"><h3>Altura de sillín</h3><p className="tp-hint">Una herramienta orientativa para revisar tu posición.</p><span className="tp-service-link">Revisar mi sillín →</span></Link>
+            <Link className="tp-panel" href="/calculador-sag/"><h3>Ajusta tu suspensión</h3><p className="tp-hint">Aprende a medir el SAG y a afinar el rebote paso a paso.</p><span className="tp-service-link">Abrir la guía de SAG →</span></Link>
+          </div>
         </div>
       </section>
 

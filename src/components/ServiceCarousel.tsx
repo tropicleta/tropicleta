@@ -4,13 +4,13 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import styles from "./ServiceCarousel.module.css";
 const slides = [
-  { number: 1, title: "Servicios generales", href: "/servicios/#mantenciones" },
+  { number: 1, title: "Servicios generales", href: "/servicios/" },
   { number: 4, title: "Retiro y entrega", href: "/servicios/" },
-  { number: 8, title: "Scooters eléctricos", href: "/servicios/?vehiculo=scooter#scooters" },
-  { number: 2, title: "Ruedas y tubeless", href: "/servicios/#ruedas" },
-  { number: 3, title: "Suspensiones", href: "/servicios/#suspensiones" },
-  { number: 5, title: "Ejes y rodamientos", href: "/servicios/#ejes" },
-  { number: 6, title: "Transmisión", href: "/servicios/#frenos" },
+  { number: 8, title: "Scooters eléctricos", href: "/servicios/?vehiculo=scooter&categoria=scooters#scooters" },
+  { number: 2, title: "Ruedas y tubeless", href: "/servicios/?categoria=ruedas#ruedas" },
+  { number: 3, title: "Suspensiones", href: "/servicios/?categoria=suspensiones#suspensiones" },
+  { number: 5, title: "Ejes y rodamientos", href: "/servicios/?categoria=ejes#ejes" },
+  { number: 6, title: "Transmisión", href: "/servicios/?categoria=transmision#transmision" },
 ];
 export function ServiceCarousel() {
   const [position, setPosition] = useState<{ index: number; previousIndex: number | null; direction: "next" | "previous" }>({ index: 0, previousIndex: null, direction: "next" });

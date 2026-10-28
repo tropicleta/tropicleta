@@ -25,10 +25,9 @@ export const site = {
 } as const;
 
 export const nav = [
-  { href: "/servicios/", label: "Servicios y cotización" },
+  { href: "/servicios/", label: "Taller" },
   { href: "/tienda/", label: "Tienda" },
   { href: "/recomendados/", label: "Recomendados" },
-  { href: "/consejos/", label: "Guías" },
   { href: "/eventos/", label: "Taller móvil" },
   { href: "/nosotros/", label: "Nosotros" },
   { href: "/contacto/", label: "Contacto" },
@@ -36,7 +35,7 @@ export const nav = [
 
 export const footerLinks = {
   taller: [
-    { href: "/servicios/", label: "Servicios y cotización" },
+    { href: "/servicios/", label: "Taller" },
     { href: "/eventos/", label: "Taller móvil para eventos" },
     { href: "/consejos/", label: "Consejos" },
     { href: "/biometria/", label: "Revisar altura de sillín" },
