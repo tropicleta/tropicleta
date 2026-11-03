@@ -1,0 +1,84 @@
+.background {
+  position: absolute;
+  inset: 0;
+  width: 81%;
+  overflow: hidden;
+  container-type: size;
+  pointer-events: none;
+  mask-image: linear-gradient(90deg, #000 0%, #000 76%, transparent 100%);
+}
+
+.poster {
+  object-fit: cover;
+  object-position: right center;
+}
+
+.player {
+  position: absolute;
+  inset: 0;
+  background: #0c1012;
+  opacity: 0;
+}
+
+.visible { opacity: 1; transition: opacity 600ms ease; }
+
+/* Preserve the portrait composition in the open space between text and carousel. */
+.player iframe {
+  position: absolute;
+  left: 54%;
+  top: 50%;
+  width: max(56.25cqh, 55cqw);
+  height: max(100cqh, 97.78cqw);
+  transform: translate(-50%, -50%);
+  border: 0;
+}
+
+.controls {
+  position: absolute;
+  z-index: 3;
+  left: 46%;
+  bottom: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.controls button, .controls a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 10px 14px;
+  border: 1px solid #ffffff50;
+  border-radius: 999px;
+  background: #090d10e6;
+  color: #fff;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.controls button:hover, .controls a:hover { background: #262b30; }
+.controls button { width: 40px; min-height: 40px; padding: 0; }
+.controls svg { flex-shrink: 0; }
+.controls button:focus-visible, .controls a:focus-visible { outline: 2px solid #f28a17; outline-offset: 4px; }
+.controls button:disabled { opacity: .5; cursor: wait; }
+
+@media (max-width: 979px) and (min-width: 701px) {
+  .controls { left: 24px; bottom: 10px; }
+}
+
+@media (max-width: 700px) {
+  .background { width: 100%; height: 650px; max-height: 110vw; mask-image: none; }
+  /* Center the subject in the visible area above the text and its dark gradient. */
+  .player iframe { left: 50%; top: 32cqw; width: 100cqw; height: 177.78cqw; }
+  .poster { object-fit: contain; object-position: center top; }
+  .controls { left: 16px; top: 16px; bottom: auto; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .player { transition: none; }
+}

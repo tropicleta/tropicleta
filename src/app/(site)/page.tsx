@@ -7,6 +7,7 @@ import { ShopSections } from "@/components/shop/ShopSections";
 import { site } from "@/data/site";
 import { WorkshopGallery } from "@/components/WorkshopGallery";
 import { WorkshopIntro } from "@/components/home/WorkshopIntro";
+import { HeroVideo } from "@/components/home/HeroVideo";
 import { AnimatedEmblem } from "@/components/AnimatedEmblem";
 import { and, desc, eq, isNotNull } from "drizzle-orm";
 import { db, schema } from "@/db";
@@ -24,8 +25,8 @@ export default async function HomePage() {
   return (
     <div className="tp-home">
       {/* ================= HERO ================= */}
-      <section className="tp-hero tp-home-photo-hero" aria-labelledby="tp-main-title">
-        <Image className="tp-hero-background" src="/taller/equipo-tropicleta.jpeg" alt="El equipo Tropicleta junto a su furgón en Atacama" fill sizes="100vw" preload />
+      <section className="tp-hero tp-home-photo-hero tp-home-video-hero" aria-labelledby="tp-main-title">
+        <HeroVideo />
         <div className="tp-shell">
           <div className="tp-hero-grid">
             <div>
