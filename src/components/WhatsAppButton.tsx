@@ -1,35 +1,27 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { usePathname } from "next/navigation";
 import { WA_CONSULTAR } from "@/lib/whatsapp";
 import styles from "./WhatsAppButton.module.css";
 
 export function WhatsAppButton() {
-  const pathname = usePathname();
   const [greetingVisible, setGreetingVisible] = useState(false);
 
   useEffect(() => {
     let timer: number | undefined;
-    function restartGreeting() {
-      window.clearTimeout(timer);
-      setGreetingVisible(false);
+    function startGreeting() {
       if (document.visibilityState === "visible") {
+        document.removeEventListener("visibilitychange", startGreeting);
         timer = window.setTimeout(() => setGreetingVisible(true), 600);
       }
     }
-    function onPageShow(event: PageTransitionEvent) {
-      if (event.persisted) restartGreeting();
-    }
-    restartGreeting();
-    document.addEventListener("visibilitychange", restartGreeting);
-    window.addEventListener("pageshow", onPageShow);
+    document.addEventListener("visibilitychange", startGreeting);
+    startGreeting();
     return () => {
       window.clearTimeout(timer);
-      document.removeEventListener("visibilitychange", restartGreeting);
-      window.removeEventListener("pageshow", onPageShow);
+      document.removeEventListener("visibilitychange", startGreeting);
     };
-  }, [pathname]);
+  }, []);
 
   return (
     <div className={styles.launcher}>
