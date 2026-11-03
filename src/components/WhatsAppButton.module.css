@@ -20,9 +20,11 @@
   color: #fff;
   text-decoration: none;
   box-shadow: 0 10px 30px rgb(0 0 0 / 35%);
-  animation: unfold 6.4s cubic-bezier(.45, 0, .2, 1) both;
   transition: background .2s;
 }
+
+.greetingVisible { animation: unfold 6.4s cubic-bezier(.45, 0, .2, 1) both; }
+.greetingVisible .label { animation: greeting 6.4s ease both; }
 
 .button:hover { background: #107b41; }
 .button:focus-visible { outline: 3px solid var(--tp-orange); outline-offset: 4px; }
@@ -45,7 +47,6 @@
   font: 600 14px/1 var(--font-body);
   white-space: nowrap;
   opacity: 0;
-  animation: greeting 6.4s ease both;
 }
 
 /* The right edge and icon stay still as the green pill extends and retracts. */
@@ -66,5 +67,18 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .button, .label { animation: none; transition: none; }
+  .button { transition: none; }
+  .greetingVisible { animation: quietGreeting 6.4s step-end both; }
+  .greetingVisible .label { animation: quietLabel 6.4s step-end both; }
+}
+
+/* Keep the greeting readable without sliding when reduced motion is requested. */
+@keyframes quietGreeting {
+  0%, 80% { width: var(--expanded-width); }
+  100% { width: var(--button-size); }
+}
+
+@keyframes quietLabel {
+  0%, 80% { opacity: 1; }
+  100% { opacity: 0; }
 }
