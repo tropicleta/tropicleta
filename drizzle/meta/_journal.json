@@ -141,6 +141,13 @@
       "when": 1793712000000,
       "tag": "0020_promotions",
       "breakpoints": true
+    },
+    {
+      "idx": 21,
+      "version": "7",
+      "when": 1793712000001,
+      "tag": "0021_tropibot",
+      "breakpoints": true
     }
   ]
 }

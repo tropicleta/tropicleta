@@ -14,6 +14,14 @@ import {
 } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
 
+export const tropibotRecords = pgTable("tropibot_records", {
+  id: serial("id").primaryKey(),
+  requestId: varchar("request_id", { length: 36 }).notNull().unique(),
+  data: jsonb("data").$type<import("../lib/tropibot-validation").TropibotRecord>().notNull(),
+  cashEntryId: integer("cash_entry_id").references(() => cashEntries.id),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
 export const cashEntries = pgTable("cash_entries", {
   id: serial("id").primaryKey(),
   requestId: varchar("request_id", { length: 36 }).notNull(),
