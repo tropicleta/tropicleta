@@ -18,13 +18,16 @@ export function WhatsAppButton() {
         timer = window.setTimeout(() => setGreetingVisible(true), 600);
       }
     }
+    function onPageShow(event: PageTransitionEvent) {
+      if (event.persisted) restartGreeting();
+    }
     restartGreeting();
     document.addEventListener("visibilitychange", restartGreeting);
-    window.addEventListener("pageshow", restartGreeting);
+    window.addEventListener("pageshow", onPageShow);
     return () => {
       window.clearTimeout(timer);
       document.removeEventListener("visibilitychange", restartGreeting);
-      window.removeEventListener("pageshow", restartGreeting);
+      window.removeEventListener("pageshow", onPageShow);
     };
   }, [pathname]);
 
