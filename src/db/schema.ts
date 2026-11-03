@@ -122,6 +122,13 @@ export const bookingStatus = pgEnum("booking_status", [
   "cancelada",
 ]);
 
+export const promotions = pgTable("promotions", {
+  code: varchar("code", { length: 32 }).primaryKey(),
+  percent: integer("percent").notNull(),
+  active: boolean("active").notNull().default(true),
+  expiresOn: date("expires_on"),
+}, (t) => [check("promotion_percent", sql`${t.percent} between 1 and 100`)]);
+
 export const bookings = pgTable("bookings", {
   id: serial("id").primaryKey(),
   code: varchar("code", { length: 20 }).notNull().unique(),

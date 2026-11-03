@@ -72,6 +72,7 @@ export const bookingSchema = z
     pickupCommune: z.string().optional(),
     transportMode: z.enum(["both", "pickup", "delivery"]).default("both"),
     firstService: z.string().optional().transform(v => v === "on"),
+    promoCode: z.string().trim().max(32).optional(),
     pickupAddress: z.string().trim().max(200).optional(),
     notes: z.string().trim().max(1000).optional(),
     website: z.string().max(0, "spam").optional(),

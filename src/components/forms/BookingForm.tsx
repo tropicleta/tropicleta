@@ -15,6 +15,8 @@ import { deliveryCommunes } from "@/data/shop";
 import type { FormState } from "@/lib/forms";
 
 import { quoteSavings } from "@/lib/quote-presentation";
+import { applyPromotion } from "@/lib/promotion";
+import { checkPromotion } from "@/actions/promotions";
 type Catalog = PackageCatalog;
 
 export function BookingForm({ catalog, vehicles, preselected, initialVehicleSlug, initialCategory, minDate, initialNotes }: { catalog: Catalog; vehicles:QuoteVehicle[]; preselected?: string; initialVehicleSlug?:string; initialCategory?:string; minDate: string; initialNotes?: string }) {
@@ -38,6 +40,23 @@ export function BookingForm({ catalog, vehicles, preselected, initialVehicleSlug
   const [commune, setCommune] = useState("");
   const [transportMode, setTransportMode] = useState<TransportMode>("both");
   const [firstService, setFirstService] = useState(false);
+  const [promoInput, setPromoInput] = useState("");
+  const [promotion, setPromotion] = useState<{code:string;percent:number}|null>(null);
+  const [promoMessage, setPromoMessage] = useState("");
+  const [promoChecking, setPromoChecking] = useState(false);
+  const promoRequest = useRef(0);
+  async function applyCode() {
+    const request = ++promoRequest.current;
+    setPromoChecking(true);
+    setPromoMessage("");
+    try {
+      const result = await checkPromotion(promoInput);
+      if (request !== promoRequest.current) return;
+      setPromotion(result.promotion ?? null);
+      setPromoMessage(result.message);
+    } catch { if (request === promoRequest.current) setPromoMessage("No pudimos comprobar el código. Intenta nuevamente."); }
+    finally { if (request === promoRequest.current) setPromoChecking(false); }
+  }
   const [draftReady,setDraftReady] = useState(false);
   useEffect(()=>{try{const text=sessionStorage.getItem("tp-service-draft-v3")??sessionStorage.getItem("tp-service-draft-v2");if(text&&!preselected){const saved=JSON.parse(text);let rows=vehicleQuotesSchema.parse(saved.vehicles.map((row:VehicleQuote)=>({...row,selection:{...row.selection,quantities:{}}})));multiVehicleQuote(all,rows,vehicles);let requested=rows.find(r=>r.vehicle===initialVehicleSlug);if(initialVehicleSlug&&vehicles.some(v=>v.slug===initialVehicleSlug)&&!requested&&rows.length<10){requested={id:crypto.randomUUID(),vehicle:initialVehicleSlug,details:"",selection:emptySelection};rows=[...rows,requested];}setVehicleQuotes(rows);setActiveId(requested?.id??rows[0].id);setPickup(!!saved.pickup);setCommune(saved.commune??"");setFirstService(!!saved.firstService);if(saved.transportMode in transportLabels)setTransportMode(saved.transportMode);}}catch{}setDraftReady(true);},[]);
   useEffect(()=>{if(draftReady)try{sessionStorage.setItem("tp-service-draft-v3",JSON.stringify({vehicles:vehicleQuotes,pickup,commune,firstService,transportMode}));}catch{}},[draftReady,vehicleQuotes,pickup,commune,firstService,transportMode]);
@@ -45,7 +64,7 @@ export function BookingForm({ catalog, vehicles, preselected, initialVehicleSlug
   try{groups=multiVehicleQuote(all,vehicleQuotes,vehicles);}catch(e){selectionError=e instanceof Error?e.message:"No se puede cotizar esta selección.";}
   const calculation=groups.find(g=>g.id===active.id)?.calculation;
   const chosen=groups.flatMap(g=>g.calculation.lines);
-  const quote=serviceQuote(chosen,pickup,commune,transportMode,firstService);
+  const quote=applyPromotion(serviceQuote(chosen,pickup,commune,transportMode,firstService),promotion);
   const toggle=(slug:string)=>setSelection(prev=>toggleSelection(all,prev,slug));
 
   const priceLabel=(s:QuoteService)=>s.price===null?"A cotizar":(s.priceFrom?"Desde ":"")+formatCLP(s.price);
@@ -74,7 +93,7 @@ export function BookingForm({ catalog, vehicles, preselected, initialVehicleSlug
       <h2 ref={stepHeading} tabIndex={-1} className="tp-step-title">{step===1?"Escoge tu servicio principal":step===2?"¿Quieres agregar algún servicio individual?":"Revisa tu cotización"}</h2>
       <div hidden={step===3}><section className="tp-vehicle-picker" aria-label="Vehículos de la cotización"><div className="tp-vehicle-tabs">{vehicleQuotes.map((row,i)=><button key={row.id} type="button" className={"tp-btn tp-btn-sm "+(row.id===active.id?"tp-btn-primary":"tp-btn-secondary")} aria-pressed={row.id===active.id} onClick={()=>setActiveId(row.id)}>{vehicles.find(v=>v.slug===row.vehicle)?.name??"Vehículo"} {i+1}</button>)}<button type="button" className="tp-btn tp-btn-secondary tp-btn-sm" disabled={vehicleQuotes.length>=10||!vehicles.length} onClick={()=>{const id=crypto.randomUUID();setVehicleQuotes(rows=>[...rows,{id,vehicle:vehicles[0]?.slug??"",details:"",selection:emptySelection}]);setActiveId(id);setQuery("");}}>+ Añadir otro vehículo</button></div><div className="tp-vehicle-actions">{vehicleQuotes.length>1&&<button type="button" className="tp-btn tp-btn-ghost tp-btn-sm" onClick={()=>{const rows=vehicleQuotes.filter(r=>r.id!==active.id);setVehicleQuotes(rows);setActiveId(rows[0].id);}}>Quitar este vehículo</button>}</div><p className="tp-hint">Elige los servicios para cada vehículo y marca delantera o trasera cuando corresponda. Los packs se calculan por separado para cada uno.</p></section></div>
       <div hidden={step===3}><PackageSelector key={active.id} initialCategory={initialCategory} mode={step===2?"extras":"principal"} vehicles={vehicles} catalog={catalog} selection={selection} vehicle={vehicle} doubleSuspension={doubleSuspension} query={query} covered={calculation?.lines.flatMap(s=>s.included)??[]} onQuery={setQuery} onToggle={toggle} onVehicle={(v,isDouble)=>{setVehicle(v);setSelection(prev=>({quantities:prev.quantities,manual:prev.manual.filter(slug=>!!all.find(s=>s.slug===slug) && supportsVehicle(all.find(s=>s.slug===slug)!,v,isDouble)),packages:prev.packages.filter(slug=>{const service=all.find(s=>s.slug===slug);return !!service && supportsVehicle(service,v,isDouble);}),excluded:prev.excluded.filter(slug=>!!all.find(s=>s.slug===slug) && supportsVehicle(all.find(s=>s.slug===slug)!,v,isDouble))}));}} /></div>
-      {step<3&&<div className="tp-step-actions">{step===2&&<button type="button" className="tp-btn tp-btn-secondary" onClick={()=>goStep(1)}>Volver</button>}<button type="button" className="tp-btn tp-btn-primary" disabled={!chosen.length||incomplete||!!selectionError} onClick={()=>goStep(step+1)}>{step===1?"Continuar: añadir extras":"Continuar a mi cotización"}</button>{step===2&&<p className="tp-hint">Puedes continuar sin añadir extras.</p>}</div>}
+
       <input type="hidden" name="vehicleQuotes" value={JSON.stringify(vehicleQuotes)}/>
       <input type="hidden" name="selection" value={JSON.stringify(selection)} />
       {[...new Set(groups.flatMap(g=>g.calculation.leaves))].map(slug=><input key={slug} type="hidden" name="services" value={slug} />)}
@@ -86,6 +105,14 @@ export function BookingForm({ catalog, vehicles, preselected, initialVehicleSlug
         {vehicleQuotes.map((row,i)=><label className="tp-field" key={row.id}>Marca, modelo o detalle de {vehicles.find(v=>v.slug===row.vehicle)?.name} {i+1}<input className="tp-input" name={row.id===active.id?"vehicleDetails":undefined} maxLength={200} value={row.details} onChange={e=>setVehicleQuotes(rows=>rows.map(r=>r.id===row.id?{...r,details:e.target.value}:r))} placeholder="Ej: MTB aro 29, frenos hidráulicos"/></label>)}
       </fieldset>
 
+      <fieldset className="tp-fieldset">
+        <legend className="tp-label">¿Tienes un código de descuento?</legend>
+        <label className="tp-field" htmlFor="promo-code">Código de la promoción</label>
+        <div className="tp-step-actions"><input id="promo-code" className="tp-input" value={promoInput} maxLength={32} autoCapitalize="characters" autoComplete="off" placeholder="Ej: PEDALEA10" onChange={e=>{promoRequest.current++;setPromoInput(e.target.value.toUpperCase());setPromotion(null);setPromoMessage("");setPromoChecking(false);}} onKeyDown={e=>{if(e.key==="Enter"){e.preventDefault();if(promoInput.trim()&&!promoChecking)void applyCode();}}}/><button type="button" className="tp-btn tp-btn-secondary" disabled={promoChecking||!promoInput.trim()} onClick={()=>void applyCode()}>{promoChecking?"Comprobando…":"Aplicar código"}</button>{promoInput&&<button type="button" className="tp-btn tp-btn-ghost" onClick={()=>{promoRequest.current++;setPromoInput("");setPromotion(null);setPromoMessage("");setPromoChecking(false);}}>Quitar</button>}</div>
+        <input type="hidden" name="promoCode" value={promotion?.code??""}/>
+        {promoMessage&&<p role="status" className="tp-hint">{promoMessage}</p>}{promotion&&<p className="tp-hint">{promotion.code}: {promotion.percent}% en servicios. {quote.promotion?.applied?"Aplicado a tu total.":"Tu beneficio de primera visita es mayor; conservamos ese descuento."}</p>}{err("promoCode")}
+        <p className="tp-hint">No incluye transporte ni repuestos. No se suma al beneficio de primera visita: aplicamos el mayor descuento.</p>
+      </fieldset>
       <fieldset className="tp-fieldset" id="retiro-entrega">
         <legend className="tp-label">Retiro y entrega (opcional)</legend>
         <label className="tp-option">
@@ -155,7 +182,7 @@ export function BookingForm({ catalog, vehicles, preselected, initialVehicleSlug
       <input type="text" name="website" tabIndex={-1} autoComplete="off" hidden aria-hidden="true" />
 
       <div>
-        <SubmitButton disabled={!vehicles.some(v=>v.slug===vehicle) || !!selectionError || !chosen.length || incomplete} pendingText="Enviando solicitud…">Enviar cotización y solicitar hora</SubmitButton>
+        {promoInput.trim()&&!promotion&&<p className="tp-hint">Aplica el código o quítalo antes de enviar.</p>}<SubmitButton disabled={promoChecking || (!!promoInput.trim() && !promotion) || !vehicles.some(v=>v.slug===vehicle) || !!selectionError || !chosen.length || incomplete} pendingText="Enviando solicitud…">Enviar cotización y solicitar hora</SubmitButton>
       </div>
 </details></div>
       </div>
@@ -169,7 +196,7 @@ export function BookingForm({ catalog, vehicles, preselected, initialVehicleSlug
           {savings.savings>0&&!savings.incomplete&&<div><dt>Valor por separado{savings.estimated?" referencial":""}</dt><dd>{formatCLP(quote.subtotal+savings.savings)}</dd></div>}
           {savings.savings>0&&<div className="tp-savings-line"><dt>Ahorro en packs{savings.incomplete?" conocido":""}{savings.estimated?" referencial":""}</dt><dd>−{formatCLP(savings.savings)}</dd></div>}
           <div><dt>Servicios (precio cotizado)</dt><dd>{formatCLP(quote.subtotal)}</dd></div>
-          {firstService && <div><dt>Primer servicio −10%</dt><dd>−{formatCLP(quote.discount)}</dd></div>}
+          {quote.discount > 0 && <div><dt>{quote.promotion?.applied ? `Código ${quote.promotion.code} −${quote.promotion.percent}%` : "Primer servicio −10%"}</dt><dd>−{formatCLP(quote.discount)}</dd></div>}
           {pickup && <div><dt>{transportLabels[transportMode]}{commune ? ` · ${commune}` : ""}</dt><dd>{quote.transport === null ? "Elige tu zona" : formatCLP(quote.transport)}</dd></div>}
         </dl>
         <details className="tp-quote-conditions"><summary>Condiciones de la cotización</summary><p className="tp-hint">El taller confirma el valor final tras el diagnóstico gratuito. Repuestos y trabajos adicionales se cotizan aparte. Revisaremos si los servicios elegidos incluyen trabajos en común.</p>
@@ -179,7 +206,7 @@ export function BookingForm({ catalog, vehicles, preselected, initialVehicleSlug
         <footer className="tp-quote-summary-footer">
         <dl className="tp-dl tp-quote-total-row"><div aria-live="polite" aria-atomic="true"><dt>{quote.from ? "Total estimado desde" : "Total estimado"}</dt><dd className="tp-quote-total">{formatCLP(quote.total)}</dd></div></dl>
         {quote.pending && <p className="tp-hint tp-quote-pending">Hay valores pendientes de cotizar, fuera del total.</p>}
-        {step<3&&<button type="button" className="tp-btn tp-btn-secondary tp-btn-sm" disabled={!chosen.length||incomplete||!!selectionError} onClick={()=>goStep(3)}>Revisar y enviar</button>}
+      {step<3&&<div className="tp-step-actions">{step===2&&<button type="button" className="tp-btn tp-btn-secondary" onClick={()=>goStep(1)}>Volver</button>}<button type="button" className="tp-btn tp-btn-primary" disabled={!chosen.length||incomplete||!!selectionError} onClick={()=>goStep(step+1)}>{step===1?"Continuar: añadir extras":"Continuar a mi cotización"}</button>{step===2&&<p className="tp-hint">Puedes continuar sin añadir extras.</p>}</div>}
         </footer>
       </aside>
     </form>

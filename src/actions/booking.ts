@@ -14,6 +14,8 @@ import { bookingSchema } from "@/lib/validation";
 import { multiVehicleQuote,vehicleQuotesSchema } from "@/lib/multi-quote";
 import { shortServiceName } from "@/lib/service-visuals";
 import { selectionSchema } from "@/lib/quote-selection";
+import { findPromotion } from "@/lib/promotions";
+import { applyPromotion } from "@/lib/promotion";
 
 export async function createBooking(_prev: FormState, fd: FormData): Promise<FormState> {
   if (!(await allowPublicSubmission("createBooking"))) return { message: "Demasiados intentos. Espera 15 minutos antes de volver a intentar." };
@@ -38,8 +40,10 @@ export async function createBooking(_prev: FormState, fd: FormData): Promise<For
     }catch(e){return {errors:{services:e instanceof Error?e.message:"La selección no es válida."},values};}
     const found=groups.flatMap(g=>g.calculation.lines);
     const serviceNames=groups.flatMap(g=>g.calculation.lines.map(s=>g.label+" · "+s.name+" ×"+s.quantity));
-    const quote = serviceQuote(found, d.pickup, d.pickupCommune, d.transportMode, d.firstService);
-    const quoteText=groups.map(g=>g.label+": "+g.calculation.lines.map(s=>s.name+" ×"+s.quantity+": "+(s.price===null?"A cotizar":(s.priceFrom?"Desde ":"")+formatCLP(s.price*s.quantity))).join("; ")).join("\n")+"; Subtotal de servicios: "+formatCLP(quote.subtotal)+(d.firstService?"; Primer servicio, descuento 10% en servicios: -"+formatCLP(quote.discount):"")+(d.pickup?"; "+transportLabels[d.transportMode]+": "+(quote.transport===null?"A cotizar":formatCLP(quote.transport)):"")+"; Total estimado: "+formatCLP(quote.total)+(quote.pending?"; Valores pendientes de cotizar.":"")+"; Sujeto a diagnóstico y confirmación.";
+    const promotion = d.promoCode ? await findPromotion(d.promoCode) : null;
+    if (d.promoCode && !promotion) return { errors: { promoCode: "El código venció o ya no está disponible. Quítalo o ingresa otro antes de enviar." }, values };
+    const quote = applyPromotion(serviceQuote(found, d.pickup, d.pickupCommune, d.transportMode, d.firstService), promotion);
+    const quoteText=groups.map(g=>g.label+": "+g.calculation.lines.map(s=>s.name+" ×"+s.quantity+": "+(s.price===null?"A cotizar":(s.priceFrom?"Desde ":"")+formatCLP(s.price*s.quantity))).join("; ")).join("\n")+"; Subtotal de servicios: "+formatCLP(quote.subtotal)+(quote.discount ? "; "+(quote.promotion?.applied?"Código "+quote.promotion.code+", descuento "+quote.promotion.percent+"%":"Primer servicio, descuento 10%")+" en servicios: -"+formatCLP(quote.discount):"")+(d.pickup?"; "+transportLabels[d.transportMode]+": "+(quote.transport===null?"A cotizar":formatCLP(quote.transport)):"")+"; Total estimado: "+formatCLP(quote.total)+(quote.pending?"; Valores pendientes de cotizar.":"")+"; Sujeto a diagnóstico y confirmación.";
     const packageDetail=groups.map(g=>g.label+(g.details?" · "+g.details:"")+": "+g.calculation.lines.map(s=>s.name+" ×"+s.quantity+(s.automatic?" (paquete reconocido)":"")+(s.included.length?" · Incluidos: "+s.included.map(slug=>catalog.find(s=>s.slug===slug)!.name+" ×"+s.includedQuantities[slug]).join(", "):"")).join("; ")).join("\n");
     code = shortCode("TP");
     await db.insert(schema.bookings).values({
