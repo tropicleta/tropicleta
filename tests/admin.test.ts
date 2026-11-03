@@ -37,6 +37,10 @@ async function main() {
     assert.equal((await db.select().from(schema.loginAttempts)).length, 0);
     const concurrent = await Promise.all(Array.from({ length: 20 }, () => claimLoginAttempt("concurrent-ip")));
     assert.equal(concurrent.filter(Boolean).length, 5);
+    const chatConcurrent = await Promise.all(Array.from({ length: 20 }, () => claimLoginAttempt("chat-test", 8, 1)));
+    assert.equal(chatConcurrent.filter(Boolean).length, 8);
+    await client.query(`update login_attempts set window_start = now() - interval '2 minutes' where key = 'chat-test'`);
+    assert.equal(await claimLoginAttempt("chat-test", 8, 1), true);
 
     const { newAdminToken, verifyAdminToken, ADMIN_IDLE_SECONDS } = await import("../src/lib/admin-session-token");
     const { storeAdminSession, touchAdminSession, revokeAdminSession } = await import("../src/lib/admin-session-store");

@@ -1,5 +1,7 @@
 "use server";
 
+import { allowPublicSubmission } from "@/lib/public-limit";
+
 import { eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
 import { db, schema } from "@/db";
@@ -14,6 +16,7 @@ import { shortServiceName } from "@/lib/service-visuals";
 import { selectionSchema } from "@/lib/quote-selection";
 
 export async function createBooking(_prev: FormState, fd: FormData): Promise<FormState> {
+  if (!(await allowPublicSubmission("createBooking"))) return { message: "Demasiados intentos. Espera 15 minutos antes de volver a intentar." };
   const values = formToObject(fd);
   const parsed = bookingSchema.safeParse(values);
   if (!parsed.success) return { errors: zodErrors(parsed.error), values };

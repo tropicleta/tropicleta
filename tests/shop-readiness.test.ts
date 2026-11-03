@@ -66,6 +66,9 @@ async function main() {
     await markOrderFailed(order.id, "rechazada");
     assert.equal((await db.select().from(schema.orders).where(eq(schema.orders.id, order.id)))[0].status, "pagada");
     const { POST: mpWebhook } = await import("../src/app/api/mercadopago/webhook/route");
+    for (const body of ["null", "[]", "{", "x".repeat(16385)]) {
+      assert.equal((await mpWebhook(new NextRequest("http://localhost/api/mercadopago/webhook/", { method: "POST", body }))).status, 400);
+    }
     process.env.MP_WEBHOOK_SECRET = "isolated-webhook-test-secret";
     const [webhookProduct] = await db.insert(schema.products).values({ slug: "webhook-test", name: "Webhook", price: 1000, stock: 2 }).returning();
     const [webhookOrder] = await db.insert(schema.orders).values({ code: "MP-WEBHOOK", customerName: "Prueba", customerEmail: "test@example.com", customerPhone: "56911111111", deliveryMethod: "retiro", subtotal: 1000, shipping: 0, total: 1000, paymentMethod: "mercadopago" }).returning();

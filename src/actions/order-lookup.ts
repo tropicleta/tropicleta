@@ -1,11 +1,14 @@
 "use server";
 
+import { allowPublicSubmission } from "@/lib/public-limit";
+
 import { and, eq, sql } from "drizzle-orm";
 import { redirect } from "next/navigation";
 import { db, schema } from "@/db";
 import type { FormState } from "@/lib/forms";
 
 export async function lookupOrder(_prev: FormState, fd: FormData): Promise<FormState> {
+  if (!(await allowPublicSubmission("lookupOrder"))) return { message: "Demasiados intentos. Espera 15 minutos antes de volver a intentar." };
   const code = String(fd.get("code") ?? "").trim().toUpperCase();
   const email = String(fd.get("email") ?? "").trim().toLowerCase();
   const values = { code, email };

@@ -29,17 +29,17 @@ export async function recordLoginFailure(ip: string) {
 }
 
 /** Reserva atómica antes de verificar credenciales: solicitudes concurrentes no saltan el límite. */
-export async function claimLoginAttempt(ip: string) {
+export async function claimLoginAttempt(ip: string, maxAttempts = MAX_ATTEMPTS, windowMinutes = WINDOW_MINUTES) {
   const t = schema.loginAttempts;
-  const expired = sql`${t.windowStart} <= now() - make_interval(mins => ${WINDOW_MINUTES})`;
+  const expired = sql`${t.windowStart} <= now() - make_interval(mins => ${windowMinutes})`;
   const [row] = await db.insert(t).values({ key: ip, count: 1 }).onConflictDoUpdate({
     target: t.key,
     set: {
-      count: sql`case when ${expired} then 1 else least(${t.count} + 1, ${MAX_ATTEMPTS + 1}) end`,
+      count: sql`case when ${expired} then 1 else least(${t.count} + 1, ${maxAttempts + 1}) end`,
       windowStart: sql`case when ${expired} then now() else ${t.windowStart} end`,
     },
   }).returning({ count: t.count });
-  return row.count <= MAX_ATTEMPTS;
+  return row.count <= maxAttempts;
 }
 
 export async function clearLoginFailures(ip: string) {

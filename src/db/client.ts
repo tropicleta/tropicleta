@@ -22,7 +22,13 @@ export function getDb(): DB {
   if (url) {
     // eslint-disable-next-line @typescript-eslint/no-require-imports
     const { Pool } = require("pg") as typeof import("pg");
-    g.__tpDb = drizzlePg(new Pool({ connectionString: url, max: 5 }), { schema });
+    g.__tpDb = drizzlePg(new Pool({
+      connectionString: url,
+      max: 5,
+      connectionTimeoutMillis: 10_000,
+      idleTimeoutMillis: 30_000,
+      statement_timeout: 15_000,
+    }), { schema });
   } else {
     if (isServerless()) throw new Error("Falta DATABASE_URL (o POSTGRES_URL) en las variables de entorno de Vercel.");
     // eslint-disable-next-line @typescript-eslint/no-require-imports

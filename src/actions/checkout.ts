@@ -1,5 +1,7 @@
 "use server";
 
+import { allowPublicSubmission } from "@/lib/public-limit";
+
 import { db, schema } from "@/db";
 import { formToObject, zodErrors, type FormState } from "@/lib/forms";
 import { shortCode } from "@/lib/format";
@@ -18,6 +20,7 @@ export type CheckoutState = FormState & {
 };
 
 export async function startCheckout(_prev: CheckoutState, fd: FormData): Promise<CheckoutState> {
+  if (!(await allowPublicSubmission("startCheckout"))) return { message: "Demasiados intentos. Espera 15 minutos antes de volver a intentar." };
   try {
     return await checkout(fd);
   } catch (error) {

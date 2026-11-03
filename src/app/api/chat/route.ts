@@ -1,6 +1,9 @@
 // Tropicleta — asistente IA "Tropi" (basado en el agente de naitre-web).
 // Requiere OPENAI_API_KEY (clave propia de Tropicleta) en .env.local / variables del proyecto en Vercel.
 import { buildKnowledge } from "@/lib/chat-knowledge";
+import { readRequestJson } from "@/lib/request-json";
+import { allowPublicSubmission } from "@/lib/public-limit";
+import { claimLoginAttempt } from "@/lib/login-limit";
 import { EMOTIONS, type Emotion } from "@/lib/chat-emotions";
 
 export const runtime = "nodejs";
@@ -130,6 +133,13 @@ export async function POST(req: Request) {
 
   const ip = (req.headers.get("x-forwarded-for") || "").split(",")[0].trim() || "unknown";
   if (rateLimited(ip)) return json({ error: "Too many requests" }, 429);
+  try {
+    if (!(await allowPublicSubmission("chat", 8, 1)) || !(await claimLoginAttempt("chat:global", 100, 1))) {
+      return json({ error: "Too many requests" }, 429);
+    }
+  } catch {
+    return json({ error: "Service unavailable" }, 503);
+  }
 
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) {
@@ -139,7 +149,9 @@ export async function POST(req: Request) {
 
   let messages: unknown;
   try {
-    ({ messages } = await req.json());
+    const body = await readRequestJson(req, 64 * 1024);
+    if (!body || typeof body !== "object") return json({ error: "Invalid body" }, 400);
+    ({ messages } = body as { messages?: unknown });
   } catch {
     return json({ error: "Invalid body" }, 400);
   }

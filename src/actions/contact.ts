@@ -1,5 +1,7 @@
 "use server";
 
+import { allowPublicSubmission } from "@/lib/public-limit";
+
 import { db, schema } from "@/db";
 import { adminEmail, emailLayout, escapeHtml, sendEmail } from "@/lib/email";
 import { formToObject, zodErrors, type FormState } from "@/lib/forms";
@@ -7,6 +9,7 @@ import { normalizeChileanPhone } from "@/lib/format";
 import { contactSchema } from "@/lib/validation";
 
 export async function sendContactMessage(_prev: FormState, fd: FormData): Promise<FormState> {
+  if (!(await allowPublicSubmission("sendContactMessage"))) return { message: "Demasiados intentos. Espera 15 minutos antes de volver a intentar." };
   const values = formToObject(fd);
   const parsed = contactSchema.safeParse(values);
   if (!parsed.success) return { errors: zodErrors(parsed.error), values };
