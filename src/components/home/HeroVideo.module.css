@@ -33,6 +33,23 @@
   border: 0;
 }
 
+@media (min-width: 701px) {
+  /* Fade all four visible edges, including where the portrait frame is cropped. */
+  .player::after {
+    content: "";
+    position: absolute;
+    z-index: 1;
+    inset-block: 0;
+    left: 54%;
+    width: max(56.25cqh, 55cqw);
+    transform: translateX(-50%);
+    background:
+      linear-gradient(90deg, #0c1012 0%, #0c101200 14%, #0c101200 86%, #0c1012 100%),
+      linear-gradient(180deg, #0c1012 0%, #0c101200 14%, #0c101200 86%, #0c1012 100%);
+    pointer-events: none;
+  }
+}
+
 .controls {
   position: absolute;
   z-index: 3;
