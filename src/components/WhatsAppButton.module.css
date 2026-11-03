@@ -1,10 +1,70 @@
-.expanded[class] :global(.tp-chat-fab) { width:64px; height:64px; animation:welcome .45s ease-out both }
-.teaser[class] { animation:message 4s ease both }
-@keyframes welcome { from { transform:scale(.82) } to { transform:scale(1) } }
-@keyframes message {
-  0% { opacity:0; transform:translateX(12px) scale(.95) }
-  12%,90% { opacity:1; transform:translateX(0) scale(1) }
-  100% { opacity:0; transform:translateX(6px) scale(.95) }
+.launcher {
+  position: fixed;
+  right: 18px;
+  bottom: calc(18px + env(safe-area-inset-bottom));
+  z-index: 61;
 }
-@media(max-width:700px) { .expanded[class] :global(.tp-chat-fab) { width:54px; height:54px } }
-@media(prefers-reduced-motion:reduce) { .expanded[class] :global(.tp-chat-fab),.teaser[class] { animation:none } }
+
+.button {
+  --button-size: 52px;
+  --expanded-width: 196px;
+  position: relative;
+  display: block;
+  box-sizing: border-box;
+  width: var(--button-size);
+  height: var(--button-size);
+  overflow: hidden;
+  border: 1px solid #25d366;
+  border-radius: 999px;
+  background: #128c4a;
+  color: #fff;
+  text-decoration: none;
+  box-shadow: 0 10px 30px rgb(0 0 0 / 35%);
+  animation: unfold 6.4s cubic-bezier(.45, 0, .2, 1) both;
+  transition: background .2s;
+}
+
+.button:hover { background: #107b41; }
+.button:focus-visible { outline: 3px solid var(--tp-orange); outline-offset: 4px; }
+
+.icon {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: grid;
+  place-items: center;
+  width: calc(var(--button-size) - 2px);
+  height: calc(var(--button-size) - 2px);
+}
+
+.label {
+  position: absolute;
+  inset: 0 var(--button-size) 0 20px;
+  display: flex;
+  align-items: center;
+  font: 600 14px/1 var(--font-body);
+  white-space: nowrap;
+  opacity: 0;
+  animation: greeting 6.4s ease both;
+}
+
+/* The right edge and icon stay still as the green pill extends and retracts. */
+@keyframes unfold {
+  0%, 5%, 100% { width: var(--button-size); }
+  19%, 80% { width: var(--expanded-width); }
+}
+
+@keyframes greeting {
+  0%, 9%, 94%, 100% { opacity: 0; transform: translateX(8px); }
+  21%, 80% { opacity: 1; transform: translateX(0); }
+}
+
+@media (max-width: 639px) {
+  .launcher { right: 12px; }
+  .button { --button-size: 44px; --expanded-width: 180px; }
+  .icon svg { width: 25px; height: 25px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .button, .label { animation: none; transition: none; }
+}
