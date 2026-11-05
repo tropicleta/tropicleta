@@ -11,6 +11,7 @@ const slides = [
   { number: 3, title: "Suspensiones", href: "/servicios/?categoria=suspensiones#suspensiones" },
   { number: 5, title: "Ejes y rodamientos", href: "/servicios/?categoria=ejes#ejes" },
   { number: 6, title: "Transmisión", href: "/servicios/?categoria=transmision#transmision" },
+  { number: 7, title: "Frenos", href: "/servicios/?categoria=frenos#frenos" },
 ];
 export function ServiceCarousel() {
   const [position, setPosition] = useState<{ index: number; previousIndex: number | null; direction: "next" | "previous" }>({ index: 0, previousIndex: null, direction: "next" });
@@ -42,7 +43,7 @@ export function ServiceCarousel() {
         return <article key={slide.number} className={`tp-single-card ${styles.card} ${active ? styles.active : leaving ? styles.leaving : ""} ${motion}`} aria-hidden={!active} inert={!active} aria-label={slideIndex + 1 + " de " + slides.length + ": " + slide.title} aria-roledescription="lámina" onAnimationEnd={() => {
           if (leaving) setPosition(current => current.previousIndex === slideIndex ? { ...current, previousIndex: null } : current);
         }}>
-          <Link href={slide.href} className="tp-poster-crop" aria-label={"Ver " + slide.title}><Image src={slide.number === 4 ? "/catalogo/compacto/retiro-entrega.png" : slide.number === 1 ? "/catalogo/compacto/servicios-generales.jpg" : "/catalogo/compacto/" + slide.number + ".jpg"} alt={"Catálogo Tropicleta: " + slide.title} fill sizes="(max-width: 700px) 92vw, (max-width: 979px) 340px, 390px" loading={active ? "eager" : "lazy"} /></Link>
+          <Link href={slide.href} className="tp-poster-crop" aria-label={"Ver " + slide.title}><Image src={slide.number === 4 ? "/catalogo/compacto/retiro-entrega.png" : slide.number === 1 ? "/catalogo/compacto/servicios-generales.jpg" : "/catalogo/compacto/" + slide.number + ".jpg"} alt={"Catálogo Tropicleta: " + slide.title} style={slide.number === 7 ? { objectFit: "cover", objectPosition: "top" } : undefined} fill sizes="(max-width: 700px) 92vw, (max-width: 979px) 340px, 390px" loading={active ? "eager" : "lazy"} /></Link>
           <div className="tp-single-caption"><div className="tp-carousel-dots" aria-label="Elegir servicio">{slides.map((item, dotIndex) => <button key={item.number} type="button" onClick={() => setPosition(current => current.index === dotIndex ? current : { index: dotIndex, previousIndex: current.index, direction: dotIndex > current.index ? "next" : "previous" })} aria-label={`Ver ${item.title}`} aria-current={index === dotIndex ? "true" : undefined} aria-controls="service-carousel"><span /></button>)}</div><Link className="tp-btn tp-btn-primary" href={slide.href}>Ir a servicios y cotización →</Link></div>
         </article>;
       })}
