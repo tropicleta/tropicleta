@@ -1,4 +1,5 @@
-.viewport { display:grid; overflow:hidden; isolation:isolate; border-radius:var(--tp-radius); box-shadow:0 16px 50px #0006 }
+.frame { box-shadow:0 16px 50px #0006 }
+.viewport { display:grid; overflow:hidden; isolation:isolate }
 .card { grid-area:1 / 1; min-width:0; visibility:hidden; box-shadow:none; backface-visibility:hidden }
 .active { visibility:visible; z-index:2 }
 .leaving { visibility:visible; z-index:1; pointer-events:none }

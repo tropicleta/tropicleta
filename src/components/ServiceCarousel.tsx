@@ -31,6 +31,7 @@ export function ServiceCarousel() {
     onMouseEnter={() => setInteracting(true)} onMouseLeave={() => setInteracting(false)}
     onFocusCapture={() => setInteracting(true)} onBlurCapture={event => { if (!event.currentTarget.contains(event.relatedTarget)) setInteracting(false); }}
     onKeyDown={event => { if (event.key === "ArrowRight" || event.key === "ArrowLeft") { event.preventDefault(); go(event.key === "ArrowRight" ? 1 : -1); } }}>
+    <div className={`tp-single-card ${styles.frame}`}>
     <div id="service-carousel" className={styles.viewport} style={{ touchAction: "pan-y" }}
       onTouchStart={event => { const point = event.touches[0]; touch.current = { x: point.clientX, y: point.clientY }; swiped.current = false; setInteracting(true); }}
       onTouchEnd={event => { const start = touch.current; const end = event.changedTouches[0]; if (start && Math.abs(end.clientX - start.x) > 45 && Math.abs(end.clientX - start.x) > Math.abs(end.clientY - start.y)) { go(end.clientX < start.x ? 1 : -1); swiped.current = true; } touch.current = null; setInteracting(false); }}
@@ -40,13 +41,14 @@ export function ServiceCarousel() {
         const active = slideIndex === index;
         const leaving = slideIndex === position.previousIndex;
         const motion = position.previousIndex === null ? "" : active ? (position.direction === "next" ? styles.enterNext : styles.enterPrevious) : leaving ? (position.direction === "next" ? styles.exitNext : styles.exitPrevious) : "";
-        return <article key={slide.number} className={`tp-single-card ${styles.card} ${active ? styles.active : leaving ? styles.leaving : ""} ${motion}`} aria-hidden={!active} inert={!active} aria-label={slideIndex + 1 + " de " + slides.length + ": " + slide.title} aria-roledescription="lámina" onAnimationEnd={() => {
+        return <article key={slide.number} className={`${styles.card} ${active ? styles.active : leaving ? styles.leaving : ""} ${motion}`} aria-hidden={!active} inert={!active} aria-label={slideIndex + 1 + " de " + slides.length + ": " + slide.title} aria-roledescription="lámina" onAnimationEnd={() => {
           if (leaving) setPosition(current => current.previousIndex === slideIndex ? { ...current, previousIndex: null } : current);
         }}>
           <Link href={slide.href} className="tp-poster-crop" aria-label={"Ver " + slide.title}><Image src={slide.number === 7 ? "/catalogo/compacto/frenos-hd.png" : slide.number === 4 ? "/catalogo/compacto/retiro-entrega.png" : slide.number === 1 ? "/catalogo/compacto/servicios-generales.jpg" : "/catalogo/compacto/" + slide.number + ".jpg"} alt={"Catálogo Tropicleta: " + slide.title} style={slide.number === 7 ? { objectFit: "cover", objectPosition: "top" } : undefined} fill sizes="(max-width: 700px) 92vw, (max-width: 979px) 340px, 390px" loading={active ? "eager" : "lazy"} /></Link>
-          <div className="tp-single-caption"><div className="tp-carousel-dots" aria-label="Elegir servicio">{slides.map((item, dotIndex) => <button key={item.number} type="button" onClick={() => setPosition(current => current.index === dotIndex ? current : { index: dotIndex, previousIndex: current.index, direction: dotIndex > current.index ? "next" : "previous" })} aria-label={`Ver ${item.title}`} aria-current={index === dotIndex ? "true" : undefined} aria-controls="service-carousel"><span /></button>)}</div><Link className="tp-btn tp-btn-primary" href={slide.href}>Ir a servicios y cotización →</Link></div>
         </article>;
       })}
+    </div>
+    <div className="tp-single-caption"><div className="tp-carousel-dots" aria-label="Elegir servicio">{slides.map((item, dotIndex) => <button key={item.number} type="button" onClick={() => setPosition(current => current.index === dotIndex ? current : { index: dotIndex, previousIndex: current.index, direction: dotIndex > current.index ? "next" : "previous" })} aria-label={`Ver ${item.title}`} aria-current={index === dotIndex ? "true" : undefined} aria-controls="service-carousel"><span /></button>)}</div><Link className="tp-btn tp-btn-primary" href={slides[index].href}>Ir a servicios y cotización →</Link></div>
     </div>
   </section>;
 }
