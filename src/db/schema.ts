@@ -7,12 +7,22 @@ import {
   jsonb,
   pgEnum,
   pgTable,
+  primaryKey,
   serial,
   text,
   timestamp,
   varchar,
 } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
+
+export const visitDaily = pgTable("visit_daily", {
+  day: date("day").notNull().default(sql`(CURRENT_TIMESTAMP AT TIME ZONE 'America/Santiago')::date`),
+  path: varchar("path", { length: 200 }).notNull(),
+  source: varchar("source", { length: 80 }).notNull(),
+  campaign: varchar("campaign", { length: 80 }).notNull().default(""),
+  views: integer("views").notNull().default(0),
+  visits: integer("visits").notNull().default(0),
+}, table => [primaryKey({ columns: [table.day, table.path, table.source, table.campaign] })]);
 
 export const tropibotRecords = pgTable("tropibot_records", {
   id: serial("id").primaryKey(),

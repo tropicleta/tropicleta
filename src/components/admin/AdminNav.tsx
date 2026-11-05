@@ -5,7 +5,7 @@ const groups = [
   {label:"Tienda",links:[{href:"/admin/productos/",label:"Productos"},{href:"/admin/ordenes/",label:"Órdenes de productos"},{href:"/admin/productos/categorias/",label:"Categorías"},{href:"/admin/productos/papelera/",label:"Papelera de productos"}]},
   {label:"Taller",links:[{href:"/admin/servicios/",label:"Servicios"},{href:"/admin/reservas/",label:"Reservas"},{href:"/admin/servicios/categorias/",label:"Categorías"},{href:"/admin/servicios/papelera/",label:"Papelera de servicios"}]},
 ];
-const general=[{href:"/admin/tropibot/",label:"Tropibot"},{href:"/admin/",label:"Resumen"},{href:"/admin/contabilidad/",label:"Contabilidad"},{href:"/admin/seguridad/",label:"Seguridad"}];
+const general=[{href:"/admin/visitas/",label:"Visitas"},{href:"/admin/tropibot/",label:"Tropibot"},{href:"/admin/",label:"Resumen"},{href:"/admin/contabilidad/",label:"Contabilidad"},{href:"/admin/seguridad/",label:"Seguridad"}];
 const other=[{href:"/admin/promociones/",label:"Promociones"},{href:"/admin/recomendados/",label:"Recomendados"},{href:"/admin/pagos/",label:"Configuración de pagos"},{href:"/admin/mensajes/",label:"Mensajes"},{href:"/admin/actividad/",label:"Actividad"}];
 export function AdminNav({badges}:{badges:Record<string,number>}) {
   const raw=usePathname();const pathname=raw.endsWith("/")?raw:raw+"/";

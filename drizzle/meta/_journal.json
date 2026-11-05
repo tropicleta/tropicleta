@@ -148,6 +148,13 @@
       "when": 1793712000001,
       "tag": "0021_tropibot",
       "breakpoints": true
+    },
+    {
+      "idx": 21,
+      "version": "7",
+      "when": 1793712000002,
+      "tag": "0022_visits",
+      "breakpoints": true
     }
   ]
 }
