@@ -67,18 +67,6 @@ export default function NosotrosPage() {
           </aside>
         </div>
       </section>
-      <section id="guias" className="tp-section tp-about-guides" aria-labelledby="guias-title">
-        <div className="tp-shell">
-          <h2 id="guias-title" className="tp-display tp-section-title">Guías del taller</h2>
-          <p className="tp-section-intro">Herramientas y consejos para conocer mejor tu bici y cuidarla entre visitas.</p>
-          <div className="tp-post-grid">
-            <Link className="tp-panel" href="/consejos/"><h3>Cuida tu bicicleta</h3><p className="tp-hint">Guías de mantención, transmisión y revisión antes de salir.</p><span className="tp-service-link">Ver las guías →</span></Link>
-            <Link className="tp-panel" href="/biometria/"><h3>Altura de sillín</h3><p className="tp-hint">Una herramienta orientativa para revisar tu posición.</p><span className="tp-service-link">Revisar mi sillín →</span></Link>
-            <Link className="tp-panel" href="/calculador-sag/"><h3>Ajusta tu suspensión</h3><p className="tp-hint">Aprende a medir el SAG y a afinar el rebote paso a paso.</p><span className="tp-service-link">Abrir la guía de SAG →</span></Link>
-          </div>
-        </div>
-      </section>
-
       <section className="tp-section tp-shop">
         <div className="tp-shell">
           <span className="tp-kicker">Cómo trabajamos</span>

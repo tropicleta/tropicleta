@@ -30,7 +30,7 @@ export function Header() {
     return () => { document.removeEventListener("pointerdown", closeOutside); document.removeEventListener("keydown", closeOnEscape); };
   }, [open]);
 
-  const isActive = (href: string) => pathname.startsWith(href.replace(/\/$/, ""));
+  const isActive = (href: string) => href === "/extras/" ? ["/extras", "/consejos", "/biometria", "/calculador-sag"].some(path => pathname.startsWith(path)) : pathname.startsWith(href.replace(/\/$/, ""));
 
   return (
     <header ref={headerRef} className="tp-header">

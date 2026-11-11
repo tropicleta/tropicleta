@@ -1,0 +1,13 @@
+Surf Shimmy
+Artist: Kevin MacLeod (incompetech.com)
+ISRC: USUAN1700018
+Licensed under Creative Commons: By Attribution 4.0 License
+https://creativecommons.org/licenses/by/4.0/
+Official track page: https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1700018
+Official source: https://incompetech.com/music/royalty-free/mp3-royaltyfree/Surf%20Shimmy.mp3
+Retrieved: 2026-10-21
+Local filename: tropi-surf-rock-v7.mp3
+Adaptation for Tropi: high-pass at70Hz, low-mid and guitar-presence EQ, short45/90ms echo, tempo increased8% with pitch preserved, loudness adjustment and limiting. Encoded as192kbps stereo MP3 at44100Hz.
+The original artist is credited; this adaptation does not imply endorsement.
+Adapted recording distributed under CC BY4.0. Script: scripts/remix-tropi-surf-v7.py.
+Attribution is also displayed in the bicycle game's footer.

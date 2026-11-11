@@ -29,6 +29,7 @@ export const nav = [
   { href: "/tienda/", label: "Tienda" },
   { href: "/recomendados/", label: "Recomendados" },
   { href: "/eventos/", label: "Taller móvil" },
+  { href: "/extras/", label: "Extras" },
   { href: "/nosotros/", label: "Nosotros" },
   { href: "/contacto/", label: "Contacto" },
 ] as const;
