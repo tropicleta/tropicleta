@@ -1,0 +1,38 @@
+.game {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  overflow: hidden;
+  border: 1px solid #65402c;
+  border-radius: 20px;
+  background: #211a14;
+}
+.preview {
+  position: relative;
+  display: block;
+  min-height: 360px;
+  overflow: hidden;
+  color: #fff4dc;
+  background: #96562c;
+}
+.preview img { object-fit: cover; object-position: 38% 48%; transform: scale(1.2); transition: transform .3s ease; }
+.preview::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, #211a1466, transparent 35%, #211a14d9); }
+.preview:hover img { transform: scale(1.25); }
+.preview:focus-visible { outline: 3px solid #ffb34b; outline-offset: -5px; }
+.previewLabel, .previewCaption { position: absolute; left: 24px; right: 24px; z-index: 1; }
+.previewLabel { top: 24px; font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+.previewCaption { bottom: 24px; display: flex; justify-content: space-between; font-size: 15px; font-weight: 700; }
+.play { position: absolute; z-index: 1; left: 50%; top: 50%; transform: translate(-50%, -50%); display: grid; place-items: center; width: 64px; height: 64px; border: 1px solid #ffe3ac; border-radius: 50%; background: #211a14b3; color: #ffe3ac; font-size: 23px; padding-left: 4px; box-shadow: 0 6px 30px #211a1466; }
+.copy { padding: 36px; align-self: center; }
+.copy h2 { margin: 12px 0 18px; font-size: clamp(40px, 5vw, 64px); line-height: 1; }
+.subtitle { display: block; max-width: 280px; margin-top: 12px; color: #ffe0aa; font-size: clamp(20px, 2.4vw, 28px); line-height: 1.2; }
+.copy p { color: #cabeaf; line-height: 1.7; }
+.facts { display: flex; flex-wrap: wrap; gap: 8px 18px; margin: 20px 0 24px; color: #ffe0aa; font-size: 13px; }
+.controls { display: block; margin-top: 14px; color: #cabeaf; font-size: 12px; }
+@media (max-width: 800px) {
+  .game { grid-template-columns: 1fr; }
+  .preview { min-height: 0; aspect-ratio: 16 / 9; }
+  .copy { padding: 26px; }
+  .previewLabel { top: 18px; }
+  .previewCaption { bottom: 18px; }
+}
+@media (prefers-reduced-motion: reduce) { .preview img { transition: none; } .preview:hover img { transform: scale(1.2); } }

@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
+import styles from "./extras.module.css";
 import { PageHero } from "@/components/PageHero";
 import { siteUrl } from "@/lib/site-url";
 
@@ -19,11 +21,21 @@ export default function ExtrasPage() {
   return <>
     <PageHero kicker="Extras" title="Aprende y" highlight="sal a jugar." intro="Guías para conocer mejor tu bici y una aventura con Tropi por Atacama." />
     <section className="tp-section" aria-labelledby="juego-title"><div className="tp-shell">
-      <div className="tp-panel">
+      <div className={styles.game}>
+        <a className={styles.preview} href="/juegos/tropi/index.html" aria-label="Jugar con Tropi: desierto, costa y estrellas">
+          <Image src="/juegos/tropi/vista-previa.png" alt="Tropi en su bicicleta recorriendo las pistas del desierto al atardecer" fill sizes="(max-width: 800px) 92vw, 60vw" />
+          <span className={styles.previewLabel}>Una aventura por Atacama</span>
+          <span className={styles.play} aria-hidden="true">▶</span>
+          <span className={styles.previewCaption}>Así se juega con Tropi <span aria-hidden="true">↗</span></span>
+        </a>
+        <div className={styles.copy}>
         <span className="tp-kicker">El juego de Tropicleta</span>
-        <h2 id="juego-title" className="tp-display tp-section-title">Tropi: desierto, costa y estrellas</h2>
-        <p className="tp-section-intro">Pedalea por tres niveles y quince etapas: salta, cambia de pista y cuida la flora y fauna del camino. Juega con el teclado o los controles táctiles.</p>
+        <h2 id="juego-title" className="tp-display tp-section-title">Tropi<span className={styles.subtitle}>Desierto, costa y estrellas</span></h2>
+        <p>Salta, cambia de pista y pedalea por Atacama. Cuida la flora y fauna mientras encuentras tu camino.</p>
+        <div className={styles.facts}><span>3 niveles</span><span>15 etapas</span><span>Gratis</span></div>
         <a className="tp-btn tp-btn-primary" href="/juegos/tropi/index.html">Jugar con Tropi →</a>
+        <small className={styles.controls}>En tu celular o con flechas y espacio.</small>
+        </div>
       </div>
     </div></section>
     <section id="guias" className="tp-section tp-about-guides" aria-labelledby="guias-title"><div className="tp-shell">
