@@ -38,3 +38,32 @@ h1{font-family:Impact,'Arial Black',system-ui;font-style:italic;font-size:clamp(
 #notice[data-danger=fatal]{background:#652e24ed;color:#fff0d4;border:1px solid #f1b588}#notice[data-danger=bump]{background:#594321ed;color:#fff1c4}#notice[hidden]{display:none}
 
 #bike[data-theme=coast] .stage{background:#398c9f}#bike[data-theme=night] .stage{background:#172640}
+
+#next-level{margin:14px auto 0;padding:12px 22px;background:#f0ae32;color:#241a14;border:1px solid #ffdd91;border-radius:10px;font:700 15px system-ui;cursor:pointer;pointer-events:auto}#next-level[hidden]{display:none}#next-level:focus-visible{outline:3px solid #fff1c4;outline-offset:4px}#bike[data-state=intermission] .state-panel{background:#211a14f5;border:1px solid #dfba75;padding:24px;max-width:580px;pointer-events:auto}#bike[data-state=intermission] .state-panel strong{color:#ffdc94}
+
+.controls .jump[data-action=continue]{font-size:13px;line-height:1.2;white-space:normal;padding:8px;overflow-wrap:normal}
+
+.ranking-section{margin:24px 0;padding:24px;border:1px solid #6e5435;border-radius:16px;background:#2d231b}.ranking-section[hidden],.ranking-finish[hidden],#ranking-form[hidden]{display:none}.ranking-heading{display:flex;align-items:center;justify-content:space-between;gap:16px}.ranking-heading h2{margin:4px 0 0;color:#ffd48d;font-size:26px}.ranking-heading small{font-size:10px;letter-spacing:.15em;color:#bfa581}.ranking-section p{color:#d8c5a6;line-height:1.6}.ranking-section button{padding:11px 16px;border:1px solid #a97b43;border-radius:10px;background:#44301e;color:#ffe2ab;font:600 14px system-ui;cursor:pointer}.ranking-section button:disabled{opacity:.6;cursor:default}.ranking-section :focus-visible{outline:3px solid #ffd58f;outline-offset:4px}.ranking-finish{margin:20px 0;padding:20px;border:1px solid #d49e45;border-radius:12px;background:#382a1b}.ranking-finish h3{margin:0;color:#ffd28b}.ranking-fields{display:flex;gap:10px;margin:10px 0}.ranking-fields input{flex:1;min-width:0;padding:12px;border:1px solid #95764b;border-radius:9px;background:#211a14;color:#fff0d3;font:16px system-ui}.ranking-fields button{background:#edac35;color:#211a14}#ranking-form label{display:block;color:#fce8bd}#ranking-form small,.ranking-note{font-size:12px;color:#bca78b!important}.ranking-table{overflow-x:auto;margin:16px 0}.ranking-table table{width:100%;border-collapse:collapse;text-align:left}.ranking-table th{font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:#cdb78d}.ranking-table td,.ranking-table th{padding:12px 8px;border-bottom:1px solid #5c4830}.ranking-table td{color:#fae8c3}.ranking-table td:last-child,.ranking-table th:last-child{text-align:right;font-variant-numeric:tabular-nums}.ranking-table tbody tr:first-child td{color:#ffd176}.ranking-note{margin-bottom:0}.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}@media(max-width:600px){.ranking-section{padding:16px}.ranking-fields{flex-direction:column}.ranking-heading h2{font-size:23px}}
+
+#trick[data-flip=true]{font-size:clamp(20px,3vw,30px);line-height:1.2;text-align:center;background:#302219eb;color:#fff0a5;border:2px solid #edb844;border-radius:12px;padding:9px 16px;box-shadow:0 4px 14px #21180d66;max-width:88%;width:max-content}#trick:empty{display:none}@media(max-width:650px){#trick[data-flip=true]{font-size:20px;padding:8px 12px}}
+
+#level-intro{position:absolute;top:105px;left:50%;transform:translateX(-50%);padding:14px 28px;text-align:center;color:#fff1cf;background:#2b241fe8;border:1px solid #e9b568;border-radius:14px;pointer-events:none;max-width:90%;width:max-content;box-shadow:0 5px 20px #30231755}#level-intro[hidden]{display:none}#level-intro small{display:block;font-size:11px;letter-spacing:2px;color:#efbf76;margin-bottom:5px}#level-intro strong{display:block;font-size:clamp(24px,4vw,38px);line-height:1.15}#bike[data-bike-expanded=true] #level-intro{top:91px}@media(max-width:650px){#level-intro{top:105px;padding:10px 20px}#level-intro strong{font-size:25px}#level-intro small{font-size:9px}}
+
+/* Consistent control rows: the longest label wraps inside the same touch target. */
+#bike .controls,#bike[data-bike-expanded=true] .controls{display:grid;grid-template-columns:auto auto;align-items:stretch;gap:16px}
+#bike .controls .cluster,#bike[data-bike-expanded=true] .controls .cluster{display:grid;grid-template-columns:repeat(2,96px);align-items:stretch;gap:8px}
+#bike .controls .drive,#bike[data-bike-expanded=true] .controls .drive{grid-template-columns:96px 140px}
+#bike .controls button,#bike[data-bike-expanded=true] .controls button{box-sizing:border-box;width:100%;min-width:0;height:80px;min-height:80px;padding:8px 6px;border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;line-height:1.15;text-align:center;white-space:normal;overflow-wrap:normal}
+#bike .controls .balance svg{width:30px;height:30px;margin:0;flex-shrink:0}
+#bike .controls small,#bike[data-bike-expanded=true] .controls small{margin:0;font-size:11px;line-height:1.2;font-weight:500}
+#bike .controls .jump,#bike[data-bike-expanded=true] .controls .jump{font-size:16px;font-weight:750}
+@media(max-width:650px){
+ #bike .controls,#bike[data-bike-expanded=true] .controls{grid-template-columns:minmax(0,1fr) minmax(0,1.35fr);gap:12px;padding:9px}
+ #bike .controls .cluster,#bike[data-bike-expanded=true] .controls .cluster,#bike .controls .drive,#bike[data-bike-expanded=true] .controls .drive{grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+ #bike .controls button,#bike[data-bike-expanded=true] .controls button{height:76px;min-height:76px;padding:7px 4px;border-radius:12px}
+ #bike .controls .jump,#bike[data-bike-expanded=true] .controls .jump{font-size:12px}
+ #bike .controls small,#bike[data-bike-expanded=true] .controls small{font-size:10px}
+ #bike .controls [data-switch]{font-size:24px}
+}
+
+#finish-website{display:inline-block;pointer-events:auto;margin:12px auto 0;padding:10px 18px;border-radius:10px;background:#f0ae32;color:#241a14;font:700 14px system-ui;text-shadow:none;text-decoration:none}#finish-website[hidden]{display:none}
