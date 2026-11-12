@@ -33,6 +33,8 @@ export function HeroVideo() {
   const container = useRef<HTMLDivElement>(null);
   const player = useRef<Player | null>(null);
   const ended = useRef(false);
+  const resumeVisible = useRef(false);
+  const initializePlayer = useRef<(()=>boolean)|null>(null);
   const [ready, setReady] = useState(false);
   const [muted, setMuted] = useState(true);
   const [playing, setPlaying] = useState(false);
@@ -92,16 +94,28 @@ export function HeroVideo() {
     const interval = window.setInterval(() => {
       if (player.current || initialize()) window.clearInterval(interval);
     }, 100);
+    initializePlayer.current=initialize;
     initialize();
     const timeout = window.setTimeout(() => window.clearInterval(interval), 20000);
     return () => {
       disposed = true;
+      initializePlayer.current=null;
       window.clearInterval(interval);
       window.clearTimeout(timeout);
       player.current?.destroy();
       player.current = null;
     };
   }, []);
+
+  useEffect(()=>{
+
+    const pauseWhenHidden=()=>{
+      if(document.hidden){resumeVisible.current=playing;player.current?.pauseVideo();}
+      else if(resumeVisible.current){player.current?.playVideo();resumeVisible.current=false;}
+    };
+    document.addEventListener('visibilitychange',pauseWhenHidden);
+    return()=>document.removeEventListener('visibilitychange',pauseWhenHidden);
+  },[playing]);
 
   function toggleAudio() {
     const current = player.current;
@@ -116,7 +130,7 @@ export function HeroVideo() {
 
   return (
     <>
-      <Script src="https://www.youtube.com/iframe_api" strategy="afterInteractive" onError={() => setFailed(true)} />
+      <Script src="https://www.youtube.com/iframe_api" strategy="lazyOnload" onReady={()=>{initializePlayer.current?.();}} onError={() => setFailed(true)} />
       <div className={styles.background} aria-hidden="true">
         <Image src="/taller/equipo-tropicleta.jpeg" alt="" fill sizes="100vw" preload className={styles.poster} />
         <div ref={container} className={`${styles.player} ${visible ? styles.visible : ""}`} />

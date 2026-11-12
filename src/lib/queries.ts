@@ -1,6 +1,6 @@
 import "server-only";
 import { shortServiceName } from "./service-visuals";
-import { and, asc, desc, eq, gt, inArray } from "drizzle-orm";
+import { and, asc, desc, eq, inArray } from "drizzle-orm";
 import { unstable_cache } from "next/cache";
 import { db, schema } from "@/db";
 import { fallbackCategories, fallbackFeatured } from "@/data/services-fallback";
@@ -12,8 +12,9 @@ const { services, serviceCategories, products, productCategories } = schema;
  * en cada visita. Se invalida por tag desde el panel (`revalidatePublicData`) y al descontar stock.
  * Ojo: el caché serializa a JSON, así que los `Date` (products.createdAt) vuelven como string; no se usan en el sitio.
  */
-export const CACHE_TAGS = { catalog: "catalogo", shop: "tienda" } as const;
-const catalogCache = { tags: [CACHE_TAGS.catalog], revalidate: 3600 };
+export const CACHE_TAGS = { catalog: "catalogo", shop: "tienda", recommendations: "recomendados" } as const;
+// Stable public content is refreshed on edits, with a daily safety refresh.
+const catalogCache = { tags: [CACHE_TAGS.catalog], revalidate: 86400 };
 // Tienda con ventana más corta: el stock baja con cada venta (el checkout igual valida stock real).
 const shopCache = { tags: [CACHE_TAGS.shop], revalidate: 300 };
 
@@ -35,23 +36,45 @@ export const getServiceCatalog = unstable_cache(
   catalogCache,
 );
 
-export const getService = unstable_cache(
-  async (slug: string) => {
-    const rows = await db
-      .select({ service: services, category: serviceCategories })
-      .from(services)
-      .innerJoin(serviceCategories, eq(services.categoryId, serviceCategories.id))
-      .where(and(eq(services.slug, slug), eq(services.active, true)))
-      .limit(1);
-    return rows[0] ? {...rows[0],service:{...rows[0].service,name:shortServiceName(rows[0].service)}} : null;
-  },
-  ["service-v19"],
+// Details and unknown URLs reuse the same catalog instead of opening a DB query per slug.
+export async function getService(slug: string) {
+  for (const { services: rows, ...category } of await getServiceCatalog()) {
+    const service = rows.find(s => s.slug === slug);
+    if (service) return { service, category };
+  }
+  return null;
+}
+
+export async function getActiveServiceSlugs() {
+  return (await getServiceCatalog()).flatMap(c => c.services.map(s => ({ slug: s.slug })));
+}
+
+export const getQuoteVehicles = unstable_cache(
+  async () => db.select().from(schema.quoteVehicles).where(eq(schema.quoteVehicles.removed, false))
+    .orderBy(asc(schema.quoteVehicles.sort), asc(schema.quoteVehicles.id)),
+  ["quote-vehicles-v1"],
   catalogCache,
 );
 
-export async function getActiveServiceSlugs() {
-  return db.select({ slug: services.slug }).from(services).where(eq(services.active, true));
-}
+export const getRecommendations = unstable_cache(
+  async () => db.select().from(schema.recommendations).where(eq(schema.recommendations.active, true))
+    .orderBy(desc(schema.recommendations.createdAt)),
+  ["public-recommendations-v1"],
+  { tags: [CACHE_TAGS.recommendations], revalidate: 86400 },
+);
+
+// Crawl traffic must not wake Postgres on every sitemap request.
+export const getPublicSitemapSlugs = unstable_cache(
+  async () => {
+    const [serviceSlugs, productSlugs] = await Promise.all([
+      db.select({ slug: services.slug }).from(services).where(eq(services.active, true)),
+      db.select({ slug: products.slug }).from(products).where(eq(products.active, true)),
+    ]);
+    return { services: serviceSlugs, products: productSlugs };
+  },
+  ["public-sitemap-slugs-v1"],
+  { tags: [CACHE_TAGS.catalog, CACHE_TAGS.shop], revalidate: 86400 },
+);
 
 // Solo la parte de BD va al caché: si falla lanza y no se cachea el respaldo.
 const getHomeServicesFromDb = unstable_cache(
@@ -104,63 +127,34 @@ export type ProductSort = "recientes" | "precio-asc" | "precio-desc";
 export const getProductCategories = unstable_cache(
   async () => db.select().from(productCategories).orderBy(asc(productCategories.sort)),
   ["product-categories-v2"],
+  { tags: [CACHE_TAGS.shop], revalidate: 86400 },
+);
+
+const getPublicProducts = unstable_cache(
+  async () => db.select().from(products).where(eq(products.active, true)).orderBy(desc(products.createdAt)),
+  ["public-products-v1"],
   shopCache,
 );
 
-export const getProducts = unstable_cache(
-  async (opts: { category?: string; sort?: ProductSort } = {}) => {
-    const order =
-      opts.sort === "precio-asc"
-        ? asc(products.price)
-        : opts.sort === "precio-desc"
-          ? desc(products.price)
-          : desc(products.createdAt);
+/** Search, categories, sort orders and detail URLs share one five-minute stock snapshot. */
+export async function getProducts(opts: { category?: string; sort?: ProductSort } = {}) {
+  const [rows, categories] = await Promise.all([getPublicProducts(), getProductCategories()]);
+  const categoryId = opts.category ? categories.find(c => c.slug === opts.category)?.id : undefined;
+  const filtered = rows.filter(p => !opts.category || p.categoryId === categoryId);
+  if (opts.sort === "precio-asc") filtered.sort((a, b) => a.price - b.price);
+  if (opts.sort === "precio-desc") filtered.sort((a, b) => b.price - a.price);
+  return filtered;
+}
 
-    if (!opts.category) {
-      return db.select().from(products).where(eq(products.active, true)).orderBy(order);
-    }
-    // Filtro por categoría en una sola consulta (join por slug)
-    const rows = await db
-      .select({ product: products })
-      .from(products)
-      .innerJoin(productCategories, eq(products.categoryId, productCategories.id))
-      .where(and(eq(products.active, true), eq(productCategories.slug, opts.category)))
-      .orderBy(order);
-    return rows.map((r) => r.product);
-  },
-  ["products"],
-  shopCache,
-);
-
-export const getProduct = unstable_cache(
-  async (slug: string) => {
-    const rows = await db
-      .select({ product: products, category: productCategories })
-      .from(products)
-      .leftJoin(productCategories, eq(products.categoryId, productCategories.id))
-      .where(and(eq(products.slug, slug), eq(products.active, true)))
-      .limit(1);
-    return rows[0] ?? null;
-  },
-  ["product"],
-  shopCache,
-);
-
-const getFeaturedProductsFromDb = unstable_cache(
-  async (limit: number) =>
-    db
-      .select()
-      .from(products)
-      .where(and(eq(products.featured, true), eq(products.active, true), gt(products.stock, 0)))
-      .orderBy(desc(products.createdAt))
-      .limit(limit),
-  ["featured-products"],
-  shopCache,
-);
+export async function getProduct(slug: string) {
+  const [rows, categories] = await Promise.all([getPublicProducts(), getProductCategories()]);
+  const product = rows.find(p => p.slug === slug);
+  return product ? { product, category: categories.find(c => c.id === product.categoryId) ?? null } : null;
+}
 
 export async function getFeaturedProducts(limit = 4) {
   try {
-    return await getFeaturedProductsFromDb(limit);
+    return (await getPublicProducts()).filter(p => p.featured && p.stock > 0).slice(0, limit);
   } catch {
     return [];
   }

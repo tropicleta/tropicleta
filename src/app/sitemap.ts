@@ -1,6 +1,5 @@
 import type { MetadataRoute } from "next";
-import { eq } from "drizzle-orm";
-import { db, schema } from "@/db";
+import { getPublicSitemapSlugs } from "@/lib/queries";
 import { siteUrl } from "@/lib/site-url";
 import { posts } from "@/data/posts";
 
@@ -14,10 +13,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }));
   const articles = posts.map((p) => ({ url: siteUrl(`/consejos/${p.slug}/`), lastModified: p.date, priority: 0.5 }));
   try {
-    const [services, products] = await Promise.all([
-      db.select({ slug: schema.services.slug }).from(schema.services).where(eq(schema.services.active, true)),
-      db.select({ slug: schema.products.slug }).from(schema.products).where(eq(schema.products.active, true)),
-    ]);
+    const { services, products } = await getPublicSitemapSlugs();
     return [
       ...staticPages,
       ...services.map((s) => ({ url: siteUrl(`/servicios/${s.slug}/`), priority: 0.6 })),

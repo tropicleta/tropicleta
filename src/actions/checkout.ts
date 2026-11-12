@@ -10,6 +10,9 @@ import { shippingCost } from "@/data/shop";
 import { checkoutSchema } from "@/lib/validation";
 import { mpEnabled, mpPreference } from "@/lib/payments/mercadopago";
 import { siteUrl } from "@/lib/site-url";
+import { reserveOrderStock, StockUnavailable } from "@/lib/stock-reservations";
+import { markOrderFailed } from "@/lib/orders";
+import { revalidateShopStock } from "@/lib/revalidate";
 import { eq } from "drizzle-orm";
 
 export type CheckoutState = FormState & {
@@ -24,6 +27,7 @@ export async function startCheckout(_prev: CheckoutState, fd: FormData): Promise
   try {
     return await checkout(fd);
   } catch (error) {
+    if(error instanceof StockUnavailable) return {message:"Una unidad fue reservada por otra compra. Actualiza el carrito o espera unos minutos.",stockIssues:[{productId:error.productId,available:error.available}]};
     console.error("[checkout] no se pudo preparar la compra", error);
     return { message: "No pudimos preparar tu compra. Tu carrito se conserva; vuelve a intentarlo en unos minutos.", values: formToObject(fd) };
   }
@@ -87,9 +91,11 @@ async function checkout(fd: FormData): Promise<CheckoutState> {
   await tx.insert(schema.orderItems).values(
     lines.map((l) => ({ orderId: created.id, productId: l.product.id, name: l.product.name, unitPrice: l.product.price, quantity: l.quantity })),
   );
+  await reserveOrderStock(tx, created.id, lines.map(l=>({productId:l.product.id,quantity:l.quantity})));
   return created;
   });
 
+  revalidateShopStock();
   // 3) Iniciar el pago
   try {
     const isHttps = siteUrl().startsWith("https://");
@@ -122,7 +128,7 @@ async function checkout(fd: FormData): Promise<CheckoutState> {
     return { redirect: { kind: "url", url } };
   } catch (e) {
     console.error("[checkout] error pasarela", e);
-    await db.update(schema.orders).set({ status: "anulada" }).where(eq(schema.orders.id, order.id));
+    await markOrderFailed(order.id, "anulada");
     return { message: "No pudimos conectar con el medio de pago. Intenta nuevamente en unos minutos.", values };
   }
 }

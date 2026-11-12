@@ -13,7 +13,7 @@ import { localDate, methods } from "@/lib/accounting-validation";
 import { audit } from "@/lib/audit";
 import { adminConfigurationError, checkPassword, clientIp, createSession, destroySession, requireAdmin } from "@/lib/auth";
 import { isForeignKeyViolation, isUniqueViolation } from "@/lib/db-errors";
-import { emailLayout, escapeHtml, sendEmail } from "@/lib/email";
+import { emailLayout, escapeHtml, sendEmail, sendImmediateEmail } from "@/lib/email";
 import { formatCLP, slugify } from "@/lib/format";
 import { formToObject, zodErrors, type FormState } from "@/lib/forms";
 import { clearLoginFailures, claimLoginAttempt } from "@/lib/login-limit";
@@ -63,7 +63,7 @@ export async function login(_prev: FormState, fd: FormData): Promise<FormState> 
     if (previous) await removeLoginChallenge(previous);
     jar.delete(cookieName);
     const challenge = await issueLoginChallenge(adminAuthFingerprint(), signLoginCode);
-    const sent = await sendEmail(process.env.ADMIN_LOGIN_EMAIL, "Tu código de acceso a Tropicleta", emailLayout("Código de acceso", `<p>Tu código para ingresar al administrador es:</p><p style="font-size:32px;letter-spacing:6px;font-weight:bold">${challenge.code}</p><p>Caduca en 10 minutos. No compartas este código. Si no solicitaste el ingreso, puedes ignorar este mensaje.</p>`));
+    const sent = await sendImmediateEmail(process.env.ADMIN_LOGIN_EMAIL, "Tu código de acceso a Tropicleta", emailLayout("Código de acceso", `<p>Tu código para ingresar al administrador es:</p><p style="font-size:32px;letter-spacing:6px;font-weight:bold">${challenge.code}</p><p>Caduca en 10 minutos. No compartas este código. Si no solicitaste el ingreso, puedes ignorar este mensaje.</p>`));
     if (!sent) { await removeLoginChallenge(challenge.token); return { message: "No pudimos enviar el código. Reintenta en unos minutos." }; }
     jar.set(cookieName, challenge.token, {httpOnly:true, secure:process.env.NODE_ENV === "production", sameSite:"strict",path:"/",maxAge:LOGIN_CODE_SECONDS});
     return { message: "Código enviado al correo autorizado." };
@@ -181,6 +181,7 @@ export async function updateOrderStatus(_prev: FormState, fd: FormData): Promise
   const result = await db.transaction(async (tx) => {
     const [o] = await tx.select().from(schema.orders).where(eq(schema.orders.id, id)).limit(1);
     if (!o) return { error: "La orden no existe." };
+    if(o.stockStatus==="review" && status!=="anulada") return {error:"Este pago requiere resolver las existencias antes de preparar o entregar."};
     if (o.status === status) return { error: null, order: null };
     if (!canTransitionOrder(o.status, status)) return { error: "Ese cambio de estado no está permitido." };
 
@@ -192,7 +193,7 @@ export async function updateOrderStatus(_prev: FormState, fd: FormData): Promise
       .returning();
     if (!updated) return { error: "La orden cambió mientras tanto. Recarga la página." };
 
-    if (status === "anulada" && restock) {
+    if (status === "anulada" && restock && o.stockStatus!=="review") {
       const items = await tx.select().from(schema.orderItems).where(eq(schema.orderItems.orderId, id));
       for (const it of items) {
         if (!it.productId) continue;
@@ -629,3 +630,6 @@ export async function manageQuoteVehicle(_prev:FormState,fd:FormData):Promise<Fo
     revalidatePublicData();return {ok:true,message:intent.data==="add"?"Vehículo añadido. Ahora asigna sus servicios y packs.":"Vehículos actualizados."};
   }catch(e){return {message:isUniqueViolation(e)?"Ya existe ese vehículo. Puedes recuperarlo si fue quitado.":e instanceof Error?e.message:"No se pudo guardar el vehículo."};}
 }
+
+export async function resolvePaidStock(fd:FormData){
+ await requireAdmin();const id=parseId(fd);const{allocateOrderStock}=await import("@/lib/stock-reservations");await db.transaction(async tx=>{const[o]=await tx.select().from(schema.orders).where(eq(schema.orders.id,id)).for("update");if(!o||o.stockStatus!=="review"||o.status!=="pagada")return;const items=await tx.select().from(schema.orderItems).where(eq(schema.orderItems.orderId,id));if(items.some(i=>i.productId===null))return;if(await allocateOrderStock(tx,id,items.map(i=>({productId:i.productId!,quantity:i.quantity}))))await tx.update(schema.orders).set({stockStatus:"allocated",updatedAt:new Date()}).where(eq(schema.orders.id,id));});revalidatePublicData();}

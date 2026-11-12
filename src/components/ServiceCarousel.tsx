@@ -14,6 +14,8 @@ const slides = [
   { number: 7, title: "Frenos", href: "/servicios/?categoria=frenos#frenos" },
 ];
 export function ServiceCarousel() {
+  const carousel = useRef<HTMLElement>(null);
+  const [visible, setVisible] = useState(true);
   const [position, setPosition] = useState<{ index: number; previousIndex: number | null; direction: "next" | "previous" }>({ index: 0, previousIndex: null, direction: "next" });
   const index = position.index;
   const touch = useRef<{ x: number; y: number } | null>(null);
@@ -21,13 +23,20 @@ export function ServiceCarousel() {
   const [interacting, setInteracting] = useState(false);
   const go = (direction: number) => setPosition(current => ({ index: (current.index + direction + slides.length) % slides.length, previousIndex: current.index, direction: direction > 0 ? "next" : "previous" }));
   useEffect(() => {
-    if (interacting) return;
+    const node = carousel.current;
+    if (!node) return;
+    const observer = new IntersectionObserver(([entry]) => setVisible(entry.isIntersecting));
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, []);
+  useEffect(() => {
+    if (interacting || !visible) return;
     const timer = window.setInterval(() => {
       if (!document.hidden && !touch.current) setPosition(current => ({ index: (current.index + 1) % slides.length, previousIndex: current.index, direction: "next" }));
     }, 6500);
     return () => window.clearInterval(timer);
-  }, [interacting, index]);
-  return <section className="tp-single-carousel" aria-label="Catálogo de servicios" aria-roledescription="carrusel"
+  }, [interacting, index, visible]);
+  return <section ref={carousel} className="tp-single-carousel" aria-label="Catálogo de servicios" aria-roledescription="carrusel"
     onMouseEnter={() => setInteracting(true)} onMouseLeave={() => setInteracting(false)}
     onFocusCapture={() => setInteracting(true)} onBlurCapture={event => { if (!event.currentTarget.contains(event.relatedTarget)) setInteracting(false); }}
     onKeyDown={event => { if (event.key === "ArrowRight" || event.key === "ArrowLeft") { event.preventDefault(); go(event.key === "ArrowRight" ? 1 : -1); } }}>
@@ -44,7 +53,7 @@ export function ServiceCarousel() {
         return <article key={slide.number} className={`${styles.card} ${active ? styles.active : leaving ? styles.leaving : ""} ${motion}`} aria-hidden={!active} inert={!active} aria-label={slideIndex + 1 + " de " + slides.length + ": " + slide.title} aria-roledescription="lámina" onAnimationEnd={() => {
           if (leaving) setPosition(current => current.previousIndex === slideIndex ? { ...current, previousIndex: null } : current);
         }}>
-          <Link href={slide.href} className="tp-poster-crop" aria-label={"Ver " + slide.title}><Image src={slide.number === 7 ? "/catalogo/compacto/frenos-hd.png" : slide.number === 4 ? "/catalogo/compacto/retiro-entrega.png" : slide.number === 1 ? "/catalogo/compacto/servicios-generales.jpg" : "/catalogo/compacto/" + slide.number + ".jpg"} alt={"Catálogo Tropicleta: " + slide.title} style={slide.number === 7 ? { objectFit: "cover", objectPosition: "top" } : undefined} fill sizes="(max-width: 700px) 92vw, (max-width: 979px) 340px, 390px" loading={active ? "eager" : "lazy"} /></Link>
+          <Link href={slide.href} className="tp-poster-crop" aria-label={"Ver " + slide.title}>{(active || leaving || slideIndex === (index + 1) % slides.length || slideIndex === (index + slides.length - 1) % slides.length) && <Image src={slide.number === 7 ? "/catalogo/compacto/frenos-hd.png" : slide.number === 4 ? "/catalogo/compacto/retiro-entrega.png" : slide.number === 1 ? "/catalogo/compacto/servicios-generales.jpg" : "/catalogo/compacto/" + slide.number + ".jpg"} alt={"Catálogo Tropicleta: " + slide.title} style={slide.number === 7 ? { objectFit: "cover", objectPosition: "top" } : undefined} fill sizes="(max-width: 700px) 92vw, (max-width: 979px) 340px, 390px" loading={active ? "eager" : "lazy"} />}</Link>
         </article>;
       })}
     </div>

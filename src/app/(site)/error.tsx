@@ -1,0 +1,3 @@
+"use client";
+import Link from 'next/link';import{site}from'@/data/site';
+export default function SectionError({reset}:{error:Error&{digest?:string};reset:()=>void}){return <section className="tp-section"><div className="tp-shell"><h1 className="tp-display">No pudimos cargar esta sección.</h1><p>Puede ser un problema temporal. Puedes volver a intentar o escribir directamente al taller; evita repetir un pago si ya ves un cargo en tu cuenta.</p><div className="tp-actions"><button className="tp-btn tp-btn-primary" onClick={reset}>Volver a intentar</button><a className="tp-btn tp-btn-secondary" href={`https://wa.me/${site.whatsappNumber}`}>Escribir al taller</a><Link href="/contacto/">Ver contacto</Link></div></div></section>;}

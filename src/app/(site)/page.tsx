@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { siteUrl } from "@/lib/site-url";
 import Link from "next/link";
 import Image from "next/image";
@@ -9,8 +10,7 @@ import { WorkshopGallery } from "@/components/WorkshopGallery";
 import { WorkshopIntro } from "@/components/home/WorkshopIntro";
 import { HeroVideo } from "@/components/home/HeroVideo";
 import { AnimatedEmblem } from "@/components/AnimatedEmblem";
-import { and, desc, eq, isNotNull } from "drizzle-orm";
-import { db, schema } from "@/db";
+import { getRecommendations } from "@/lib/queries";
 
 export const metadata: Metadata = {
  title: { absolute: "Taller de bicicletas en Tierra Amarilla y Copiapó | Tropicleta" },
@@ -20,8 +20,13 @@ export const metadata: Metadata = {
 
 export const dynamic = "force-dynamic";
 
-export default async function HomePage() {
-  const [recommended] = await db.select({ image: schema.recommendations.imageUrl, name: schema.recommendations.name }).from(schema.recommendations).where(and(eq(schema.recommendations.active, true), isNotNull(schema.recommendations.imageUrl))).orderBy(desc(schema.recommendations.createdAt)).limit(1);
+async function HomeShopSections() {
+  // This preview is optional: a database outage must not take down the workshop's home page.
+  const recommended = await getRecommendations().then(rows => rows.find(r => r.imageUrl)).catch(() => undefined);
+  return <ShopSections showcase recommendationPreview={recommended?.imageUrl ? { image: recommended.imageUrl, name: recommended.name } : undefined} />;
+}
+
+export default function HomePage() {
   return (
     <div className="tp-home">
       {/* ================= HERO ================= */}
@@ -70,7 +75,7 @@ export default async function HomePage() {
           <Link href="/eventos/" className="tp-mobile-summary-photo"><Image src="/taller/taller-movil-presentacion.jpeg" alt="Taller móvil Tropicleta: asistencia mecánica en terreno para eventos ciclistas" width={720} height={1056} sizes="(max-width: 700px) 240px, (max-width: 1000px) 240px, 260px" /></Link>
         </div>
         <div className="tp-home-hub-shops">
-          <ShopSections showcase recommendationPreview={recommended?.image ? { image: recommended.image, name: recommended.name } : undefined} />
+          <Suspense fallback={<ShopSections showcase />}><HomeShopSections /></Suspense>
         </div>
         </div>
       </section>

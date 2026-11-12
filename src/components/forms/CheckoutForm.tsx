@@ -168,7 +168,7 @@ export function CheckoutForm({ mpAvailable, testPayments, notice }: { mpAvailabl
             </SubmitButton>
           )}
           <p className="tp-hint" style={{ margin: 0 }}>
-            Pago seguro. El total se verifica nuevamente antes de cobrar.
+            Al continuar reservamos las unidades durante 30 minutos. El total y la disponibilidad se verifican antes de ir al pago.
           </p>
         </aside>
       </form>

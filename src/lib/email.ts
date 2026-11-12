@@ -1,24 +1,18 @@
 import "server-only";
-import { Resend } from "resend";
+import { randomUUID } from "node:crypto";
+import { emailQueue, deliverEmail } from "./email-outbox";
 
-const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
-const FROM = process.env.EMAIL_FROM ?? "Tropicleta <onboarding@resend.dev>";
+/** Durable notification. true means accepted into the outbox, not inbox delivery. */
+export async function sendEmail(to:string|undefined|null,subject:string,html:string){
+ if(!to)return false;
+ if(!process.env.RESEND_API_KEY){if(process.env.NODE_ENV!=="production")console.info("[email:dev] notificación simulada");return false;}
+ try{const id=await emailQueue.enqueue(to,subject,html);await emailQueue.flush(1,id);return true;}catch{console.error("[email] no se pudo guardar/procesar el aviso");return false;}
+}
 
-/** Envía un email con Resend. Sin RESEND_API_KEY lo deja en consola (desarrollo). Nunca lanza. */
-export async function sendEmail(to: string | undefined | null, subject: string, html: string) {
-  if (!to) return false;
-  if (!resend) {
-    console.info(`[email:dev] → ${to} · ${subject}`);
-    return false;
-  }
-  try {
-    const { error } = await resend.emails.send({ from: FROM, to, subject, html });
-    if (error) console.error("[email] error", error);
-    return !error;
-  } catch (e) {
-    console.error("[email] excepción", e);
-    return false;
-  }
+/** Login codes expire: never queue a code to be delivered after its challenge. */
+export async function sendImmediateEmail(to:string|undefined|null,subject:string,html:string){
+ if(!to||!process.env.RESEND_API_KEY)return false;
+ try{await deliverEmail({recipient:to,subject,html,id:randomUUID()});return true;}catch{return false;}
 }
 
 export const adminEmail = () => process.env.ADMIN_EMAIL;

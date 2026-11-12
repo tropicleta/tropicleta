@@ -1,5 +1,6 @@
 // Tropicleta — asistente IA "Tropi" (basado en el agente de naitre-web).
 // Requiere OPENAI_API_KEY (clave propia de Tropicleta) en .env.local / variables del proyecto en Vercel.
+import { claimChatBudget } from "@/lib/chat-budget";
 import { buildKnowledge } from "@/lib/chat-knowledge";
 import { readRequestJson } from "@/lib/request-json";
 import { allowPublicSubmission } from "@/lib/public-limit";
@@ -167,6 +168,7 @@ export async function POST(req: Request) {
   }
 
   try {
+    if(!await claimChatBudget()) return json({error:"chat_budget",reply:"Por hoy alcancé mi límite de atención. Puedes escribir directamente al taller por WhatsApp y te ayudamos allí.",emotion:"apenado"},429);
     // Capa 1: clasificador. Si falla (red, etc.) seguimos: la capa 2 mantiene las reglas.
     try {
       const g = await openai(apiKey, {

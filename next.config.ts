@@ -4,7 +4,10 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
   async headers() {
-    return [{ source: "/:path*", headers: [
+    return [
+      {source:"/juegos/tropi/tropi-surf-rock-v8-extended.mp3",headers:[{key:"Cache-Control",value:"public, max-age=31536000, immutable"}]},
+      {source:"/biometria/vendor/:path*",headers:[{key:"Cache-Control",value:"public, max-age=86400, stale-while-revalidate=604800"}]},
+      { source: "/:path*", headers: [
       { key: "X-Content-Type-Options", value: "nosniff" },
       { key: "X-Frame-Options", value: "DENY" },
       { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },

@@ -184,6 +184,7 @@ export const orders = pgTable("orders", {
   id: serial("id").primaryKey(),
   code: varchar("code", { length: 26 }).notNull().unique(), // buyOrder Webpay (máx 26)
   status: orderStatus("status").notNull().default("pendiente"),
+    stockStatus: varchar("stock_status", { length: 16 }).notNull().default("legacy"),
   customerName: text("customer_name").notNull(),
   customerEmail: text("customer_email").notNull(),
   customerPhone: varchar("customer_phone", { length: 20 }).notNull(),
@@ -272,3 +273,6 @@ export type OrderItem = typeof orderItems.$inferSelect;
 export type ContactMessage = typeof contactMessages.$inferSelect;
 export type BookingStatus = (typeof bookingStatus.enumValues)[number];
 export type OrderStatus = (typeof orderStatus.enumValues)[number];
+
+export const stockReservations = pgTable("stock_reservations", { orderId:integer("order_id").notNull().references(()=>orders.id,{onDelete:"cascade"}), productId:integer("product_id").notNull().references(()=>products.id,{onDelete:"cascade"}), quantity:integer("quantity").notNull(), expiresAt:timestamp("expires_at",{withTimezone:true}).notNull() },t=>[primaryKey({columns:[t.orderId,t.productId]})]);
+export const emailOutbox = pgTable("email_outbox", { id:varchar("id",{length:64}).primaryKey(), recipient:text("recipient").notNull(), subject:text("subject").notNull(), html:text("html").notNull(), attempts:integer("attempts").notNull().default(0), nextAttemptAt:timestamp("next_attempt_at",{withTimezone:true}).notNull().defaultNow(), lockedUntil:timestamp("locked_until",{withTimezone:true}), sentAt:timestamp("sent_at",{withTimezone:true}), lastError:text("last_error"), createdAt:timestamp("created_at",{withTimezone:true}).notNull().defaultNow() });

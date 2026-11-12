@@ -17,8 +17,7 @@ export function VisitTracker() {
     try {
       const saved = JSON.parse(sessionStorage.getItem("tp:visit:v1") || "null");
       if (saved && Date.now() - saved.at < 30 * 60 * 1000) {
-        first = false;
-        attribution = saved.attribution;
+        return;
       }
       sessionStorage.setItem("tp:visit:v1", JSON.stringify({ at: Date.now(), attribution }));
     } catch { /* Storage blocked: each page load is an estimated visit. */ }

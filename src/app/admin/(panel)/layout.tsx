@@ -1,3 +1,5 @@
+import { after } from "next/server";
+import { retryQueuedEmails } from "@/lib/email-outbox";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { logout } from "@/actions/admin";
@@ -11,6 +13,7 @@ export const metadata: Metadata = { title: { default: "Panel", template: "%s · 
 
 export default async function PanelLayout({ children }: { children: React.ReactNode }) {
   await requireAdmin();
+  after(()=>retryQueuedEmails(2).then(()=>{}).catch(()=>{}));
   const n = await pendingCounts();
 
   return (

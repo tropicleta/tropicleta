@@ -34,7 +34,7 @@ export default async function GraciasCompraPage({ searchParams }: Props) {
       <div className="tp-shell tp-two-col" style={{ position: "relative", zIndex: 1 }}>
         <div>
           <span className="tp-kicker">Orden {order.code}</span>
-          {paid ? (
+          {order.stockStatus==="review" ? (<><h1 className="tp-display">Recibimos tu pago.</h1><p className="tp-hero-copy">Necesitamos revisar la disponibilidad de tu pedido. Te contactaremos por WhatsApp para coordinar una solución. No vuelvas a pagar esta orden.</p></>) : paid ? (
             <>
               <h1 className="tp-display">
                 ¡Gracias por <span>tu compra!</span>

@@ -4,6 +4,7 @@ import { db, schema } from "@/db";
 import { adminEmail, emailLayout, escapeHtml, sendEmail } from "@/lib/email";
 import { displayPhone, formatCLP } from "@/lib/format";
 import { siteUrl } from "@/lib/site-url";
+import { allocateOrderStock } from "./stock-reservations";
 import { revalidateShopStock } from "@/lib/revalidate";
 
 const { orders, orderItems, products } = schema;
@@ -19,48 +20,29 @@ export async function getOrderByCode(code: string) {
  * Marca una orden como pagada UNA sola vez (idempotente): solo pasa de "pendiente" a "pagada".
  * Descuenta stock y envía emails solo en la primera transición.
  */
-export async function markOrderPaid(
-  orderId: number,
-  payment: { authorizationCode?: string | null; paymentId?: string | null; details?: unknown },
-) {
-  const changed = await db.transaction(async (tx) => {
-    const updated = await tx
-      .update(orders)
-      .set({
-        status: "pagada",
-        paidAt: new Date(),
-        updatedAt: new Date(),
-        authorizationCode: payment.authorizationCode ?? null,
-        paymentId: payment.paymentId ?? null,
-        paymentDetails: payment.details ?? null,
-      })
-      .where(and(eq(orders.id, orderId), inArray(orders.status, ["pendiente", "rechazada"])))
-      .returning({ id: orders.id });
-    if (!updated.length) return false;
-
-    const items = await tx.select().from(orderItems).where(eq(orderItems.orderId, orderId));
-    for (const it of items) {
-      if (!it.productId) continue;
-      await tx
-        .update(products)
-        .set({ stock: sql`GREATEST(${products.stock} - ${it.quantity}, 0)` })
-        .where(eq(products.id, it.productId));
-    }
-    return true;
-  });
-
-  if (changed) {
-    revalidateShopStock();
-    await sendOrderEmails(orderId);
-  }
-  return changed;
+export async function markOrderPaid(orderId:number,payment:{authorizationCode?:string|null;paymentId?:string|null;details?:unknown}) {
+ const changed=await db.transaction(async tx=>{
+  const [order]=await tx.select().from(orders).where(eq(orders.id,orderId)).for("update");
+  if(!order || order.paidAt || !["pendiente","rechazada","anulada"].includes(order.status)) return false;
+  const items=await tx.select().from(orderItems).where(eq(orderItems.orderId,orderId));
+  const allocated=items.every(it=>it.productId!==null)&&await allocateOrderStock(tx,orderId,items.map(it=>({productId:it.productId!,quantity:it.quantity})));
+  await tx.update(orders).set({status:"pagada",stockStatus:allocated?"allocated":"review",paidAt:new Date(),updatedAt:new Date(),authorizationCode:payment.authorizationCode??null,paymentId:payment.paymentId??null,paymentDetails:payment.details??null}).where(eq(orders.id,orderId));
+  return true;
+ });
+ if(changed){
+  revalidateShopStock();await sendOrderEmails(orderId);
+  const [order]=await db.select().from(orders).where(eq(orders.id,orderId));
+  if(order.stockStatus==="review") await sendEmail(adminEmail(),"Revisar stock de pago "+order.code,emailLayout("Pago recibido: revisar stock","<p>La orden "+escapeHtml(order.code)+" recibió el pago sin disponibilidad reservada. Revisar existencias o coordinar la devolución antes de entregar.</p>"));
+ }
+ return changed;
 }
 
-export async function markOrderFailed(orderId: number, status: "rechazada" | "anulada", details?: unknown) {
-  await db
-    .update(orders)
-    .set({ status, updatedAt: new Date(), paymentDetails: details ?? null })
-    .where(and(eq(orders.id, orderId), eq(orders.status, "pendiente")));
+export async function markOrderFailed(orderId:number,status:"rechazada"|"anulada",details?:unknown){
+ await db.transaction(async tx=>{
+  const [changed]=await tx.update(orders).set({status,updatedAt:new Date(),paymentDetails:details??null}).where(and(eq(orders.id,orderId),eq(orders.status,"pendiente"))).returning();
+  if(changed) await tx.delete(schema.stockReservations).where(eq(schema.stockReservations.orderId,orderId));
+ });
+ revalidateShopStock();
 }
 
 async function sendOrderEmails(orderId: number) {

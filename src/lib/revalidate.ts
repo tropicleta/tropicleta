@@ -6,6 +6,7 @@ import { CACHE_TAGS } from "@/lib/queries";
 export function revalidatePublicData() {
   revalidateTag(CACHE_TAGS.catalog, { expire: 0 });
   revalidateTag(CACHE_TAGS.shop, { expire: 0 });
+  revalidateTag(CACHE_TAGS.recommendations, { expire: 0 });
   revalidatePath("/", "layout");
 }
 

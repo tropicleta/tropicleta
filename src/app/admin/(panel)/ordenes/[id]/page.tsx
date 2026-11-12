@@ -1,3 +1,4 @@
+import { resolvePaidStock } from "@/actions/admin";
 import Link from "next/link";
 import { eq } from "drizzle-orm";
 import { notFound } from "next/navigation";
@@ -31,6 +32,7 @@ export default async function OrdenAdmin({ params }: Props) {
         <StatusBadge status={o.status} />
       </div>
 
+      {o.stockStatus==="review"&&<section className="tp-panel"><h2>Pago recibido: revisar existencias</h2><p>La reserva venció o no había unidades disponibles al confirmar el pago. Coordina la solución con el cliente antes de entregar. Si repones el producto, puedes volver a comprobar y asignar las unidades.</p><form action={resolvePaidStock}><input type="hidden" name="id" value={o.id}/><button className="tp-btn tp-btn-primary">Comprobar y asignar existencias</button></form></section>}
       <div className="tp-two-col">
         <div className="tp-panel tp-stack">
           {items.map((i) => (

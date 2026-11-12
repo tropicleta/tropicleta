@@ -1,7 +1,8 @@
 "use server";
 
 import { eq } from "drizzle-orm";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
+import { CACHE_TAGS } from "@/lib/queries";
 import { db, schema } from "@/db";
 import { requireAdmin } from "@/lib/auth";
 import { recommendationSchema } from "@/lib/affiliate-validation";
@@ -22,6 +23,8 @@ export async function saveRecommendation(_previous: FormState, fd: FormData): Pr
     if (id) await db.update(schema.recommendations).set(parsed.data).where(eq(schema.recommendations.id, id));
     else await db.insert(schema.recommendations).values(parsed.data);
   } catch { return { message: "No pudimos guardar. Intenta nuevamente; tus datos siguen en el formulario." }; }
+  revalidateTag(CACHE_TAGS.recommendations, { expire: 0 });
+  revalidatePath("/");
   revalidatePath("/recomendados/");
   revalidatePath("/admin/recomendados/");
   return { message: "Recomendación guardada." };

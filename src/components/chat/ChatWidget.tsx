@@ -115,7 +115,7 @@ export function ChatWidget() {
           messages: history.filter((m) => m !== HELLO).slice(-12).map(({ role, content }) => ({ role, content })),
         }),
       });
-      const data = r.ok ? await r.json() : {};
+      const data = await r.json().catch(()=>({}));
       const reply: string = data.reply || (r.status === 429 ? "¡Uf, voy muy rápido! Dame un minutito para recuperar el aliento 🐾" : ERROR_MSG);
       const e: Emotion = data.emotion || "apenado";
       setMsgs((m) => [...m, { role: "assistant", content: reply, emotion: e }]);

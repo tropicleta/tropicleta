@@ -69,7 +69,7 @@ export default async function OrdenesAdmin({ searchParams }: Props) {
                 <td>{paymentLabel(o.paymentMethod)}</td>
                 <td className="num">{formatCLP(o.total)}</td>
                 <td>
-                  <StatusBadge status={o.status} />
+                  <StatusBadge status={o.status} />{o.stockStatus==="review"&&<strong className="tp-orange"> Revisar stock</strong>}
                 </td>
               </tr>
             ))}
