@@ -15,8 +15,8 @@ export const metadata: Metadata = {
 };
 
 const guides = [
-  { href: "/biometria/", title: "Altura de sillín", description: "Una herramienta orientativa para revisar tu posición.", action: "Revisar mi sillín" },
-  { href: "/calculador-sag/", title: "Ajusta tu suspensión", description: "Aprende a medir el SAG y a afinar el rebote paso a paso.", action: "Abrir la guía de SAG" },
+  { href: "/biometria/", icon: "sillin", title: "Altura de sillín", description: "Una herramienta orientativa para revisar tu posición.", action: "Revisar mi sillín" },
+  { href: "/calculador-sag/", icon: "suspension", title: "Ajusta tu suspensión", description: "Aprende a medir el SAG y a afinar el rebote paso a paso.", action: "Abrir la guía de SAG" },
 ];
 
 export default function ExtrasPage() {
@@ -43,7 +43,7 @@ export default function ExtrasPage() {
     <section id="guias" className="tp-section tp-about-guides" aria-labelledby="guias-title"><div className="tp-shell">
       <h2 id="guias-title" className="tp-display tp-section-title">Guías del taller</h2>
       <p className="tp-section-intro">Herramientas y consejos para conocer mejor tu bici y cuidarla entre visitas.</p>
-      <div className="tp-post-grid">{guides.map(guide => <Link key={guide.href} className="tp-panel" href={guide.href}><h3>{guide.title}</h3><p className="tp-hint">{guide.description}</p><span className="tp-service-link">{guide.action} →</span></Link>)}{posts.map(post => <Link key={post.slug} href={`/consejos/${post.slug}/`} className={`tp-post-card ${guideStyles.card}`}><GuideImage guide={post.slug} /><div className={guideStyles.body}><span className="tp-meta">{post.readingMinutes} min de lectura</span><h2 className="tp-display">{post.title}</h2><p>{post.excerpt}</p><span className="tp-service-link">Leer la guía →</span></div></Link>)}</div>
+      <div className="tp-post-grid">{guides.map(guide => <Link key={guide.href} className={`tp-post-card ${guideStyles.card}`} href={guide.href}><GuideImage guide={guide.icon} /><div className={guideStyles.body}><span className="tp-meta">Herramienta interactiva</span><h2 className="tp-display">{guide.title}</h2><p>{guide.description}</p><span className="tp-service-link">{guide.action} →</span></div></Link>)}{posts.map(post => <Link key={post.slug} href={`/consejos/${post.slug}/`} className={`tp-post-card ${guideStyles.card}`}><GuideImage guide={post.slug} /><div className={guideStyles.body}><span className="tp-meta">{post.readingMinutes} min de lectura</span><h2 className="tp-display">{post.title}</h2><p>{post.excerpt}</p><span className="tp-service-link">Leer la guía →</span></div></Link>)}</div>
     </div></section>
   </>;
 }
