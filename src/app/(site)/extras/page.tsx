@@ -14,9 +14,9 @@ export const metadata: Metadata = {
   alternates: { canonical: siteUrl("/extras/") },
 };
 
-const guides = [
-  { href: "/biometria/", icon: "sillin", title: "Altura de sillín", description: "Una herramienta orientativa para revisar tu posición.", action: "Revisar mi sillín" },
-  { href: "/calculador-sag/", icon: "suspension", title: "Ajusta tu suspensión", description: "Aprende a medir el SAG y a afinar el rebote paso a paso.", action: "Abrir la guía de SAG" },
+const tools = [
+  { href: "/biometria/", icon: "sillin", title: "Encuentra tu altura de sillín", description: "Revisa tu postura con una foto o con ayuda de la cámara y descubre qué ajustar.", action: "Revisar mi sillín" },
+  { href: "/calculador-sag/", icon: "suspension", title: "Ajusta tu suspensión", description: "Aprende a medir el SAG y a afinar el rebote paso a paso.", action: "Medir mi SAG" },
 ];
 
 export default function ExtrasPage() {
@@ -40,10 +40,15 @@ export default function ExtrasPage() {
         </div>
       </div>
     </div></section>
+    <section id="configura" className="tp-section" aria-labelledby="configura-title"><div className="tp-shell">
+      <h2 id="configura-title" className="tp-display tp-section-title">Configura tu bicicleta</h2>
+      <p className="tp-section-intro">Dos herramientas para encontrar tu posición y poner a punto la suspensión de tu bici.</p>
+      <div className={styles.tools}>{tools.map(tool => <Link key={tool.href} className={styles.toolCard} href={tool.href}><GuideImage guide={tool.icon} /><div className={styles.toolBody}><h3 className="tp-display">{tool.title}</h3><p>{tool.description}</p><span className={styles.toolAction}>{tool.action} <span aria-hidden="true">→</span></span></div></Link>)}</div>
+    </div></section>
     <section id="guias" className="tp-section tp-about-guides" aria-labelledby="guias-title"><div className="tp-shell">
       <h2 id="guias-title" className="tp-display tp-section-title">Guías del taller</h2>
-      <p className="tp-section-intro">Herramientas y consejos para conocer mejor tu bici y cuidarla entre visitas.</p>
-      <div className="tp-post-grid">{guides.map(guide => <Link key={guide.href} className={`tp-post-card ${guideStyles.card}`} href={guide.href}><GuideImage guide={guide.icon} /><div className={guideStyles.body}><span className="tp-meta">Herramienta interactiva</span><h2 className="tp-display">{guide.title}</h2><p>{guide.description}</p><span className="tp-service-link">{guide.action} →</span></div></Link>)}{posts.map(post => <Link key={post.slug} href={`/consejos/${post.slug}/`} className={`tp-post-card ${guideStyles.card}`}><GuideImage guide={post.slug} /><div className={guideStyles.body}><span className="tp-meta">{post.readingMinutes} min de lectura</span><h2 className="tp-display">{post.title}</h2><p>{post.excerpt}</p><span className="tp-service-link">Leer la guía →</span></div></Link>)}</div>
+      <p className="tp-section-intro">Consejos prácticos para cuidar tu bici entre visitas al taller.</p>
+      <div className="tp-post-grid">{posts.map(post => <Link key={post.slug} href={`/consejos/${post.slug}/`} className={`tp-post-card ${guideStyles.card}`}><GuideImage guide={post.slug} /><div className={guideStyles.body}><span className="tp-meta">{post.readingMinutes} min de lectura</span><h2 className="tp-display">{post.title}</h2><p>{post.excerpt}</p><span className="tp-service-link">Leer la guía →</span></div></Link>)}</div>
     </div></section>
   </>;
 }
