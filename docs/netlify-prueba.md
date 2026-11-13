@@ -25,6 +25,15 @@ Configurar mediante Netlify UI/CLI/API, con ámbito que incluya funciones y comp
 
 No activar la tienda como pública hasta completar las comprobaciones. El proyecto se creó privado y conectado a main; revisar la rama antes de publicar cambios de compatibilidad para no desplegarlos inadvertidamente en Vercel.
 
+## Comprobado en la copia privada
+
+- Tienda con 17 productos, ficha, carrito y subtotal correctos; pagos ausentes bloquean el checkout.
+- Servicios y cálculo de cotización; Extras con dos herramientas y cuatro guías.
+- Inicio de sesión por el propietario, navegación autenticada y guardado de producto de prueba; la ficha recibió el nombre temporal.
+- El registro del producto fue restaurado en PostgreSQL. Falta confirmar el guardado de restauración por UI y su caché debido a cortes del control de Chrome.
+- La clave local de Mercado Pago se comprobó mediante GET /users/me: pertenece a un usuario test_user. No se copiaron claves de pago a Netlify ni se realizaron cobros.
+- El importador limita su operación a 45 segundos en Netlify (SITE_ID), cancela Chromium al vencer y conserva la lista existente. En otros hosts mantiene su comportamiento anterior. Prueba aislada de proveedor bloqueado y cancelación aprobada; lectura real de Mercado Libre en Netlify todavía pendiente.
+
 ## Comprobaciones pendientes
 
 - Catálogo, servicios, recomendados y guías con PostgreSQL de prueba.
@@ -36,6 +45,10 @@ No activar la tienda como pública hasta completar las comprobaciones. El proyec
 - Subidas con almacenamiento aislado; sin credenciales deben mostrar un aviso sin escribir en el disco temporal.
 - Importador de afiliados con Chromium y límites de función en Netlify.
 - Verificar cuotas de Netlify, Neon, correo, IA y almacenamiento antes de activar el dominio.
+
+Las notificaciones de Mercado Pago deben poder llegar sin autenticación de equipo de Netlify. La copia actual sigue privada: no dar por validado un webhook externo hasta habilitar acceso al entorno de prueba y comprobar su firma. Se necesita MP_WEBHOOK_SECRET de la aplicación de prueba. No reutilizar claves live para este catálogo ficticio.
+
+Límite de funciones: https://docs.netlify.com/build/functions/configuration/ . Variables disponibles en runtime: https://docs.netlify.com/build/functions/environment-variables/ .
 
 Cambiar DNS y callbacks de pagos es un paso posterior a la validación. Mantener disponible el despliegue de Vercel para poder volver atrás.
 

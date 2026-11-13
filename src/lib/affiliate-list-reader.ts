@@ -1,6 +1,7 @@
 import "server-only";
 import chromium from "@sparticuz/chromium";
 import puppeteer from "puppeteer-core";
+import { withAffiliateReadDeadline } from "./affiliate-read-deadline";
 
 export const affiliateListUrl = "https://www.mercadolibre.cl/social/tropicleta/lists/29d0cd7a-cea5-4da9-b610-0435b82391b6?matt_tool=38636572";
 
@@ -14,11 +15,18 @@ export type PublicAffiliateItem = {
 
 /** Navegador del servidor sin sesión; solo página pública. Rechazos no son listas vacías. */
 export async function readPublicAffiliateList() {
-  if (process.platform !== "linux") throw new Error("El lector se comprueba en el servidor Linux de Vercel.");
+  return withAffiliateReadDeadline(readList);
+}
+
+async function readList(signal?: AbortSignal) {
+  if (process.platform !== "linux") throw new Error("El lector necesita un servidor Linux.");
+  const executablePath = await chromium.executablePath();
+  signal?.throwIfAborted();
   const browser = await puppeteer.launch({
     args: chromium.args,
-    executablePath: await chromium.executablePath(),
+    executablePath,
     headless: true,
+    signal,
   });
   const started = Date.now();
   try {
@@ -65,6 +73,7 @@ export async function readPublicAffiliateList() {
     }
     return { complete: true as const, pages, checkedAt: new Date().toISOString(), items: [...items.values()] };
   } finally {
-    await browser.close();
+    try { await browser.close(); }
+    catch (error) { if (!signal?.aborted) throw error; }
   }
 }
