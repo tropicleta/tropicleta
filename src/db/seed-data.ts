@@ -1,7 +1,7 @@
 /**
  * Contenido inicial del sitio.
  * ⚠️ CONTENIDO DUMMY: salvo los 3 servicios publicados en tropicleta.com (Mantención completa $50.000,
- * Limpieza ultrasónica + encerado $35.000, Tubeless completo $20.000), precios, descripciones, productos,
+ * Limpieza de transmisión + encerado SILCA $30.000, Tubeless completo $20.000), precios, descripciones, productos,
  * reservas, órdenes y mensajes son de ejemplo. Reemplázalos desde /admin antes de publicar.
  */
 import { sql } from "drizzle-orm";
@@ -135,15 +135,15 @@ export const seedServices: SeedService[] = [
   {
     cat: "transmision",
     slug: "limpieza-ultrasonica-encerado",
-    name: "Limpieza ultrasónica + encerado",
-    price: 35000,
+    name: "Limpieza de transmisión + encerado SILCA",
+    price: 30000,
     featured: true,
     duration: "48 horas",
-    summary: "Limpieza profunda de la transmisión en baño ultrasónico y encerado de cadena.",
-    description:
-      "Desmontamos cadena, cassette y platos y los limpiamos en baño ultrasónico, que saca la suciedad de lugares donde el cepillo no llega. Luego enceramos la cadena: rueda más silenciosa, más limpia y dura más.",
-    includes: ["Desmontaje de cadena, cassette y platos", "Baño ultrasónico", "Encerado de cadena por inmersión", "Montaje y ajuste de cambios"],
+    summary: "Limpieza de piñón, coronas y roldanas; ultrasonido en cadena y encerado en caliente con SILCA Secret Chain Blend.",
+    description: "Limpieza de piñón, coronas y roldanas; ultrasonido en cadena y encerado en caliente con SILCA Secret Chain Blend. Incluye retiro y montaje de la cadena. Usamos la cera sin aditivos EnduranceChip ni SpeedChip.",
+    includes: ["Limpieza de piñón, coronas y roldanas","Limpieza ultrasónica de cadena","Encerado por inmersión con SILCA Secret Chain Blend","Retiro y montaje de cadena"],
   },
+  { cat: "transmision", slug: "limpieza-reencerado-cadena", name: "Limpieza y reencerado de cadena SILCA", price: 15000, summary: "Retiro, limpieza, encerado SILCA y montaje de cadena previamente encerada, sin aceite añadido.", description: "Servicio para cadenas previamente enceradas que no hayan recibido aceite. No incluye limpieza de piñón, coronas ni roldanas. Si requiere desengrase profundo por aceite añadido, se cotiza aparte.", includes: ["Retiro de cadena", "Limpieza de cadena previamente encerada", "Encerado por inmersión con SILCA Secret Chain Blend", "Montaje de cadena"] },
   { cat: "transmision", slug: "ajuste-de-cambios", name: "Ajuste de cambios", price: 8000, duration: "Mismo día", summary: "Regulación de desviadores, tope y tensión de cable." },
   { cat: "transmision", slug: "cambio-de-cadena", name: "Cambio de cadena", price: 6000, duration: "Mismo día", summary: "Instalación de cadena nueva (repuesto aparte) con largo y cierre correctos." },
   {

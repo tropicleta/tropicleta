@@ -32,7 +32,7 @@ export const getServiceCatalog = unstable_cache(
     ]);
     return cats.map((c) => ({ ...c, services: rows.filter((s) => s.categoryId === c.id).map(s=>({...s,name:shortServiceName(s)})) })).filter(c => c.services.length > 0);
   },
-  ["service-catalog-v19"],
+  ["service-catalog-v20-silca"],
   catalogCache,
 );
 
@@ -101,7 +101,7 @@ const getHomeServicesFromDb = unstable_cache(
       categories: cats.map((c) => ({ slug: c.slug, name: c.name })),
     };
   },
-  ["home-services-v4"],
+  ["home-services-v5-silca"],
   catalogCache,
 );
 
