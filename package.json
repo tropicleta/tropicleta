@@ -15,7 +15,9 @@
     "db:reset-local": "node -e \"require('fs').rmSync('.data',{recursive:true,force:true})\" && echo 'BD local borrada; se recrea al iniciar'",
     "test:admin": "node --conditions=react-server --import tsx tests/admin.test.ts",
     "test:catalog": "node --import tsx tests/catalog.test.ts",
-    "test:shop": "node --conditions=react-server --import tsx tests/shop-readiness.test.ts"
+    "test:shop": "node --conditions=react-server --import tsx tests/shop-readiness.test.ts",
+    "build:tropi": "node scripts/build-tropi.mjs",
+    "test:tropi": "node --test tests/tropi-ranking.test.mjs"
   },
   "dependencies": {
     "@electric-sql/pglite": "^0.5.8",
@@ -40,7 +42,8 @@
     "@types/react-dom": "^19",
     "drizzle-kit": "^0.31.11",
     "tsx": "^4.23.15",
-    "typescript": "^5"
+    "typescript": "^5",
+    "esbuild": "^0.28.2"
   },
   "overrides": {
     "@vercel/cli-config": "0.3.8"

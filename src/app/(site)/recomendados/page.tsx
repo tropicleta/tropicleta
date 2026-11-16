@@ -10,6 +10,7 @@ import { SortSelect } from "@/components/shop/SortSelect";
 import { CategorySelect } from "@/components/shop/CategorySelect";
 import { ProductMedia } from "@/components/shop/ProductMedia";
 import { matchesSearch } from "@/lib/catalog-search";
+import styles from "./recomendados.module.css";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = { title: "Recomendados en Mercado Libre", description: "Productos seleccionados por Tropicleta para cuidar tu bicicleta y disfrutar tus salidas. Compra directamente en Mercado Libre.", alternates: { canonical: siteUrl("/recomendados/") } };
@@ -30,13 +31,17 @@ export default async function RecommendationsPage({ searchParams }: { searchPara
   });
   const totalPages=Math.max(1,Math.ceil(items.length/pageSize)),currentPage=Math.min(pageNumber,totalPages);
   const visibleItems=items.slice((currentPage-1)*pageSize,currentPage*pageSize);
-  const pageUrl=(n:number)=>`/recomendados/?${new URLSearchParams({...(categoria?{categoria}:{}),...(query?{q:query}:{}),orden:sort,p:String(n)})}`;
+  const pageUrl=(n:number)=>`/recomendados/?${new URLSearchParams({...(categoria?{categoria}:{}),...(query?{q:query}:{}),orden:sort,p:String(n)})}#productos`;
+  const pagination = totalPages > 1 ? <nav aria-label="Páginas de recomendados" className={styles.pagination}>
+    {currentPage > 1 ? <Link prefetch={false} className="tp-btn tp-btn-secondary" href={pageUrl(currentPage - 1)}>← Anterior</Link> : <span aria-disabled="true" className={`tp-btn tp-btn-secondary ${styles.disabled}`}>← Anterior</span>}
+    <span className={styles.status}>Página <strong>{currentPage}</strong> de {totalPages}</span>
+    {currentPage < totalPages ? <Link prefetch={false} className="tp-btn tp-btn-primary" href={pageUrl(currentPage + 1)}>Siguiente →</Link> : <span aria-disabled="true" className={`tp-btn tp-btn-secondary ${styles.disabled}`}>Siguiente →</span>}
+  </nav> : null;
   return <>
     <section className="tp-hero tp-page-hero"><div className="tp-shell">
       <span className="tp-kicker">La selección de Tropicleta</span>
       <h1 className="tp-display">Para tu próxima <span>salida.</span></h1>
       <p className="tp-hero-copy">Accesorios, herramientas y equipo que recomendamos. Descubre por qué los elegimos y compra directamente en Mercado Libre.</p>
-      {totalPages>1&&<nav aria-label="Páginas de recomendados" className="tp-actions" style={{marginTop:24}}>{currentPage>1&&<Link className="tp-btn tp-btn-secondary" href={pageUrl(currentPage-1)}>Anterior</Link>}<span>Página {currentPage} de {totalPages}</span>{currentPage<totalPages&&<Link className="tp-btn tp-btn-secondary" href={pageUrl(currentPage+1)}>Siguiente</Link>}</nav>}
     </div></section>
     <section className="tp-section tp-recommendations"><div className="tp-shell">
       <ShopSections current="recomendados" />
@@ -46,7 +51,8 @@ export default async function RecommendationsPage({ searchParams }: { searchPara
         <CategorySelect categories={categories} value={categoria} />
         <SortSelect value={sort} />
       </div>
-      <p className="tp-catalog-count">{items.length} {items.length === 1 ? "recomendación" : "recomendaciones"}{query ? ` para “${query}”` : ""}</p>
+      <p id="productos" className="tp-catalog-count" style={{ scrollMarginTop: 110 }}>{items.length} {items.length === 1 ? "recomendación" : "recomendaciones"}{query ? ` para “${query}”` : ""}</p>
+      {pagination}
       {items.length ? <div className="tp-product-grid" style={{ marginTop: 24 }}>{visibleItems.map(item => <article className="tp-product-card tp-recommendation-card" key={item.id}>
         <ProductMedia name={item.name} image={item.imageUrl} />
         <div className="tp-product-body">
@@ -55,6 +61,7 @@ export default async function RecommendationsPage({ searchParams }: { searchPara
           <a className="tp-btn tp-btn-primary" href={item.url} target="_blank" rel="sponsored nofollow noopener noreferrer">Ver en Mercado Libre ↗</a>
         </div>
       </article>)}</div> : <div className="tp-catalog-empty"><h2>{query ? "No encontramos recomendaciones" : categoria ? "No hay recomendaciones en esta categoría" : "Estamos preparando nuestra selección"}</h2><p>{query ? "Prueba con otra palabra o explora todos los recomendados." : "Pronto compartiremos productos con recomendaciones útiles para tus salidas."}</p><Link className="tp-btn tp-btn-secondary" href={categoria || query ? "/recomendados/" : "/tienda/"}>{categoria || query ? "Ver todos los recomendados" : "Explorar la tienda Tropicleta"}</Link></div>}
+      {pagination}
     </div></section>
   </>;
 }

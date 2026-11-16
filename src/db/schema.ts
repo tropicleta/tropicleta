@@ -1,5 +1,7 @@
 import {
   boolean,
+  uuid,
+  index,
   check,
   uniqueIndex,
   date,
@@ -276,3 +278,14 @@ export type OrderStatus = (typeof orderStatus.enumValues)[number];
 
 export const stockReservations = pgTable("stock_reservations", { orderId:integer("order_id").notNull().references(()=>orders.id,{onDelete:"cascade"}), productId:integer("product_id").notNull().references(()=>products.id,{onDelete:"cascade"}), quantity:integer("quantity").notNull(), expiresAt:timestamp("expires_at",{withTimezone:true}).notNull() },t=>[primaryKey({columns:[t.orderId,t.productId]})]);
 export const emailOutbox = pgTable("email_outbox", { id:varchar("id",{length:64}).primaryKey(), recipient:text("recipient").notNull(), subject:text("subject").notNull(), html:text("html").notNull(), attempts:integer("attempts").notNull().default(0), nextAttemptAt:timestamp("next_attempt_at",{withTimezone:true}).notNull().defaultNow(), lockedUntil:timestamp("locked_until",{withTimezone:true}), sentAt:timestamp("sent_at",{withTimezone:true}), lastError:text("last_error"), createdAt:timestamp("created_at",{withTimezone:true}).notNull().defaultNow() });
+
+export const tropiScores = pgTable("tropi_scores", {
+  runId: uuid("run_id").primaryKey(),
+  name: text("name").notNull(),
+  score: integer("score").notNull(),
+  completedAt: timestamp("completed_at", {withTimezone: true}).notNull().defaultNow(),
+}, t => [
+  check("tropi_scores_name_check", sql`char_length(${t.name}) between 2 and 20`),
+  check("tropi_scores_score_check", sql`${t.score} >= 0 and ${t.score} <= 1000000000`),
+  index("tropi_scores_order").on(t.score.desc(), t.completedAt, t.runId),
+]);

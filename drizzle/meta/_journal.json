@@ -162,6 +162,13 @@
       "when": 1794485000000,
       "tag": "0023_launch_reliability",
       "breakpoints": true
+    },
+    {
+      "idx": 24,
+      "version": "7",
+      "when": 1794826800000,
+      "tag": "0024_tropi_scores",
+      "breakpoints": true
     }
   ]
 }

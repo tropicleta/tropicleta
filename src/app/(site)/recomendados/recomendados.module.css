@@ -1,0 +1,18 @@
+.pagination {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 12px;
+  margin: 24px 0;
+  padding: 16px 0;
+  border-block: 1px solid #ffffff26;
+}
+.pagination > :first-child { justify-self: start; }
+.pagination > :last-child { justify-self: end; }
+.status { text-align: center; font-size: .9rem; white-space: nowrap; }
+.disabled { opacity: .35; cursor: default; }
+@media (max-width: 480px) {
+  .pagination { gap: 6px; }
+  .pagination a, .pagination .disabled { min-height: 44px; padding: 10px 12px; font-size: .8rem; }
+  .status { font-size: .75rem; }
+}

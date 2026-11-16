@@ -1,0 +1,2 @@
+const ACTIONS=['back','forward','jump'];
+export function createBikeInput(){const held=new Map(),input={gas:true,back:false,forward:false,jump:false,jumpSerial:0};function sync(){const wasJump=input.jump;const actions=new Set(held.values());for(const a of ACTIONS)input[a]=actions.has(a);if(input.jump&&!wasJump)input.jumpSerial++;}return{input,set(id,action,on){if(!ACTIONS.includes(action))return;if(on)held.set(id,action);else held.delete(id);sync();},clear(){held.clear();sync();}};}
