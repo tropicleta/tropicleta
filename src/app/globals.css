@@ -820,3 +820,8 @@ img {
     transition: none !important;
   }
 }
+
+/* Ocultar botón flotante de Netlify */
+#nl-badge-frame {
+  display: none !important;
+}
