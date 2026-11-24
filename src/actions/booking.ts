@@ -59,7 +59,14 @@ export async function createBooking(_prev: FormState, fd: FormData): Promise<For
       pickup: d.pickup,
       pickupCommune: d.pickup ? d.pickupCommune! : null,
       pickupAddress: d.pickup ? d.pickupAddress! : null,
-      quoteSnapshot: { version:2, vehicles:groups, lines:found, ...quote },
+      quoteSnapshot: {
+        version: 2,
+        vehicles: groups,
+        lines: found,
+        ...quote,
+        transportMode: d.pickup ? d.transportMode : null,
+        customerNotes: d.notes ?? null,
+      },
       notes: [packageDetail, quoteText, d.notes].filter(Boolean).join("\n"),
     });
 
